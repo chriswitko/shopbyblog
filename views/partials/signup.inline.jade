@@ -1,0 +1,14 @@
+form.form-inline(action='/signup', role='form', method='post')
+  input(type='hidden', name='_csrf', value=_csrf)
+  .form-group
+    .input-group.pr10
+      input.form-control.input-lg(type='email', name='email', id='email', placeholder='#{__("Email")}', autocomplete='off')
+  .form-group
+    .input-group.pr10
+      input.form-control.input-lg(type='password', name='password', id='password', placeholder='#{__("Password")}', autocomplete='off')
+  .form-group
+    .input-group.pr10
+      input.form-control.input-lg(type='password', name='confirmPassword', id='confirmPassword', placeholder='#{__("Confirm Password")}', autocomplete='off')
+  .form-group
+    .input-group
+      button.btn.btn-danger.btn-lg(type='submit') #{__("Get started")}

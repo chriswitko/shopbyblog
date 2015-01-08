@@ -1,0 +1,202 @@
+script(id='temp-product-old', type='text/x-handlebars-template').
+  <div class="col-sm-4">
+    <div style="position:relative;" class="grid-element">
+      <a href="/product/{{product.permalink}}"><div style="background:#f8f8f8 url(#{imagesUrl}/images/s_{{product.imageFileName}}) no-repeat 50% 50%;background-size:cover" class="img-thumbnail grid-image clearfix"></div></a>
+      <div style="position:absolute;top:20px;right:20px;" class="grid-avatar">
+        {{#if product.ads.length}}
+        <span class="badge">
+          <i class="fa fa-star color-red"/><span class="color-black">#{__("Today's Deal")}</span>
+        </span>
+        {{else}}
+        <a href="/{{product.author.permalink}}"><img src="{{product.author.photo}}" width="30" class="img-circle"/></a>
+        {{/if}}
+      </div>
+      <div class="grid-body clearfix">
+        <table width="100%" style="margin-top:10px;">
+          <tr>
+            <td valign="top" class="td-counter">
+              <sbb-vote product="{{product._id}}" active='{{product.isVoted}}' counter='{{product.meta.upvotes}}'></sbb-vote>
+            </td>
+            <td valign="top" class="td-title" style="width:100%;">
+              <div class="clearfix ellipsis" style="height:40px;">
+                <p class="m0 imp lato"><a href="/product/{{product.permalink}}">{{product.title}}</a></p>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+script(id='temp-product', type='text/x-handlebars-template').
+  <div class="col-sm-4">
+    <div style="position:relative;display:block;overflow:hidden;" class="grid-element container-fb">
+      <div class="clearfix">
+        <a href="/product/{{product.permalink}}"><div style="background:#f8f8f8 url(#{imagesUrl}/images/s_{{product.imageFileName}}) no-repeat 50% 50%;background-size:cover" class="img-thumbnail grid-image clearfix"></div></a>
+      </div>
+      <div style="position:absolute;top:20px;right:20px;" class="grid-avatar">
+        {{#if product.ads.length}}
+        <span class="badge">
+          <i class="fa fa-star color-red"/><span class="color-black">#{__("Today's Deal")}</span>
+        </span>
+        {{else}}
+        <a href="/{{product.author.permalink}}"><img src="{{product.author.photo}}" width="30" class="img-circle"/></a>
+        {{/if}}
+      </div>
+      <div class="grid-body clearfix mt10">
+        <div class="clearfix overflow">
+          <p class="m0 imp lato overflow"><a class="overflow" href="/product/{{product.permalink}}">{{product.title}}</a></p>
+        </div>
+        <div class="clearfix overflow">
+          <sbb-product-tb variant='grid' product="{{product._id}}" active='{{product.isVoted}}' permalink='{{product.permalink}}' counter='{{product.meta.upvotes}}'></sbb-product-tb>
+        </div>
+      </div>
+    </div>
+  </div>
+
+script(id='temp-search', type='text/x-handlebars-template').
+  <div class="col-sm-3 search-container pt5">
+    <form action="/search">
+      <div style="position:relative;display:block" class="search-area">
+        <div style="position:absolute;top:7px;left:10px;" class="search-icon"><i class="fa fa-search notimp"></i></div>
+        <input type="search" name="q" placeholder="#{__('Search for products...')}" style="border-radius:20px;padding-left:25px;" class="form-control mt10 mb0" value="#{q}" autocomplete="off"/>
+      </div>
+    </form>
+  </div>
+
+script(id='grid-item-product', type='text/x-handlebars-template').
+  {{#each products}}
+
+    {{#if product.isNewDay}}
+    {{#if @first}}
+    {{else}}
+      </div>
+        </div>
+          </div>
+    {{/if}}
+    {{/if}}
+
+    {{#lastDate product.createdAt}}
+      <div class="row mb10">
+        <div class="col-sm-9">
+          {{displayDay product.createdAt}}
+        </div>
+        <!--{{#if @first}}
+        {{>search}}
+        {{/if}}-->
+      </div>
+    {{/lastDate}}
+
+
+    {{#if product.isNewDay}}
+      <div class="row results-area">
+        <div class="col-sm-12">
+          <div class="row grid-sections">
+    {{/if}}
+
+    {{>product}}
+
+    {{#if @last}}
+      </div>
+        </div>
+          </div>
+    {{/if}}
+
+  {{/each}}
+
+script(id='grid-item-product-next', type='text/x-handlebars-template').
+  {{#each products}}
+
+    {{#if product.isNewDay}}
+    {{#if @first}}
+    {{else}}
+      </div>
+        </div>
+          </div>
+    {{/if}}
+    {{/if}}
+
+    {{#lastDate product.createdAt}}
+      <div class="row mb10">
+        <div class="col-sm-9">
+          {{displayDay product.createdAt}}
+        </div>
+      </div>
+    {{/lastDate}}
+
+
+    {{#if product.isNewDay}}
+      <div class="row results-area">
+        <div class="col-sm-12">
+          <div class="row grid-sections">
+    {{/if}}
+
+    {{>product}}
+
+    {{#if @last}}
+      </div>
+        </div>
+          </div>
+    {{/if}}
+
+  {{/each}}
+script(id='grid-item-product-only', type='text/x-handlebars-template').
+  {{#each products}}
+
+    {{#if @first}}
+      <div class="row results-area">
+        <div class="col-sm-12">
+          <div class="row grid-sections">
+    {{/if}}
+
+    <div class="col-sm-4">
+      <div style="position:relative;" class="grid-element container-fb">
+        <div class="clearfix">
+          <a href="/product/{{product.permalink}}"><div style="background:#f8f8f8 url(#{imagesUrl}/images/s_{{product.imageFileName}}) no-repeat 50% 50%;background-size:cover" class="img-thumbnail grid-image clearfix"></div></a>
+        </div>
+        <div style="position:absolute;top:20px;right:20px;" class="grid-avatar">
+          {{#if product.ads.length}}
+          <span class="badge">
+            <i class="fa fa-star color-red"/><span class="color-black">#{__("Today's Deal")}</span>
+          </span>
+          {{else}}
+          <a href="/{{product.author.permalink}}"><img src="{{product.author.photo}}" width="30" class="img-circle"/></a>
+          {{/if}}
+        </div>
+        <div class="grid-body clearfix mt10">
+          <div class="clearfix overflow">
+            <p class="m0 imp lato overflow"><a class="overflow" href="/product/{{product.permalink}}">{{product.title}}</a></p>
+          </div>
+          <div class="clearfix overflow">
+            <sbb-product-tb variant='grid' product="{{product._id}}" active='{{product.isVoted}}' permalink='{{product.permalink}}' counter='{{product.meta.upvotes}}'></sbb-product-tb>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    {{#if @last}}
+      </div>
+        </div>
+          </div>
+    {{/if}}
+
+  {{/each}}
+
+script(id='temp-comment', type='text/x-handlebars-template').
+  {{#each comments}}
+    <div class="media">
+      <a href="/{{comment.user.permalink}}" class="pull-left"><img src="{{comment.user.photo}}" width="50" class="media-object img-circle"/></a>
+      <div class="media-body">
+        <h4 class="media-heading m0">
+          <ul class="list-unstyled list-inline small mb0 list-actions">
+            <li><a href="/{{comment.user.permalink}}" class="notimp">@{{comment.user.permalink}}</a></li>
+            <li><time class="imp small" itemprop="createdAt" datetime="{{comment.createdAt}}"></time></li>
+          </ul>
+        </h4>
+        <p class="m0">{{comment.body}}</p>
+      </div>
+    </div>
+  {{/each}}
+
+//- <li><a href="" class="notimp bind small" onclick='observable.trigger("commentRemove", {comment_id:"{{comment._id}}", product_id:"{{comment.product._id}}"})'><i class="fa fa-times"></i>remove</a></li>

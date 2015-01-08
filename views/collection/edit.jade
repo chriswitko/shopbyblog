@@ -1,0 +1,56 @@
+extends ../layout
+
+block content
+  .container.container-fix.container-shadow
+    .page-header.m0
+      h3.m0 #{collection.permalink?'COLLECTION: '+collection.title:'CREATE NEW COLLECTION'}
+
+    .clearfix.mt20
+      form.form-horizontal(role='form', action='/collection/add', method='post', enctype='multipart/form-data')
+        input(type='hidden', name='_csrf', value=_csrf)
+        input(type='hidden', name='mode', value=collection.permalink?'edit':'add')
+        input(type='hidden', name='id', value=collection.permalink?collection.id:'')
+        .form-group
+          label(class='col-sm-2 control-label', for='section') Category
+          .col-sm-8
+            label.radio.radio-inline
+              input(type='radio', checked=collection.section==1, name='section', value='1', data-toggle='radio')
+              span For Him
+            label.radio.radio-inline
+              input(type='radio', checked=collection.section==2, name='section', value='2', data-toggle='radio')
+              span For Her
+            label.radio.radio-inline
+              input(type='radio', checked=collection.section==3, name='section', value='3', data-toggle='radio')
+              span Home &amp; Design
+        .form-group
+          label(class='col-sm-2 control-label', for='title') Collection Title
+          .col-sm-8
+            input.form-control(type='text', name='title', id='title', placeholder='Enter collection title', value=collection.title, autocomplete='off')
+        .form-group
+          label(class='col-sm-2 control-label', for='body') Tagline
+          .col-sm-8
+            input.form-control(type='text', name='body', id='body', placeholder='Enter collection tagline', value=collection.body, autocomplete='off')
+        .form-group
+          label(class='col-sm-2 control-label', for='image_source') Image
+          .col-sm-8
+            ul.list-unstyled(id='image_source')
+              li(id='image_source_upload_area')
+                label(class='checkbox')
+                  input(type='radio', name='image_source', id='image_source_upload', value='upload', onchange='switchShow("image_source", "image_source_upload")', checked)
+                  span &nbsp; Upload image from my device
+                .clearfix.mt10
+                  input(type='file', name='filename')
+        hr
+        .form-group
+          label(class='col-sm-2 control-label', for='tags') Tags
+          .col-sm-8
+            input.form-control(type='text', name='tags', id='tags', placeholder='Enter tags', value=collection.getTags(), autocomplete='off')
+        .form-group
+          .col-sm-offset-2.col-sm-8
+            ul.list-unstyled.list-inline.m0.list-on-left
+              li
+                button.btn.btn-danger(type='submit')
+                  | Save changes!
+              li
+                button.btn.btn-default(type='button', onclick='location="#{collection?"/collection/"+collection.permalink:"/"}"')
+                  | Cancel

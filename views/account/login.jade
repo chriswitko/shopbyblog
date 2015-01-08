@@ -1,0 +1,73 @@
+extends ../layout
+
+block content
+  .container
+    .row
+      .col-sm-4.col-sm-push-4.container-fix.container-shadow
+        .clearfix.mt10
+          form(method='post', name='loginForm')
+            input(type='hidden', name='_csrf', value=_csrf)
+            .col-sm-12
+              .clearfix.mb20.align-center
+                //- h3.m0.color-diff Log In to ShopByBlog
+                a(href='/')
+                  img(src='/img/logo_vector_1.png', width='100')
+              .clearfix
+                ul.list-unstyled
+                  li
+                    a.btn.btn-block.btn-facebook.btn-social(href='/auth/facebook')
+                      i.fa.fa-facebook
+                      | #{__('Sign in with Facebook')}
+                  li.mt10
+                    a.btn.btn-block.btn-twitter.btn-social(href='/auth/twitter')
+                      i.fa.fa-twitter
+                      | #{__('Sign in with Twitter')}
+                  //- li.mt10
+                    a.btn.btn-block.btn-google-plus.btn-social(href='/auth/google')
+                      i.fa.fa-google-plus
+                      | #{__('Sign in with Google')}
+                  //- li.mt10
+                    a.btn.btn-block.btn-instagram.btn-social(href='/auth/instagram')
+                      i.fa.fa-instagram
+                      | #{__('Sign in with Instagram')}
+                //- a.btn.btn-block.btn-github.btn-social(href='/auth/github')
+                  i.fa.fa-github
+                  | Sign in with GitHub
+                //- a.btn.btn-block.btn-linkedin.btn-social(href='/auth/linkedin')
+                  i.fa.fa-linkedin
+                  | Sign in with LinkedIn
+                hr
+              .clearfix
+                .form-group
+                  label.control-label(for='email') #{__('Email')}
+                  input.form-control(type='email', name='email', id='email', placeholder='Email', autofocus=true, autocomplete='off')
+                .form-group
+                  label.control-label(for='password') #{__('Password')}
+                  input.form-control(type='password', name='password', id='password', placeholder='Password', autocomplete='off')
+                .form-group
+                  button.btn.btn-danger(type='submit')
+                    | #{__('Login')}
+                  a.btn.btn-link(href='/forgot') #{__('Forgot your password?')}
+                hr
+              .clearfix
+                p.small.m0
+                  i.fa.fa-angle-right
+                  a(href='/signup') #{__('Sign up')}
+block js
+  script.
+    var validator = new FormValidator('loginForm', [
+      {
+        name: 'password',
+        rules: 'required'
+      }, {
+        name: 'email',
+        rules: 'required|valid_email'
+      }
+    ], function(errors, event) {
+      if (errors.length > 0) {
+        $('.p-err').remove();
+        for(i=0;i<=errors.length-1;i++) {
+          $('#'+errors[i].id).before('<p class="p-err small color-red">'+errors[i].message+'</p>');
+        }
+      }
+    });

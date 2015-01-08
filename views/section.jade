@@ -1,0 +1,100 @@
+extends layout
+
+block content
+  include templates/products.grid.jade
+  include templates/sections.grid.jade
+  include templates/collections.grid.jade
+
+  //- .container.mb20.mt20
+    .row
+      .col-sm-12
+        img.img-responsive.img-rounded(src='http://ds.serving-sys.com/BurstingRes///Site-93885/Type-0/c4a52e9b-bec0-47a5-808a-622440b1d57f.jpg')
+        //- img.img-responsive.img-rounded(src='http://adv.adview.pl/ads/128/OWWZHJXVBEUIXGDQFASWQETMJVPBBF_256427.gif')
+        //- img.img-responsive.img-rounded(src='http://pagead2.googlesyndication.com/pagead/imgad?id=CICAgKCTiIyHaBABGAEyCBm2tYTSaR6R')
+
+  .container.container-clean.pb0.mt0
+    .row.pb0.slicer2
+      .col-sm-8
+        h1.mt0.mb10.lato.lato900 #{section.name.toUpperCase()}
+        p.m0 #{section.description}
+
+      .col-sm-4.align-right
+        ul.list-unstyled.list-inline.m0
+          li(class=(!user||!section.isFollowing)?'':'hid', id='action-btn-follow-#{section.id}')
+            a.btn.btn-primary.bind(href='', rel='popover', data-trigger='hover', data-placement='bottom', title='Dodaj do obserwowanych', data-content='Jeżeli chcesz otrzmywać powiadomienia z tej kategoii, kliknij ten przycisk.', onclick='observable.trigger("sectionFollow", {section_id:"#{section.id}", follower_id:"#{user?user.id:""}"})')
+              i.fa.fa-plus
+              | #{__('Follow')}
+          li(class=(user&&section.isFollowing)?'':'hid', id='action-btn-unfollow-#{section.id}')
+            a.btn.btn-danger.bind(href='', onclick='observable.trigger("sectionUnfollow", {section_id:"#{section.id}", follower_id:"#{user?user.id:""}"})')
+              i.fa.fa-check
+              | #{__('Following')}
+
+    //- if !user
+      .row.mt20.mb20
+        .col-sm-12
+          include subscribe
+
+    //- .row.mb10
+      .col-sm-12
+        img.img-responsive.img-rounded(src='http://pagead2.googlesyndication.com/pagead/imgad?id=CICAgKCTiIyHaBABGAEyCBm2tYTSaR6R')
+
+  //- .container.pb0
+    #collections-container.row.slicer2.pt0
+      .col-sm-12
+        .clearfix.container-fix.container-fb.pt20.pb5.pr20.pl20
+          include grid.collections.jade
+
+  sbb-people(title='#{__("RECOMMENDED BLOGS")}', theme='default', variant='whotofollow', permalink='#{user?user.permalink:""}')
+
+  .container.container-grid.pb0.mb20.pt0
+    .col-sm-12
+      .row
+        .clearfix
+          #results-area
+
+    .row
+      .col-sm-12.align-center
+        a.btn.btn-primary.btn-lg.btn-block.bind(href='') #{__('load more...')}
+
+block js
+
+  script.
+    $(document).ready(function() {
+      $(".grid-element").fitText();
+      $(".grid-overfly-txt").fitText();
+
+      window.SBB_SECTION = !{JSON.stringify(section)};
+      //- console.log('s', SBB_SECTION);
+      //- console.log('s', SBB.getUrlVar('s'));
+
+      if(!window.SBB_SECTION.isFollowing) {
+        //- $('#action-btn-follow-'+window.SBB_SECTION.id).find('a').popover({
+        //-   html: true,
+        //-   content : 'If you interested in this category, click here to get latest products updates.',
+        //-   trigger: 'manual',
+        //-   placement: 'bottom',
+        //-   delay: {"hide": 100 }
+        //- });
+        $('#action-btn-follow-'+window.SBB_SECTION.id).find('a').popover('show');
+        $.doTimeout( 3000, function(){
+          $('#action-btn-follow-'+window.SBB_SECTION.id).find('a').popover('hide');
+        });
+      }
+
+
+      if($('#collections-area')) SBBCollection.uiGetCollections(window.SBB_SECTION, 3);
+
+      if($('#results-area')) {
+        SBBProduct.getList({section: window.SBB_SECTION.id}, function(data) {
+          var source = $("#grid-item-product").html();
+
+          var template = Handlebars.compile(source);
+
+          var context = {products: data.products};
+          var html    = template(context);
+
+          $('#results-area').html(html);
+          SBB.initResizeGrid();
+        });
+      }
+    })

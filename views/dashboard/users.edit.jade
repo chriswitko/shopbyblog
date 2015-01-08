@@ -1,0 +1,137 @@
+extends ../layout.dashboard.jade
+
+block content
+  .container
+    .clearfix.container-fix.container-fb.p20
+      .page-header.m0
+        h3.m0 EDIT USER
+
+      .row.mt20
+        .col-sm-12
+          form.form-horizontal(role='form', method='post')
+            input(type='hidden', name='_csrf', value=_csrf)
+            .form-group
+              label(class='col-sm-2 control-label', for='permalink') Permalink
+              .col-sm-8
+                p.form-control-static
+                  a(href='/#{profile.permalink}', target='_blank') #{profile.permalink}
+            .form-group
+              label(class='col-sm-2 control-label', for='email') E-mail
+              .col-sm-8
+                p.form-control-static
+                  a(href='mailto:#{profile.email}') #{profile.email}
+            .form-group
+              label(class='col-sm-2 control-label', for='role') Role
+              .col-sm-8
+                select.form-control(name='role', id='role')
+                  option(value='1', selected=profile.role=='1') User
+                  option(value='2', selected=profile.role=='2') Moderator
+                  option(value='3', selected=profile.role=='3') Admin
+            .form-group
+              label(class='col-sm-2 control-label', for='section') Category
+              .col-sm-8
+                label.radio.radio-inline
+                  input(type='radio', checked=profile.blogger.section==1, name='blogger[section]', value='1', data-toggle='radio')
+                  span For Him
+                label.radio.radio-inline
+                  input(type='radio', checked=profile.blogger.section==2, name='blogger[section]', value='2', data-toggle='radio')
+                  span For Her
+                label.radio.radio-inline
+                  input(type='radio', checked=profile.blogger.section==3, name='blogger[section]', value='3', data-toggle='radio')
+                  span Home &amp; Design
+            .form-group
+              label.col-sm-2.control-label(for='locale') Language
+              .col-sm-8
+                select.form-control(name="blogger[locale]", id="locale", autofocus="autofocus", autocorrect="off", autocomplete="off")
+                  option(value="") -- select --
+                  option(value="pl", selected=(profile.blogger.locale=='pl')) Polski
+                  option(value="en", selected=(profile.blogger.locale=='en')) English
+                  option(value="es", selected=(profile.blogger.locale=='es')) Español
+                  option(value="fr", selected=(profile.blogger.locale=='fr')) Français
+                  option(value="it", selected=(profile.blogger.locale=='it')) Italiano
+                  option(value="hu", selected=(profile.blogger.locale=='hu')) Magyar
+                  option(value="nl", selected=(profile.blogger.locale=='nl')) Nederlands
+                  option(value="pt", selected=(profile.blogger.locale=='pt')) Português
+                  option(value="sv", selected=(profile.blogger.locale=='sv')) Svenska
+                  option(value="tr", selected=(profile.blogger.locale=='tr')) Türkçe
+                  option(value="ro", selected=(profile.blogger.locale=='ro')) Română
+                  option(value="sk", selected=(profile.blogger.locale=='sk')) Slovenčina
+                  option(value="cs", selected=(profile.blogger.locale=='cs')) Čeština
+                  option(value="el-GR", selected=(profile.blogger.locale=='el-GR')) ελληνικά
+                  option(value="ru", selected=(profile.blogger.locale=='ru')) Русский
+                  option(value="uk", selected=(profile.blogger.locale=='uk')) Українська
+            .form-group
+              label.col-sm-2.control-label(for='country') Country
+              .col-sm-8
+                select.form-control(name="country", id="country", autofocus="autofocus", autocorrect="off", autocomplete="off")
+                  !=citiesInHTML
+            .form-group
+              label(class='col-sm-2 control-label', for='role') &nbsp;
+              .col-sm-8
+                .clearfix
+                  .checkbox
+                    label
+                      input(type='checkbox', name='isGhost', value='1', checked=profile.isGhost)
+                      div.pt2 Ghost
+                .clearfix
+                  .checkbox
+                    label
+                      input(type='checkbox', name='isVerified', value='1', checked=profile.isVerified)
+                      div.pt2 Verified
+                .clearfix
+                  .checkbox
+                    label
+                      input(type='checkbox', name='isPending', value='1', checked=profile.isPending)
+                      div.pt2 Pending
+                .clearfix
+                  .checkbox
+                    label
+                      input(type='checkbox', name='isHidden', value='1', checked=profile.isHidden)
+                      div.pt2 Hidden
+                .clearfix
+                  .checkbox
+                    label
+                      input(type='checkbox', name='isRemoved', value='1', checked=profile.isRemoved)
+                      div.pt2 Removed
+            .form-group
+              label(class='col-sm-2 control-label', for='feedlyId') FeedlyID
+              .col-sm-8
+                input.form-control(type='text', name='blogger[feedlyId]', id='feedlyId', value=profile.blogger.feedlyId, autocomplete='off')
+            .form-group
+              label(class='col-sm-2 control-label', for='rss') RSS
+              .col-sm-8
+                input.form-control(type='text', name='links[rss]', id='rss', value=profile.links.rss, autocomplete='off')
+            .form-group
+              label(class='col-sm-2 control-label', for='basePrice') UU
+              .col-sm-3
+                input.form-control(type='text', name='blogger[last12mPageUniqueUsers]', id='last12mPageUniqueUsers', value=profile.blogger.last12mPageUniqueUsers, autocomplete='off')
+            .form-group
+              label(class='col-sm-2 control-label', for='baseShare') UV
+              .col-sm-3
+                .input-group
+                  input.form-control(type='text', name='blogger[last12mPageUniqueViews]', id='last12mPageUniqueViews', value=profile.blogger.last12mPageUniqueViews, autocomplete='off')
+                  span.input-group-addon / 12m
+            .form-group
+              label(class='col-sm-2 control-label', for='baseShare') Blogger Share
+              .col-sm-3
+                .input-group
+                  input.form-control(type='text', name='business[baseShare]', id='baseShare', value=sprintf('%0.2f', profile.business.baseShare), autocomplete='off')
+                  span.input-group-addon %
+            .form-group
+              label.col-sm-2.control-label(for='baseCurrency') Currency
+              .col-sm-3
+                select.form-control(name="business[baseCurrency]", id="baseCurrency", autofocus="autofocus", autocorrect="off", autocomplete="off")
+                  option(value="") -- select --
+                  option(value="PLN", selected=(profile.business.baseCurrency=='PLN')) PLN
+                  option(value="EUR", selected=(profile.business.baseCurrency=='EUR')) EUR
+                  option(value="USD", selected=(profile.business.baseCurrency=='USD')) USD
+            .form-group
+              .col-sm-offset-2.col-sm-8
+                button.btn.btn-primary(type='submit')
+                  | Update
+            .form-group.mb0
+              .col-sm-2 &nbsp;
+              .col-sm-10
+                ul.list-unstyled.list-inline.m0.list-on-left
+                  li
+                    a(href='/dashboard/autorespond/verified?uid=#{profile._id}') Send Verified email

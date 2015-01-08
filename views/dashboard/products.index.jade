@@ -1,0 +1,78 @@
+extends ../layout.dashboard.jade
+
+block content
+  .container-wide
+
+    .page-header.mt0.pb0
+      h3.m0 PRODUCTS
+
+    .container-wide.container-fix.container-fb.pb0.mb0.mt0.p15
+      .row
+        .col-sm-6.mb10
+          ul.list-unstyled.list-inline.m0.list-on-left
+            li
+              .btn-group
+                button.btn.btn-default(type='button') All products
+                button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
+                  span.caret
+                ul.dropdown-menu(role='menu')
+                  li
+                    a(href='#') All products
+                  li
+                    a(href='#') For Him
+                  li
+                    a(href='#') For Her
+                  li
+                    a(href='#') Home & Design
+            li
+              .btn-group
+                button.btn.btn-default(type='button') Queued
+                button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
+                  span.caret
+                ul.dropdown-menu(role='menu')
+                  li
+                    a(href='#') Queued
+                  li
+                    a(href='#') Approved
+                  li
+                    a(href='#') Unapproved
+        .col-sm-6.align-right.mb10
+          .search-area(style='position:relative;display:block')
+            .search-icon(style='position:absolute;top:7px;left:10px;')
+              i.fa.fa-search.notimp
+            input.form-control(type='search', placeholder='Search for products...', style='border-radius:20px;padding-left:25px;')
+
+      .row
+        .col-sm-12
+          table.table.m0
+            thead
+              tr
+                th(width='100%', colspan='3')
+                  p.m0 Found <strong>12</strong> from total of <strong>130</strong> products.
+            tbody
+              if products
+                each product, i in products
+                  tr
+                    td.align-middle(width='100', nowrap)
+                      .grid-image.clearfix(style='background:#f8f8f8 url(#{imagesUrl}/images/s_#{product.imageFileName}) no-repeat 50% 50%;background-size:cover;width:100px;height:100px;')
+                    td(width='100%', valign='top')
+                      p.m0.imp
+                        a(href='/product/#{product.permalink}', target='_blank') #{product.title}
+                      p.m0 #{product.body}
+                      .clearfix
+                        ul.list-unstyled.list-inline.m0.list-on-left
+                          li
+                            a(href='') For Him
+                          li <strong>2</strong> upvotes
+                    td(width='150', align='right', nowrap)
+                      ul.list-unstyled.list-inline.list-on-left.m0.list-on-right
+                        li
+                          .btn-group
+                            a.btn.btn-default(href='/dashboard/products/edit/#{product.id}') Edit
+                            button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
+                              span.caret
+                            ul.dropdown-menu.pull-right(role='menu')
+                              li
+                                a(href='/dashboard/products/action/#{product.id}/sendToS3') Send to S3
+                              li
+                                a(href='/dashboard/products/action/#{product.id}/remove') Remove

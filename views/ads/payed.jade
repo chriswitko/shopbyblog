@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+  .container
+    .clearfix.container-fix.container-fb.p15
+      .page-header.m0
+        h3.m0 PAYMENT CONFIRMATION
+
+      .row.mt20
+        .col-sm-12
+          form.form-horizontal(role='form', method='post', enctype='multipart/form-data')
+            input(type='hidden', name='_csrf', value=_csrf)
+            .form-group
+              label(class='col-sm-2 control-label', for='url')
+              .col-sm-8
+                | Thank You! Your payment has been confirmed.

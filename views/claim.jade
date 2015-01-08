@@ -1,0 +1,169 @@
+extends layout
+
+block content
+  .container
+    .clearfix.container-fix.container-fb.pt0
+      .page-header.m0.bg-dark.p20.color-white
+        h3.mt0 DOŁĄCZ DO NAS. ZACZNIJ ZARBIAĆ NA SWOICH REKOMENDACJACH.
+        p.mb0 Wypełnij formularz poniżej. Informacje te przyspieszą proces weryfikacji i aktywacji konta blogera.
+
+      .clearfix.p20
+        form.form-horizontal(role='form', method='post', enctype='multipart/form-data')
+          input(type='hidden', name='_csrf', value=_csrf)
+          input(type='hidden', name='blogger[feedlyId]', id='feedlyId', value='')
+          .form-group
+            label.col-sm-2.control-label(for='website') #{__('Blog URL')}
+            .col-sm-8
+              input.form-control(type='text', name='website', id='website', value='#{user.profile.website}', autocomplete='off', autofocus=true, onblur='searchBlog()')
+          #next.form-group
+            .col-sm-offset-2.col-sm-8
+              ul.list-unstyled.list-inline.m0.list-on-left
+                li
+                  button.btn.btn-primary.btn-lg(type='button', onclick='searchBlog()')
+                    | #{__('Next')}
+          #blogger.clearfix.hid
+            .form-group
+              label.col-sm-2.control-label(for='name') #{__('Name')}
+              .col-sm-8
+                input.form-control(type='text', name='name', id='name', value='#{user.profile.name}', autocomplete='off')
+            .form-group
+              label.col-sm-2.control-label(for='locale') #{__('Language')}
+              .col-sm-8
+                select.form-control(name="blogger[locale]", id="locale", autofocus="autofocus", autocorrect="off", autocomplete="off")
+                  option(value="") #{__('-- select --')}
+                  option(value="pl", selected=(user.blogger.locale=='pl')) Polski
+                  option(value="en", selected=(user.blogger.locale=='en')) English
+                  option(value="es", selected=(user.blogger.locale=='es')) Español
+                  option(value="fr", selected=(user.blogger.locale=='fr')) Français
+                  option(value="it", selected=(user.blogger.locale=='it')) Italiano
+                  option(value="hu", selected=(user.blogger.locale=='hu')) Magyar
+                  option(value="nl", selected=(user.blogger.locale=='nl')) Nederlands
+                  option(value="pt", selected=(user.blogger.locale=='pt')) Português
+                  option(value="sv", selected=(user.blogger.locale=='sv')) Svenska
+                  option(value="tr", selected=(user.blogger.locale=='tr')) Türkçe
+                  option(value="ro", selected=(user.blogger.locale=='ro')) Română
+                  option(value="sk", selected=(user.blogger.locale=='sk')) Slovenčina
+                  option(value="cs", selected=(user.blogger.locale=='cs')) Čeština
+                  option(value="el-GR", selected=(user.blogger.locale=='el-GR')) ελληνικά
+                  option(value="ru", selected=(user.blogger.locale=='ru')) Русский
+                  option(value="uk", selected=(user.blogger.locale=='uk')) Українська
+            .form-group
+              label.col-sm-2.control-label(for='country') #{__('Country')}
+              .col-sm-8
+                select.form-control(name="country", id="country", autofocus="autofocus", autocorrect="off", autocomplete="off")
+                  !=citiesInHTML
+            .form-group
+              .clearfix
+                label.col-sm-2.control-label &nbsp;
+                .col-sm-8
+                  .clearfix.container-fb(style='background:#f8f8f8;')
+                    table.table.m0(width='100%')
+                      thead
+                        tr
+                          th(width='50%')
+                            span #{__('Number of Total Unique Users')}
+                            br
+                            small #{__('(in last 12 months)')}
+                          th(width='50%')
+                            span #{__('Number of Total Page Views')}
+                            br
+                            small #{__('(in last 12 months)')}
+                      tbody
+                        tr
+                          td
+                            input.form-control(type='text', placeholder='0', name='blogger[last12mPageUniqueUsers]', id='last12mPageUniqueUsers', value='#{user.blogger.last12mPageUniqueUsers||"0"}')
+                          td
+                            input.form-control(type='text', placeholder='0', name='blogger[last12mPageUniqueViews]', id='last12mPageUniqueViews', value='#{user.blogger.last12mPageUniqueViews||"0"}')
+                      tfoot
+                        tr
+                          td(colspan='2')
+                            small
+                              i.fa.fa-arrow-right
+                              | Potrzebne informacje możesz znaleźć np. w Google Analitycs lub innym narzędziu, które gromadzi statystyki bloga.
+                        tr
+                          td(colspan='2')
+                            small
+                              i.fa.fa-question-circle
+                              | Powyżysze informacje pozwolą nam ustalić wysokość opłat za zamawiane reklamy przez reklamodawców.
+
+            .form-group.mb0.mt20
+              .col-sm-offset-2.col-sm-8
+                .clearfix
+                  p.mt0.imp.small Wpisz adresy do posiadanych kont w sieciach społecznościowych tj. Twitter, Facebook, Instagram oraz YouTube.
+
+            .form-group
+              label.col-sm-2.control-label(for='twitter') #{__('Twitter URL')}
+              .col-sm-8
+                input.form-control(type='text', name='links[twitter]', id='twitter', value='#{user.links.twitter||""}', autocomplete='off', placeholder="Wprowadź adres do profilu na Twitter, np.: https://twitter.com/username")
+            .form-group
+              label.col-sm-2.control-label(for='facebook') #{__('Facebook URL')}
+              .col-sm-8
+                input.form-control(type='text', name='links[facebook]', id='facebook', value='#{user.links.facebook||""}', autocomplete='off', placeholder="Wprowadź adres do profilu na Facebook, np.: https://facebook.com/username")
+            .form-group
+              label.col-sm-2.control-label(for='instagram') #{__('Instagram URL')}
+              .col-sm-8
+                input.form-control(type='text', name='links[instagram]', id='instagram', value='#{user.links.instagram||""}', autocomplete='off', placeholder="Wprowadź adres do profilu na Instagram, np.: https://instagram.com/username")
+            .form-group
+              label.col-sm-2.control-label(for='youtube') #{__('YouTube URL')}
+              .col-sm-8
+                input.form-control(type='text', name='links[youtube]', id='youtube', placeholder='Wprowadź adres do profilu na YouTube, np.: https://youtube.com/channel/username', value='#{user.links.youtube||""}', autocomplete='off')
+
+            .form-group
+              label.col-sm-2.control-label &nbsp;
+              .col-sm-8
+                .checkbox-inline
+                  input(type='checkbox', name='isAgreed', id='isAgreed', checked='checked', velue='1', style='margin-top:2px')
+                  label(for='isAgreed') #{__('I have read and aggree to our')} <a class='underline' href='/terms' target='_blank'>#{__('Terms of Service')}</a>.
+
+
+            .form-group
+              .col-sm-offset-2.col-sm-8
+                ul.list-unstyled.list-inline.m0.list-on-left
+                  li
+                    button.btn.btn-danger.btn-lg(type='submit')
+                      | #{__('Send')}
+
+          .form-group.mb0.mt20
+            .col-sm-offset-2.col-sm-8
+              .clearfix
+                p.m0.imp.small #{__('Have a questions? Write us')} <a href="mailto:hello@shopbyblog.com">hello@shopbyblog.com</a>
+
+
+block js
+  script.
+    (function($){
+      $(function(){
+        $('select#country').selectToAutocomplete();
+        //- $('form').submit(function(){
+          //- alert( $(this).serialize() );
+          //- return false;
+        //- });
+      });
+    })(jQuery);
+
+    function searchBlog() {
+      var api = new $.RestClient('/api/blog/');
+
+      api.add('search');
+
+      var request = api.search.read({q: $('#website').val()});
+      request.done(function (data) {
+        if(data.results&&data.results.length==1) {
+
+          $("select#locale option").filter(function() {
+            return $(this).val() == data.results[0].language;
+          }).prop('selected', true);
+
+          $('#name').val($('#name').val()?$('#name').val():data.results[0].title);
+          $('#twitter').val($('#twitter').val()?$('#twitter').val():'https://twitter.com/' + data.results[0].twitterScreenName);
+          $('#facebook').val($('#facebook').val()?$('#facebook').val():'https://facebook.com/' + data.results[0].facebookUsername);
+
+          // hidden
+          $('#feedlyId').val($('#feedlyId').val()?$('#feedlyId').val():data.results[0].feedId);
+        }
+        $('#next').hide();
+        $('#blogger').removeClass('hid');
+      });
+
+    }
+

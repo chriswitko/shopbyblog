@@ -1,0 +1,198 @@
+extends layout
+
+block content
+  include templates/products.grid.jade
+
+  //- .container.mb20.mt20
+    .row
+      .col-sm-12.align-center
+        img.img-responsive.pull-center(src='http://pagead2.googlesyndication.com/pagead/imgad?id=CICAgKCTiIz9rQEQARgBMggmNu77UqEy2g')
+
+  .container
+    .clearfix.container-fix.container-fb.p20
+      .row
+        .col-sm-12.mb20
+          .clearfix
+            sbb-product-tb(variant='preview', comments="#{product.meta.comments}", product="#{product._id}", active='#{product.isVoted}', permalink='#{product.permalink}', counter='#{product.meta.upvotes}', ispublisher='#{isPublisher}')
+        .col-sm-12
+          .row
+            .col-sm-7.grid-products
+              .clearfix
+                a(href='#{product.postUrl}', target='_blank')
+                  .grid-element(style='position:relative;')
+                    .grid-image.clearfix.img-thumbnail(style='background:#f8f8f8 url(/uploads/l_#{product.imageFileName}) no-repeat 50% 50%;background-size:cover;')
+
+
+            .col-sm-5
+              .row.mb20
+                .col-sm-12
+                  table(width='100%')
+                    tr
+                      //- td.td-counter(valign='top', width='50', nowrap)
+                        sbb-vote(product="#{product.id}", active="#{product.isVoted}", counter='#{product.meta.upvotes}')
+                      td.td-title(valign='top')
+                        h3.m0
+                          a.imp(href='#{product.postUrl}', active='#{product.isVoted}', target='_blank')
+                            | #{product.title}
+                        .clearfix.mt10
+                          .media
+                            a.pull-left(href='/#{product.author.permalink}')
+                              img.media-object.img-circle(src='#{product.author.gravatar()}', width='50')
+                            .media-body
+                              h4.media-heading.m0
+                                ul.list-unstyled.list-inline.small.mb0.list-actions
+                                  li
+                                    a.notimp(href='/#{product.author.permalink}') @#{product.author.permalink}
+                                  li
+                                    time.imp.small(itemprop='createdAt', datetime='#{product.createdAt}')
+                              p.m0 #{product.body.substr(0, 140)}<a href="#{product.postUrl}" target="_blank">#{product.body.length>140?'...':''}</a>
+                                if product.postUrl
+                                  .clearfix
+                                    a.imp.pr0.color-g-green(href='#{product.getLeadUrl()}', target='_blank')
+                                      i.fa.fa-external-link
+                                      | PRZECZYTAJ WIĘCEJ...
+                                  //- ul.list-unstyled.m0
+                                    li
+                                      //- .clearfix(style='line-height:31px;')
+                                        //- .pull-left
+                                          a.imp.color-g-blue(href='#{product.getLeadUrl()}', target='_blank') #{product.getDomainUrl()}
+                                        //- .pull-right
+
+                          //- ul.list-unstyled.list-inline.m0.list-on-left.pull-left
+                            li
+                              a.imp(href='/#{product.author.permalink}')
+                                img.img-circle(src='#{product.author.gravatar()}', width='30')
+                            //- li
+                              | #{__('Posted')}
+                            li
+                              a.imp(href='/#{product.author.permalink}') #{product.author.getName()}
+                            li(style='padding-left:0;')
+                              //- a.underline(href='/product/#{product.permalink}') #{fromNow}
+                              a(href='/product/#{product.permalink}')
+                                time.small.notimp.underline(itemprop="createdAt", datetime="#{product.createdAt}")
+                        //- .clearfix.mt5
+                          p.m0 #{product.body.substr(0, 140)}<a href="#{product.postUrl}" target="_blank">#{product.body.length>140?'...':''}</a>
+
+              .row
+                .col-sm-12
+                  .clearfix.p10.gbox
+                    .row
+                      .col-sm-12
+                        h4.mt0.mb10
+                          //- i.fa.fa-star.color-gold
+                          | #{__('WHERE TO BUY')} &nbsp;
+                          span.pull-right
+                            a.bind(href='', data-content='<span style="font-size:12px;font-weight:normal;">Sponsrowane linki są wykupowane są przez dostawców, którzy w swojej ofercie posiadają ten produkt.</span>', title='Sponsored', data-placement="bottom", data-trigger="focus", data-toggle='popover', rel='popover')
+                              small Sponsorowane &nbsp;
+                                i.fa.fa-info-circle.mr0
+                      .col-sm-12
+                        .clearfix.p102
+                          if ads.length
+                            ul.list-unstyled.m0
+                              each ad in ads
+                                li
+                                  .clearfix(style='line-height:31px;')
+                                    .pull-left
+                                      a.imp.color-g-blue(href='#{ad.ad.getLeadUrl()}', target='_blank') #{ad.ad.getDomainUrl()}
+                                    .pull-right
+                                      a.btn.btn-link.btn-sm.imp.pr0.color-g-green(href='#{ad.ad.getLeadUrl()}', target='_blank') KUP TERAZ
+                          else
+                            ul.list-unstyled.m0
+                              li
+                                .clearfix(style='line-height:31px;')
+                                  .pull-left
+                                    a.imp.color-g-blue(href='https://google.com?#q=#{product.title}', target='_blank') google.com
+                                  .pull-right
+                                    a.btn.btn-link.btn-sm.imp.pr0.color-g-green(href='https://google.com?#q=#{product.title}', target='_blank') KUP TERAZ
+                            //- .clearfix
+                              a(href='/ads/create?pid=#{product.id}') Jeżeli prowadzisz sklep i posiadasz ten produkt w swojej ofercie, to zapoznaj się znaszą ofertą.
+
+
+                            //- hr.m0
+                          //- if product.postUrl
+                            ul.list-unstyled.m0
+                              li
+                                .clearfix(style='line-height:31px;')
+                                  .pull-left
+                                    a.imp.color-g-blue(href='#{product.getLeadUrl()}', target='_blank') #{product.getDomainUrl()}
+                                  .pull-right
+                                    a.btn.btn-link.btn-sm.imp.pr0.color-g-green(href='#{product.getLeadUrl()}', target='_blank') FIND MORE
+                        .clearfix.mt5
+                          a.btn.btn-default.btn-block.imp(href='/ads/create?pid=#{product.id}') Dodaj tutaj link do swojego sklepu &nbsp;
+                            i.fa.fa-angle-right
+
+                .col-sm-12.mt20
+                  .clearfix
+                    .pull-left.mr10
+                      .fb-like(data-href="https://facebook.com/ShopByBlog", data-layout="button", data-action="like", data-show-faces="true", data-share="false")
+                    .pull-left
+                      a.twitter-share-button(href="https://twitter.com/share", data-url="https://twitter.com/ShopByBlog", data-via="shopbyblog", data-count="none")
+
+                if votes&&votes.length
+                  .col-sm-12.mt20
+                    h4.mt0.mb10 #{product.meta.upvotes} UPVOTES
+
+                  .col-sm-12
+                    ul.list-unstyled.list-inline.m0.list-on-left.list-voters
+                      each vote in votes
+                        li
+                          a(href='/#{vote.user.permalink}')
+                            img.img-circle(src='#{vote.user.gravatar()}', width='30')
+
+                //- .col-xs-12.mt20.align-center
+                  .clearfix
+                    small.notimp REKLAMA
+                  .clearfix
+                    <embed type="application/x-shockwave-flash" src="http://img.turn.com/img-data/e4319076d3b74b8ba91514515889765d_1.swf?clickTAG=http%3A%2F%2Fr.turn.com%2Fr%2Fclick%3Fid%3DDD3tvb2ezDhWjg0A6QMBAA%26url%3Dhttp%253A%252F%252Fallegro.pl%252Fzapachy-dla-mezczyzn-wody-toaletowe-17757%253FbuyNew%253D1%2526counters%253D1%2526offerTypeBuyNow%253D1%2526order%253Dp%2526price_enabled%253D1%2526price_from%253D69%2526utm_source%253Dprogrammatic%2526utm_medium%253Dcadreon%2526utm_content%253Dmodaiuroda_wodytoaletowe_300x250%2526utm_campaign%253Dzima2014_2015%26invsrc%3D12%26tld%3Dszafa.pl" width="300" height="250" style="undefined" id="ad" name="ad" quality="high" wmode="opaque">
+
+
+  sbb-people(title='SUGGESTED USERS', theme='default', variant='whotofollow', permalink='#{user?user.permalink:""}', follower='#{user?user._id:""}')
+
+  a(id='comments')
+  .container
+    .clearfix.container-fix.container-fb.p20
+      .row
+        .col-sm-12
+          h4.mt0.mb10 #{__('COMMENTS')} (<span id="commentsCounter">#{product.meta.comments}</span>)
+        .col-sm-12
+          if (user)
+            .clearfix
+              form.bind(name='commentForm')
+                input(type='hidden', id='_csrf', name='_csrf', value=_csrf)
+                textarea.form-control(id='commentBody', name='commentBody', placeholder="#{__('What are your thoughts on this product?')}", rows='3')
+                .clearfix.mt10
+                  input.btn.btn-sm.btn-default(type='submit', value="#{__('Submit')}")
+          else
+            .clearfix.p10.bg-clouds
+              p.m0 #{__('Please sign in to vote and comment for this product.')}
+          .clearfix.mt20
+            #comments-area
+
+
+block js
+
+  script.
+    $(document).ready(function() {
+      window.SBB_PRODUCT = !{JSON.stringify(product)};
+
+      var validator = new FormValidator('commentForm', [
+        {
+          name: 'commentBody',
+          rules: 'required'
+        }
+      ], function(errors, event) {
+        if (errors.length > 0) {
+          $('.p-err').remove();
+          for(i=0;i<=errors.length-1;i++) {
+            $('#'+errors[i].id).before('<p class="p-err small color-red">'+errors[i].message+'</p>');
+          }
+        } else {
+          $('.p-err').remove();
+          observable.trigger("commentAdd", {SBB_PRODUCT: window.SBB_PRODUCT, product_id:"#{product.id}", user_id:"#{user?user.id:""}", body: $("#commentBody").val()})
+        }
+      });
+
+
+      if($('#comments-area')) SBBComment.uiGetComments({product_id: window.SBB_PRODUCT._id, limit: 5});
+
+    })

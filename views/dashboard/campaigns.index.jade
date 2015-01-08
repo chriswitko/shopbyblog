@@ -1,0 +1,71 @@
+extends ../layout.dashboard.jade
+
+block content
+  .container-wide
+
+    .page-header.mt0.pb0
+      h3.m0 CAMPAIGNS
+
+    .container-wide.container-fix.container-fb.pb0.mb0.mt0.p15
+      .row
+        .col-sm-12
+          table.table.m0(width='100%')
+            if pagination
+              thead
+                tr
+                  th(width='10')
+                  th Blogger
+                  th Advertiser
+                  th Product
+                  th Start/End
+                  th Total (PLN)
+                  th Paid
+                  th &nbsp;
+
+            tbody
+              if campaigns
+                each campaign, i in campaigns
+                  tr
+                    td
+                      i.fa.fa-play.color-red
+                    td
+                      a(href='/#{campaign.blogger.permalink}', target='_blank') #{campaign.blogger.getName()}
+                    td
+                      a(href='/#{campaign.user.permalink}', target='_blank') #{campaign.user.getName()}
+                    td
+                      a(href='/product/#{campaign.product.permalink}', target='_blank', rel='tooltip', title='#{campaign.product.title}') Product
+                    td
+                      p.m0
+                        if campaign.start
+                          | #{moment(campaign.start).format('DD/MM/YYYY HH:mm')} - #{moment(campaign.start).format('DD/MM/YYYY HH:mm')}
+                        else
+                          | &mdash;
+                    td
+                      p.m0 #{sprintf('%0.2f', campaign.price.totalPrice)} zł
+                    td
+                      p.m0
+                        i.fa(class=campaign.price.isPaid?'fa-check':'fa-minus')
+                    td(width='150', align='right', nowrap)
+                      ul.list-unstyled.list-inline.list-on-left.m0.list-on-right
+                        li
+                          .btn-group
+                            a.btn.btn-default(href='/dashboard/campaigns/edit/#{campaign.id}') Edit
+                            button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
+                              span.caret
+                            ul.dropdown-menu.pull-right(role='menu')
+                              li
+                                a(href='/dashboard/campaigns/action/#{campaign.id}/paid') Mark as Paid
+                              li
+                                a(href='/dashboard/campaigns/action/#{campaign.id}/unpaid') Mark as Unpaid
+                              li
+                                a(href='/dashboard/campaigns/action/#{campaign.id}/start') Start
+                              li
+                                a(href='/dashboard/campaigns/action/#{campaign.id}/cancel') Cancel
+                        //- li
+                          a.btn.btn-default(href='') Remove
+
+    .container-wide
+      .row
+        .col-sm-12
+          .clearfix.mt10.align-right
+            p.m0.small Found <strong>#{pagination.total}</strong> campaigns

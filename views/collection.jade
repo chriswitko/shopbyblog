@@ -1,0 +1,90 @@
+extends layout
+
+block content
+  include templates/products.grid.jade
+  include templates/sections.grid.jade
+  include templates/collections.grid.jade
+
+  //- .container-wide.p10.bg-clouds
+    .container
+      .row
+        .col-sm-2.align-center.hidden-xs
+          img.img-circle.img-responsive(src='https://s3.amazonaws.com/ph-s3/list-assets/nas-pic.png', width='126', height='126')
+        .col-sm-10
+          h3.m0 Bartek Olszewski Run Shoes
+          p My best selection of shoes to run, vote for your favorite.
+          .clearfix.pull-left(style='position:relative;')
+            .fb-like.pull-left(style='margin-right:10px;', data-href="https://facebook.com/ShopByBlog", data-layout="button", data-action="like", data-show-faces="true", data-share="false")
+            .tw-button.pull-left
+              a.twitter-share-button(href="https://twitter.com/share", data-url="https://twitter.com/ShopByBlog", data-via="shopbyblog", data-count="none")
+
+  .container.container-clean.mt0
+    .row
+      .col-sm-12.align-center.hidden-xs
+        img.img-circle.img-responsive.pull-center(src='/uploads/s_#{collection.imageFileName}', width='126', height='126')
+      .col-sm-12.align-center
+        h3.mt10.mb10.lato.lato900 #{collection.title} <span class="notimp lato100">by</span> <a href="">Chris Witko</a>
+        p #{collection.body} &nbsp;
+        .clearfix.pull-center(style='position:relative;')
+          .clearfix.pull-center
+            table.pull-center.m0
+              tr
+                td
+                  .clearfix(style='margin-top:-4px!important;')
+                    .fb-like.mr10(data-href="https://facebook.com/ShopByBlog", data-layout="button", data-action="like", data-show-faces="true", data-share="false")
+                td
+                  a.twitter-share-button(href="https://twitter.com/share", data-url="https://twitter.com/ShopByBlog", data-via="shopbyblog", data-count="none")
+
+      if user
+        .col-sm-12.align-center.mt10
+          ul.list-unstyled.list-inline.m0
+            if (user&&user.role>=2)
+              li
+                a(href='/collection/#{collection.permalink}/edit')
+                  i.fa.fa-pencil
+                  | Edit
+              li
+                a(href='#')
+                  i.fa.fa-code
+                  | Get Widget
+
+    //- if !user
+      .row.mb20.mt20
+        .col-xs-12
+          include subscribe
+
+  //- .container.hidden-xs
+    .row
+      .col-xs-12
+        ul.nav.nav-tabs(role="tablist")
+          li.active(role="presentation")
+            a(href="/{{profile.permalink}}", role="tab") Products
+          li(role="presentation")
+            a(href="/notifications", role="tab") Get Widget &nbsp;
+              sup.imp EARN MONEY
+
+  .container.container-grid.pb0.mb20.pt0.mt0
+    .col-sm-12
+      .row
+        .clearfix
+          #results-area
+
+block js
+
+  script.
+    $(document).ready(function() {
+      var SBB_COLLECTION = !{JSON.stringify(collection)};
+
+      if($('#results-area')) {
+        SBBProduct.getList({section: SBB_COLLECTION.section, tags: SBB_COLLECTION.factors.tags?SBB_COLLECTION.factors.tags.join(','):''}, function(data) {
+          var source = $("#grid-item-product-only").html();
+
+          var template = Handlebars.compile(source);
+
+          var context = {products: data.products};
+          var html    = template(context);
+
+          $('#results-area').html(html);
+        });
+      }
+    })

@@ -1,0 +1,272 @@
+// Colors
+// -------------------------
+
+// Base colors
+@color-marker: #E74C3C;
+@color-silver: #a8a8a8;
+@color-silver-dark: #676767;
+@color-silver-light: rgb(204, 214, 221);
+@color-clouds: #F2F2F2;
+@color-clouds-light: rgba(242, 242, 242, 0.8);
+@color-light: #f5f8fa;
+@color-alizarin: #E74C3C;
+@color-asbestos: #7F8C8D;
+@color-pomegranate: #C0392B;
+@color-wetasphalt: #34495E;
+@color-sunflower: #f1c40f;
+@color-orange: #F39C12;
+@color-facebook: #3b5998;
+@color-twitter: #00a0d1;
+@color-googleplus: #db4a39;
+@color-instagram: #3f729b;
+@color-success-dark: #05A5EA;
+@color-success-light: #00AEFA;
+@color-red: #F70031;
+@color-red-light: #FA023C;
+@color-blue: #3698d4;
+@color-blue-light: #24A3DC;
+@color-blue-dark: #3b5998;
+@color-gold: #F5C031;
+@color-bg: rgb(235, 236, 237);
+@color-grad: linear-gradient(#d9dcde,#eaecee),#e8eaec;
+@color-gray: #f8f8f8;
+@color-pink: #FF285B;
+@color-new-green: #57CE89;
+@color-new-yellow-light: rgb(247, 253, 202);
+@color-new-yellow-dark: rgb(254, 207, 113);
+@color-new-pink: rgb(240, 119, 108);
+@color-new-pink-light: rgb(219, 157, 190);
+@color-new-violet: rgb(196, 156, 222);
+@color-new-blue: rgb(102, 154, 225);
+@color-new-blue-light: rgb(98, 194, 228);
+
+
+@gray-lighter: #f5f5f5;
+@gray-light: #e0e0e0;
+@gray: #737373;
+@gray-dark: #404040;
+@gray-darker: #121212;
+
+@brand-primary: @color-clouds;
+@brand-success: #0f9d58;
+@brand-warning: #f4b400;
+@brand-danger: #d80017;
+@brand-info: #5bc0dd;
+
+// Footer
+// -------------------------
+
+footer {
+  color: @gray-darker;
+  // background-color: @gray-darker;
+
+  a:hover {
+    color: @gray-darker;
+  }
+}
+
+// Typography
+// -------------------------
+
+@font-size-base: 13px;
+@font-family-base: sans-serif;
+@headings-font-family: sans-serif;
+@headings-font-weight: 700;
+@text-color: @gray-darker;
+@link-color: @brand-primary;
+@link-hover-color: @gray-darker;
+
+a { -webkit-transition: color .4s; transition: color .4s; color: #000; }
+
+a:link, a:visited { color: #000; }
+
+a:hover { color: @color-red; }
+
+a:active { -webkit-transition: color .3s; transition: color .3s; color: #000; }
+
+.link { text-decoration: none; }
+
+// Buttons
+a.btn-danger {
+  background-color: @color-red;
+  color: white;
+}
+
+a.btn-default {
+  color: black;
+}
+
+button.btn-primary, a.btn-primary {
+  background-color: black;
+  color: white;
+}
+
+.btn-success {
+  color: white;
+}
+
+a.btn-success {
+  color: white;
+}
+
+
+// a {
+//   color: @color-silver-dark;
+//   // transition: all .4s cubic-bezier(.24,.45,.46,.92);
+
+//   &:hover {
+//     text-decoration: none;
+//   }
+// }
+
+ul,
+p {
+  font-family: 'Raleway', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+}
+
+.text-danger {
+  color: @brand-danger;
+}
+
+// Dropdowns
+// -------------------------
+
+@dropdown-link-color: @gray-darker;
+
+.dropdown-menu > li > a {
+  font-weight: 300;
+}
+
+// Buttons
+// -------------------------
+
+@btn-default-bg: @gray-lighter;
+@btn-default-color: @gray-darker;
+
+.btn {
+  // padding: 10px 16px;
+  border: 0;
+  border-radius: 3px;
+  transition: all .4s cubic-bezier(.24,.45,.46,.92);
+
+  &:hover {
+    color: #fff;
+    background-color: @gray-darker;
+  }
+}
+
+.btn-social {
+  padding: 10px 20px 10px 50px;
+
+  :first-child {
+    width: 38px;
+    line-height: 38px;
+  }
+}
+
+.btn-link {
+
+  &:hover {
+    color: @gray-darker;
+    text-decoration: none;
+    background-color: transparent;
+  }
+}
+
+// Forms
+// -------------------------
+
+@input-border-radius: 2px;
+@input-border-focus: #999;
+@input-border: #f0f0f0;
+@input-color: #444;
+@input-color-placeholder: #999;
+// @input-height-base: 44px;
+
+// Form states and alerts
+// -------------------------
+
+@state-success-bg: @brand-success;
+@state-info-bg: @brand-primary;
+@state-warning-bg: @brand-warning;
+@state-danger-bg: @brand-danger;
+
+.alert {
+  font-family: 'Raleway', sans-serif;
+  color: #fff;
+}
+
+.form-admin {
+  .control-admin {
+    background-color: #ffffcc;
+  }
+}
+
+// Navbar
+// -------------------------
+
+@navbar-height: 50px;
+@navbar-default-bg: rgba(255,255,255,0.95);
+@navbar-default-link-color: @gray-darker;
+@navbar-default-link-active-color: @color-silver-dark;
+@navbar-default-link-active-bg: transparent;
+@navbar-default-link-hover-color: @color-silver-dark;
+@navbar-default-link-hover-bg: transparent;
+@navbar-default-brand-color: @gray-darker;
+@navbar-default-brand-hover-color: @color-silver-dark;
+
+.navbar-default {
+  border: 0;
+  box-shadow: 0 1px 5px rgba(0,0,0,.15);
+
+  .navbar-nav {
+    > li > a {
+      transition: color .4s cubic-bezier(.24,.45,.46,.92);
+    }
+    > li > ul.dropdown-menu > li.active a {
+      color: @color-silver-dark;
+    }
+  }
+}
+
+.navbar-dark {
+  background-color: black;
+  border: 0;
+  box-shadow: 0 1px 5px rgba(0,0,0,.15);
+
+  .navbar-nav {
+    > li > a {
+      color: white;
+      -webkit-font-smoothing: subpixel-antialiased;
+      transition: color .4s cubic-bezier(.24,.45,.46,.92);
+    }
+    > li > ul.dropdown-menu > li.active a {
+      color: @color-silver-dark;
+    }
+  }
+}
+
+.navbar-white {
+  background-color: white;
+  border: 0;
+  box-shadow: 0 1px 5px rgba(0,0,0,.15);
+
+  .navbar-nav {
+    > li > a {
+      color: black;
+      -webkit-font-smoothing: subpixel-antialiased;
+      transition: color .4s cubic-bezier(.24,.45,.46,.92);
+    }
+    > li > ul.dropdown-menu > li.active a {
+      color: @color-silver-dark;
+    }
+  }
+}
+
+/* Alerts */
+.alert-success {
+  border-color: @color-gray;
+  background-color: @color-new-green;
+}

@@ -1,0 +1,20 @@
+extends ../layout
+
+block content
+  .container.container-fix
+    .row.mb20
+      .col-sm-8
+        h1.mt0.mb10 Widget Demo
+        p.m0 This is simple projection of out widget for blogs and websites.
+        br
+
+        section
+          h2 Who will see my ad?
+          p Product Hunt surfaces the best new products, every day. It's a place for product-loving enthusiasts to share and geek out about the latest mobile apps, websites, hardware projects, and tech creations.
+      .col-sm-4.align-center
+        <!-- SnapWidget -->
+        //- http://snapwidget.com/in/?h=YW1hemluZ3xpbnwxMjV8M3wzfHxub3w1fG5vbmV8b25TdGFydHx5ZXN8eWVz&ve=131214
+        <script src="/js/widget/sbbwidget.js"></script>
+        <iframe src="/js/widget/bootstrap.html?wid=XX1125" title="Instagram Widget" class="snapwidget-widget" allowTransparency="true" frameborder="0" scrolling="no" style="border:none; overflow:hidden; width:100%;"></iframe>
+
+

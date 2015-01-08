@@ -1,0 +1,190 @@
+extends ../layout
+
+block content
+  .container
+    .clearfix.container-fix.container-fb.p15
+      .page-header.m0
+        h3.m0 ORDER YOUR AD
+
+      .row.mt20
+        .col-sm-12
+          form.form-horizontal(id='orderForm', role='form', method='post', enctype='multipart/form-data')
+            input(type='hidden', name='_csrf', value=_csrf)
+            //- input(type='hidden', name='mode', value=product.permalink?'edit':'add')
+            //- input(type='hidden', name='id', value=product.permalink?product.id:'')
+            .form-group
+              label(class='col-sm-2 control-label', for='url')
+              .col-sm-8
+                | Enter URL to website where customer can buy selected product.
+            .form-group
+              label(class='col-sm-2 control-label', for='url') URL
+              .col-sm-8
+                input.form-control(type='url', name='url', id='url', value=campaign.url, placeholder='Enter URL to website', autocomplete='off', autofocus=true)
+            .form-group
+              label(class='col-sm-2 control-label', for='url') &nbsp;
+              .col-sm-8
+                p.imp.color-red Estimated price per day: #{currentLang=='pl'?pricing[0].totalPerDayFormatted:pricing[0].euro.totalPerDayFormatted}
+
+                .clearfix
+                  p.imp What you will get:
+                  .clearfix
+                    ul
+                      li This product will be marked as promoted on bloggers website: <strong>warszaskibiegacz.pl</strong>
+                      li Your link will be placed next to this product by the time of campaign
+                      li We will send notification to our users who follow this blogger and upvote this product
+                .clearfix
+                  p.imp Select your option:
+                .clearfix
+                  table.table.table-striped.table-bordered(width='100%')
+                    tr
+                      td(width='30')
+                        input(type='radio', name='days', value='5')
+                      td(width='200')
+                        span 5 days
+                      td
+                        span #{currentLang=='pl'?pricing[0].totalBruttoFormatted:pricing[0].euro.totalBruttoFormatted}
+                    tr
+                      td
+                        input(type='radio', name='days', value='10')
+                      td
+                        span 10 days
+                      td
+                        span #{currentLang=='pl'?pricing[1].totalBruttoFormatted:pricing[1].euro.totalBruttoFormatted}
+                    tr
+                      td
+                        input(type='radio', checked='checked', name='days', value='15')
+                      td.imp.color-red
+                        span 15 days
+                        span &nbsp;&nbsp;
+                        span.badge
+                          i.fa.fa-star.color-red
+                          span.color-black Popular
+                      td.imp.color-red
+                        span #{currentLang=='pl'?pricing[2].totalBruttoFormatted:pricing[2].euro.totalBruttoFormatted}
+                    tr
+                      td
+                        input(type='radio', name='days', value='20')
+                      td
+                        span 20 days
+                      td
+                        span #{currentLang=='pl'?pricing[3].totalBruttoFormatted:pricing[3].euro.totalBruttoFormatted}
+                    tr
+                      td
+                        input(type='radio', name='days', value='25')
+                      td
+                        span 25 days
+                      td
+                        span #{currentLang=='pl'?pricing[4].totalBruttoFormatted:pricing[4].euro.totalBruttoFormatted}
+                    tr
+                      td
+                        input(type='radio', name='days', value='30')
+                      td
+                        span 30 days
+                      td
+                        span #{currentLang=='pl'?pricing[5].totalBruttoFormatted:pricing[5].euro.totalBruttoFormatted}
+
+            //- .form-group
+              label(class='col-sm-2 control-label', for='start')
+              .col-sm-2
+                small.strong.imp Price
+                input.form-control(type='text', name='price', id='price', placeholder='0.00', autocomplete='off')
+              .col-sm-2
+                small.strong.imp Currency
+                select.form-control(name='currency', id='currency')
+                  option(value='1') PLN
+            //- .form-group
+              label(class='col-sm-2 control-label', for='start') Days
+              .col-sm-8
+                p.form-control-static 5
+            //- .form-group
+              label(class='col-sm-2 control-label', for='start')
+              .col-sm-8
+                | Enter start and end date of campaign:
+            //- .form-group
+              label(class='col-sm-2 control-label', for='start')
+              .col-sm-2
+                small.strong.imp Start
+                input.form-control(type='text', name='start', id='start', value=moment(campaign.start).format('DD/MM/YYYY'), placeholder='', autocomplete='off')
+              .col-sm-2
+                small.strong.imp End
+                input.form-control(type='text', name='end', id='end', value=moment(campaign.end).format('DD/MM/YYYY'), placeholder='', autocomplete='off')
+
+            .form-group.mb0.mt20
+              .col-sm-offset-2.col-sm-8
+                ul.list-unstyled.list-inline.m0.list-on-left
+                  li
+                    button.btn.btn-danger(type='submit')
+                      | Verify &amp; Pay
+                  li
+                    a.btn.btn-link(href='')
+                      | Cancel
+
+            .form-group.mb0.mt20
+              .col-sm-offset-2.col-sm-8
+                .clearfix
+                  p.m0.imp.small Have a questions? Write us <a href="mailto:hello@shopbyblog.com">hello@shopbyblog.com</a>
+
+//-
+  include faq.jade
+
+block js
+
+  script.
+    $(document).ready(function() {
+      var startDate = new Date();
+      startDate.setDate(startDate.getDate() + 1);
+
+      $( '#start' ).pickadate({
+          format: 'dd/mm/yyyy',
+          min: new Date(),
+          firstDay: 1,
+          showMonthsShort: true,
+          formatSubmit: 'yyyy-mm-dd',
+          hiddenName: true,
+          onSet: function( event ) {
+              if ( event.select ) {
+                $('#end').pickadate('picker').set('min', +1);
+                //- alert('ok:'+this.get());
+                  //- this.$node.
+                  //-     closest( '.js__fieldset' ).
+                  //-     after( '<div class="section__block section__block--notification-green">' +
+                  //-         '<p>Values to submit: ' +
+                  //-             '<code>' + this.get() + '</code>' +
+                  //-             ' and ' +
+                  //-             '<code>' + this.get( 'select', 'yyyy/mm/dd' ) + '</code>' +
+                  //-         '</p>' +
+                  //-         '<p>Using the names: ' +
+                  //-             '<code>' + this.$node[0].name + '</code>' +
+                  //-             ' and ' +
+                  //-             '<code>' + this._hidden.name + '</code>' +
+                  //-         '</p></div>'
+                  //-     )
+              }
+          }
+      })
+
+      $( '#end' ).pickadate({
+          format: 'dd/mm/yyyy',
+          min: $('#start').attr('data-value'),
+          firstDay: 1,
+          showMonthsShort: true,
+          formatSubmit: 'yyyy-mm-dd',
+          hiddenName: true,
+      })
+
+      $('#end').pickadate('picker').set('min', +1);
+    })
+
+    var validator = new FormValidator('orderForm', [
+      {
+        name: 'url',
+        rules: 'required'
+      }
+    ], function(errors, event) {
+      if (errors.length > 0) {
+        $('.p-err').remove();
+        for(i=0;i<=errors.length-1;i++) {
+          $('#'+errors[i].id).before('<p class="p-err small color-red">'+errors[i].message+'</p>');
+        }
+      }
+    });

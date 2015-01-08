@@ -1,0 +1,31 @@
+doctype html
+html
+  head(prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#")
+    include partials/head
+
+    block jshead
+  body(class=bg?'with-static-bg':'', style='background:black;')
+    if !hideNav
+      include partials/navbar
+
+    .container
+      include partials/flash
+
+    if !user&&!hideSubscriptionBox
+      .container.container-fix.pb0.hidden-xs
+        .row.mb20
+          .col-xs-12
+            include subscribe
+
+    block content
+
+    if !hideFooter
+      include partials/footer
+
+    != js('application')
+
+    if currentLang=='pl'
+        script(src='/js/lib/locale/pl.js')
+
+
+    block js

@@ -1,0 +1,76 @@
+extends ../layout.dashboard.jade
+
+block content
+  .container
+
+    .page-header.mt20
+      h3 SECTIONS
+
+    .row.mb20
+      .col-sm-12
+        ul.list-unstyled.list-inline.m0.list-on-left
+          li
+            a.btn.btn-danger.bind(href='', onclick='SBB.hello()') Create
+          li
+            .btn-group
+              button.btn.btn-default(type='button') All users
+              button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
+                span.caret
+              ul.dropdown-menu(role='menu')
+                li
+                  a(href='#') All users
+                li.divider
+                li
+                  a(href='#') Users
+                li
+                  a(href='#') Moderators
+                li
+                  a(href='#') Admins
+                li.divider
+                li
+                  a(href='#') Verified
+
+
+
+    .row.mb20
+      .col-sm-12
+        table.table.m0
+          thead
+            tr
+              th(width='12', nowrap)
+              th(width='100%') Section Name
+              th
+          tbody
+            tr
+              td.align-middle(width='12', nowrap, align='center')
+                i.fa.fa-circle.notimp
+              td.align-middle
+                a(href='') For Him
+              td.align-middle(align='right', nowrap)
+                ul.list-unstyled.list-inline.list-on-left.m0.list-on-right
+                  li
+                    a.btn.btn-default(href='') Edit
+                  li
+                    a.btn.btn-default(href='') Remove
+            tr
+              td.align-middle(width='12', nowrap, align='center')
+                i.fa.fa-circle.imp
+              td.align-middle
+                a(href='') For Her
+              td.align-middle(align='right', nowrap)
+                ul.list-unstyled.list-inline.list-on-left.m0.list-on-right
+                  li
+                    a.btn.btn-default(href='') Edit
+                  li
+                    a.btn.btn-default(href='') Remove
+            tr
+              td.align-middle(width='12', nowrap, align='center')
+                i.fa.fa-circle.imp
+              td.align-middle
+                a(href='') Home & Design
+              td.align-middle(align='right', nowrap)
+                ul.list-unstyled.list-inline.list-on-left.m0.list-on-right
+                  li
+                    a.btn.btn-default(href='') Edit
+                  li
+                    a.btn.btn-default(href='') Remove

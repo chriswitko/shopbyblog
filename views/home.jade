@@ -1,0 +1,71 @@
+extends layout
+
+block content
+  include templates/products.grid.jade
+  include templates/sections.grid.jade
+
+
+  if !user
+    #cookie-policy.container.mb0.mt20.pb0.hid
+      .row
+        .col-sm-12
+          .panel.panel-default.mb0
+            .panel-body
+              p.m0 #{__("Cookies help us deliver our services. By using our services, you agree to our use of cookies.")}
+              .clearfix.mt10
+                a.btn.btn-danger.bind(href='', onclick='$.cookie("cookie-policy-box", 1);$("#cookie-policy").hide()') Ok
+                a.btn.btn-link.notimp(href='/privacy') Learn more
+
+  if !user
+    .container.container-clean.pb0.with-floor2.mb0
+      .row
+        include partials/home.headline.jade
+
+    include static/for-bloggers-signup
+
+  sbb-people(title='#{__("RECOMMENDED BLOGS")}', theme='default', variant='whotofollow', permalink='#{user?user.permalink:""}', follower='#{user?user._id:""}')
+
+  .container.container-grid.pb0.mb20.pt0
+    .col-sm-12
+      .row
+        .clearfix
+          #results-area
+
+    .row.mb15.mt20
+      .col-sm-12.align-center
+        a.btn.btn-primary.btn-lg.btn-block.bind(href='', onclick='getProducts()') #{__('load more...')}
+
+
+block js
+
+  script.
+    $(document).ready(function() {
+      var page = 0;
+
+      if($.cookie('cookie-policy-box')!=1) $('#cookie-policy').removeClass('hid');
+
+      $(".grid-element").fitText();
+
+      window.getProducts = function(criteria) {
+        if(!criteria) criteria = {}
+
+        page++;
+        criteria.page = page;
+
+        SBBProduct.getList(criteria, function(data) {
+
+          var source = $("#grid-item-product").html();
+          if(page>1) source = $("#grid-item-product-next").html();
+
+          var template = Handlebars.compile(source);
+
+          var context = {products: data.products};
+          var html    = template(context);
+
+          $('#results-area').append(html);
+          SBB.initResizeGrid();
+        });
+      }
+
+      if($('#results-area')) window.getProducts();
+    })

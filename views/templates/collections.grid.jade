@@ -1,0 +1,18 @@
+script(id='grid-item-collection', type='text/x-handlebars-template').
+  {{#each collections}}
+
+    <div class="col-sm-3 col-xs-6 mb15">
+      <div style="position:relative;" class="grid-element">
+        <a href="/collection/{{collection.permalink}}">
+          <div style="background:#f8f8f8 url(/uploads/s_{{collection.imageFileName}}) no-repeat 50% 50%;background-size:cover;" class="grid-image clearfix">
+            <div style="width:100%;position:relative;background:rgba(255, 255, 255, 0.4);height:100%;" class="grid-overfly">
+              <div style="position:absolute;left:0;text-align:center;width:100%;" class="grid-overfly-txt">
+                <h1 class="m0 p10 grid-txt">{{collection.title}}</h1>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+  {{/each}}

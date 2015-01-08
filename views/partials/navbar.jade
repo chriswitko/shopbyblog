@@ -1,0 +1,119 @@
+.navbar.navbar-default.navbar-fixed-top.navbar-white
+  .container
+    .navbar-header
+      button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+        span.sr-only Toggle navigation
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      a.navbar-brand(href='/',  style='padding-top:3px')
+        img(src='/img/logo_vector_1.png', height='44')
+    .collapse.navbar-collapse
+      ul.nav.navbar-nav
+        li(class=(section&&section.id=='1')?'active':undefined)
+          a(href='/for-him') #{__('Inspirations')}
+        //- li(class=(section&&section.permalink=='deals')?'active':undefined)
+          a(href='/deals')
+            | #{__("Following")}
+        //- li(class=(section&&section.id=='2')?'active':undefined)
+          a(href='/for-her') #{__('Bloggers')}
+        //- li(class=(section&&section.id=='1')?'active':undefined)
+        //-   a(href='/for-him') #{__('For Him')}
+        //- li(class=(section&&section.id=='2')?'active':undefined)
+        //-   a(href='/for-her') #{__('For Her')}
+        //- li(class=(section&&section.id=='3')?'active':undefined)
+        //-   a(href='/home-and-design') #{__('Home & Design')}
+        li(class=(section&&section.permalink=='deals')?'active':undefined)
+          a(href='/deals')
+            | #{__("Today's Deals")}
+      ul.nav.navbar-nav.navbar-right
+        if !user
+          li(class=(section&&section.permalink=='signin')?'active':undefined)
+            a(href='/login') #{__('Login')}
+          li(class=(section&&section.permalink=='signup')?'active':undefined)
+            a(href='/signup') #{__('Sign up')}
+        else
+          - if (user.role>=2||user.isVerified)
+            li.hidden-xs(class=(section&&section.permalink=='add')?'active':undefined)
+              a.pr0(href='/add', rel='tooltip', title='Add Product', data-placement='bottom')
+                i.fa.fa-plus.hidden-xs
+          li.hidden-xs(class=(section&&section.permalink=='invites')?'active':undefined)
+            a.pr0(href='/invites', rel='tooltip', title='Invite Friends', data-placement='bottom')
+              i.fa.fa-envelope
+          li.hidden-xs(class=(section&&section.permalink=='add')?'active':undefined)
+            a.pr0(href='/search', rel='tooltip', title='Search...', data-placement='bottom')
+              i.fa.fa-search
+          li.hidden-xs(class=title=='Account Management'?'active':undefined)
+            a.dropdown-toggle(href='#', style='padding-right:0', data-toggle='dropdown')
+              //- .user-badge-large(style='position:absolute;left:40px;top:0;z-index:10')
+              if user.profile.picture
+                img.img-circle(src='#{user.profile.picture}')
+              else
+                img.img-circle(src='#{user.gravatar(60)}')
+            ul.dropdown-menu
+              li
+                a(href='#{user.getPermalink()}')
+                  | #{__('My Profile')}
+              - if (user&&(user.isVerified||user.role>=2))
+                li
+                  a(href='/widgets/blogger?eid=#{user.id}')
+                    | #{__('Create Widget')}
+                li
+                  a(href='/settings#insights')
+                    | Rozliczenia
+              li
+                a(href='/invites')
+                  | #{__('Invite Friends')}
+              li
+                a(href='/settings')
+                  | #{__('Settings')}
+              - if (user.role>=2)
+                li.divider
+                li
+                  a(href='/dashboard')
+                    | #{__('Dashboard')}
+                li
+                  a(href='/collection/add')
+                    | #{__('Create Collection')}
+              li.divider
+              li
+                a(href='/logout')
+                  | #{__('Logout')}
+          li.dropdown.hidden-lg.hidden-md.hidden-sm
+            a.dropdown-toggle(href='#', data-toggle='dropdown')
+              | #{__('More')}&nbsp;
+              i.caret
+            ul.dropdown-menu
+              li
+                a(href='#{user.getPermalink()}')
+                  | #{__('My Profile')}
+              - if (user&&(user.isVerified||user.role>=2))
+                li
+                  a(href='/widgets/blogger?eid=#{user.id}')
+                    | #{__('Create Widget')}
+                li
+                  a(href='/settings#insights')
+                    | #{__('Insights')}
+              li
+                a(href='/invites')
+                  | #{__('Invite Friends')}
+                  if (user.meta.emailInvitesLeft&&currentLang=='en')
+                    span.badge.badge-danger.pull-right #{user.meta.emailInvitesLeft}
+              li
+                a(href='/notifications')
+                  | #{__('Notifications')}
+              li
+                a(href='/settings')
+                  | #{__('Settings')}
+              - if (user.role>=2)
+                li.divider
+                li
+                  a(href='/dashboard')
+                    | #{__('Dashboard')}
+                li
+                  a(href='/collection/add')
+                    | #{__('Create Collection')}
+              li.divider
+              li
+                a(href='/logout')
+                  | #{__('Logout')}

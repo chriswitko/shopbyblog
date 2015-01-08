@@ -1,0 +1,61 @@
+extends layout
+
+block content
+  include templates/products.grid.jade
+  include templates/sections.grid.jade
+  include templates/collections.grid.jade
+
+  //- .container.container-grid.mt10
+    //- .row.mb10.slicer.pb20
+      .col-sm-9.pt10
+        h3.m0 Search results for <a href="/search?q=#{q}">#{q}</a>
+      .col-sm-3
+        form(action="/search")
+          .search-area(style="position:relative;display:block")
+            <div style="position:absolute;top:7px;left:10px;" class="search-icon"><i class="fa fa-search notimp"></i></div>
+            <input type="search" name="q" placeholder="Search for products..." style="border-radius:20px;padding-left:25px;" class="form-control mt5" value="#{q}" autocomplete="off"/>
+    //- .row.mb10.slicer.pb20
+      .col-sm-12.align-center
+        h3.m0 Search results for <a href="/search?q=#{q}"><u>#{q}</u></a>
+      .col-sm-12.align-center.mt15
+        form(action="/search")
+          .search-area(style="position:relative;display:block")
+            .search-icon(style="position:absolute;top:7px;left:10px;")
+              i.fa.fa-search.notimp
+            input(type="search", name="q", placeholder="Search for products...", style="border-radius:20px;padding-left:25px;", class="form-control", value="#{q}", autocomplete="off")
+
+
+  .container.pb0.mb20.mt20
+    .row
+      .col-sm-12
+        small.imp PEOPLE
+    .row
+      .col-sm-12
+        .clearfix.container-fix.p20
+          include grid.blogs.jade
+
+  .container.container-grid.pb0.mb20.pt0
+    .col-sm-12
+      .row
+        .clearfix
+          #results-area
+
+block js
+
+  script.
+    $(document).ready(function() {
+      var SBB_Q = SBB.getUrlVar('q');
+
+      if($('#results-area')) {
+        SBBProduct.search({q: SBB_Q}, function(data) {
+          var source = $("#grid-item-product-only").html();
+
+          var template = Handlebars.compile(source);
+
+          var context = {products: data.products};
+          var html    = template(context);
+
+          $('#results-area').html(html);
+        });
+      }
+    })

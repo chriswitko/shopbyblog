@@ -1,0 +1,138 @@
+extends layout
+
+block content
+  script(id='grid-item-blog', type='text/x-handlebars-template').
+    {{#each blogs}}
+      <div class="col-sm-4 mb20">
+        <a href='{{website}}' target='_blank'>
+          <div class="table-div">
+            <div class="table-row">
+              <div class="table-cell pull-left avatar-midd">
+                <div style='width:50px;height:50px;background:url({{visualUrl}}) no-repeat 50% 50%;background-size:cover;' class='img-responsive img-circle'></div>
+              </div>
+              <div class="table-cell pr10 pull-left overflow w50 pt10">
+                <h5 class="m0 ellipsis-txt">{{title}}</h5>
+                <div class="clearfix notimp">{{subscribers}} followers <br/> {{language}} {{contentType}}</div>
+              </div>
+              <div class="table-cell prt pt8 hid"><a href="" class="btn btn-primary">Follow</a></div>
+            </div>
+          </div>
+        </a>
+      </div>
+    {{/each}}
+
+
+  .container
+    .row.mt20.mb20
+      .col-sm-12
+        h1.mt0.mb10 Blogs
+        p.m0 Discover the best blogs with fashion &amp; home design. Shop the best products inspired by bloggers.
+
+    //- .row.mb20.hidden-xs
+      .col-sm-4
+        .step-no.pull-left 1
+        h5.m0.pull-left(style='line-height:50px') Find favourite blogs
+      .col-sm-4
+        .step-no.pull-left 2
+        h5.m0.pull-left(style='line-height:50px') Follow them all
+      .col-sm-4
+        .step-no.pull-left 3
+        h5.m0.pull-left(style='line-height:50px') Recieve product inspirations
+
+    //- .row.mb20
+      .col-sm-12
+        .panel.panel-gray.m0
+          .panel-body.p10.align-center
+            .row
+              .col-sm-6.hidden-xs
+                table
+                  tr
+                    td(nowrap)
+                      h4.mb0 Search or add your own blog to increase traffic
+              .col-sm-6.visible-xs-12
+                form(onsubmit='searchBlogs();return false;')
+                  table(width='100%')
+                    tr
+                      td.pr10(align='right', nowrap, width='100%')
+                        input.form-control(placeholder='Enter your blog name or URL address', id='q', autocomplete='off')
+                      td(align='right')
+                        a.btn.btn-danger(href='javascript:void(0)', onclick='searchBlogs()') Search
+
+
+
+
+  .container.mb20
+    .row
+      .col-sm-12
+        ul.list-unstyled.list-inline.m0.list-on-left
+          li
+            a(href='')
+              h3.day.m0 POPULAR
+          li
+            a(href='')
+              h3.day.m0.color-red FOR HIM
+          li
+            a(href='')
+              h3.day.m0 FOR HER
+          li
+            a(href='')
+              h3.day.m0 HOME & DESIGN
+
+    .row
+      .col-sm-12
+        .clearfix.container-fix.container-fb.pr20.pl20.pb0
+          //- include grid.blogs.jade
+          .row.grid-sections
+            #results-found
+
+  //- .container.mb20
+    .row
+      .col-sm-12
+        h3.day.m0 FOR HER
+
+    .row
+      .col-sm-12
+        .clearfix.container-fix.container-fb.p20
+          include grid.blogs.jade
+
+  //- .container.mb20
+    .row
+      .col-sm-12
+        h3.day.m0 HOME &amp; DESIGN
+
+    .row
+      .col-sm-12
+        .clearfix.container-fix.container-fb.p20
+          include grid.blogs.jade
+
+block js
+  script.
+
+    function searchBlogs() {
+      var api = new $.RestClient('/api/blog/');
+
+      api.add('search');
+
+      var request = api.search.read({q: 'fashion'});//$('#q').val()
+      request.done(function (data) {
+        if(data.results) {
+          console.log(data);
+          $('.results-found-area').removeClass('hid');
+
+          var source   = $("#grid-item-blog").html();
+          var template = Handlebars.compile(source);
+
+          var context = {blogs: data.results};
+          var html    = template(context);
+
+          $('#results-found').html(html);
+        } else {
+          swal({title: "Error!", text: "No data.", type: "error", confirmButtonText: "OK" });
+        }
+      });
+
+    }
+
+    $(document).ready(function() {
+      searchBlogs();
+    })

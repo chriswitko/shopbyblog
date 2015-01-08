@@ -1,0 +1,56 @@
+footer
+  .container.text-center
+    .row
+      .col-xs-12
+        ul.list-inline.list-unstyled.m0
+          li
+            a(href='/') #{__('Home')}
+          li
+            a(href='/about') #{__('About')}
+          li
+            a(href='/for-bloggers') #{__('For Bloggers')}
+          li
+            a(href='/sell-products') #{__('For Sellers')}
+          //- li
+            a(href='/ads') Ads
+          //- li
+            a(href='/terms') Terms
+          //- li
+            a(href='/help') Help
+          li
+            a(href='/privacy') #{__('Privacy')}
+          li
+            a(href='/contact') #{__('Contact')}
+      .col-sm-12
+        p.m0.small &copy; 2015 #{__('ShopByBlog')}. #{__('All Rights Reserved')}
+        //- .clearfix
+          ul.list-inline.list-unstyled.m0
+            li(class=currentLang=='en'?'imp':'notimp')
+              a.small(href='/en') #{__('English')}
+            li(class=currentLang=='pl'?'imp':'notimp')
+              a.small(href='/pl') #{__('Polish')}
+      .col-xs-12.mt20.small
+        ul.list-inline.list-unstyled.m0
+          li
+            a(href='https://facebook.com/ShopByBlog', target='_blank')
+              i.fa.fa-facebook-square.color-black.fa-2x
+          li
+            a(href='https://twitter.com/ShopByBlog', target='_blank')
+              i.fa.fa-twitter.color-black.fa-2x
+          li
+            a(href='https://instagram.com/ShopByBlog', target='_blank')
+              i.fa.fa-instagram.color-black.fa-2x
+
+div#fb-root
+
+script.
+  (function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=521887574586787&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+script.
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');

@@ -1,0 +1,85 @@
+extends layout
+
+block content
+  .container.container-clean.pb0.mb20(style='position:relative;')
+    .row.mb20
+      .col-sm-push-1.col-sm-10.align-center
+        h1.mt0.mb10.lato.lato900 #{__('Sign up for exclusive discounts, first dibs on new products and the best new designs')}
+        p.m0.lato.lato400 #{__('Follow the best product inspirations from your favorite bloggers')}
+
+    .row.mb15
+      .col-sm-12.align-center
+        a.btn.btn-danger.btn-lg(href='/signup') Get started
+        p.small.mt10
+          small <a href="/for-bloggers">Are you Blogger? Find out how we help monetizing your blog</a> &middot; <a href="/sell-products">Sell your products</a>
+
+  .container
+    .clearfix.container-fix.p20
+      .row.pb20.pt20
+        .col-sm-4.align-center
+          .clearfix
+            i.fa.fa-search.fa-4x.notimp
+          h2.mb10 Discover
+          p.m0 Build your profile and <u class="lato700">deliver daily products recommendations</u> to your readers. It's easy & free.
+        .col-sm-4.align-center
+          .clearfix
+            i.fa.fa-check.fa-4x.notimp
+          h2.mb10 Follow
+          p.m0 Increase engagement in your blog, <u class="lato700">give your user one place to find & buy</u> the best products.
+        .col-sm-4.align-center
+          .clearfix
+            i.fa.fa-shopping-cart.fa-4x.notimp
+          h2.mb10 Buy
+          p.m0 You recommend products and we deliver sponsored links to each of them. <u class="lato700">You earn 70% on every campaign</u>.
+
+  .container.container-clean.pb0.mb20(style='position:relative;')
+    .row.mb20
+      .col-sm-push-1.col-sm-10.align-center
+        h1.mt0.mb10.lato.lato900 The Idea
+        p.m0.lato.lato400 Don't ask WHERE TO BUY IT? Just find it here.
+
+  .container.container-fix
+    .row
+      .col-sm-12
+        ul.m0
+          li
+            h5 Find products recommended by bloggers
+            p.m0 Many ad networks deliver random content, often not incontext to your blog.
+          li
+            h5 Follow your favorite bloggers
+            p.m0 Your readers often ask you where to buy products you write in your posts? Out widget is very handy place to deliver this answer.
+          li
+            h5 Recieve the best deals
+            p.m0 We deliver great insights about products you recommend. Now you will learn more witch products are the most popular.
+          li
+            h5 One place to shop better
+            p.m0 We take care on looking for new adverstisers, who will add sponsored links to each of your recommendations.
+
+  .container
+
+    section.mt50
+      h3.m0 FAQ
+      hr
+
+      h4 I'm blogger. How ShopByBlog works for me?
+      p Product Hunt surfaces the best new products, every day. It's a place for product-loving enthusiasts to share and geek out about the latest mobile apps, websites, hardware projects, and tech creations.
+
+      p You can read more about our story on <a href="http://pando.com/2013/12/04/can-the-democratic-power-of-a-platform-like-hacker-news-be-applied-to-products/" target="_blank">PandoDaily</a>, <a href="http://www.fastcolabs.com/3023152/open-company/the-wisdom-of-the-20-minute-startup" target="_blank">Fast Company</a>, <a href="http://techcrunch.com/2014/06/04/product-hunt-is-the-social-news-site-of-tech-products-read-by-influential-people/" target="_blank">TechCrunch</a>, <a href="http://thenextweb.com/insider/2014/06/05/product-hunt-is-leveling-the-playing-field-to-help-good-apps-and-startups-get-attention/" target="_blank">The Next Web</a>, <a href="http://www.businessinsider.com/product-hunt-2014-6" target="_blank">Business Insider</a>, <a href="http://www.foxbusiness.com/on-air/risk-and-reward/index.html#/v/3639940132001" target="_blank">Fox Business</a>, and <a href="http://www.forbes.com/sites/sethporges/2014/07/03/the-creator-of-product-hunt-spills-the-hit-sites-dirty-details" target="_blank">Forbes</a>.</p>
+
+    section
+      h4 How much I can earn?
+      p You get 60% and we 40% of each deals we'll setup.
+
+      ul
+        li URL - Direct link to the product page (avoid links to press or blogs)
+        li Product Name
+        li Tagline - Very short description of the product (make it catchy!)
+
+  .container.container-clean.pb0.mb20(style='position:relative;')
+    .row.mb20
+      .col-sm-push-1.col-sm-10.align-center
+        h1.mt0.mb10.lato.lato900 Have a question? Write us!
+
+    .row.mb15
+      .col-sm-12.align-center
+        a.btn.btn-primary.btn-lg(href='/signup') info@shopbyblog.com

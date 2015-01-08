@@ -1,0 +1,38 @@
+.navbar.navbar-default.navbar-fixed-top
+  .container-wide
+    .navbar-header
+      button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+        span.sr-only Toggle navigation
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      a.navbar-brand(href='/', style='padding-top:3px')
+        img(src='/img/logo_vector.png', height='44')
+    .collapse.navbar-collapse
+      ul.nav.navbar-nav
+        //- li.dropdown(class=title=='Account Management'?'active':undefined)
+          a.dropdown-toggle(href='#', data-toggle='dropdown')
+            | Sections&nbsp;
+            i.caret
+          ul.dropdown-menu
+            li(class=title=='Contact'?'active':undefined)
+              a(href='/s/best-deals') Special offers
+            li.divider
+            li(class=title=='Home'?'active':undefined)
+              a(href='/s') For Him
+            li(class=title=='API Examples'?'active':undefined)
+              a(href='/api') For Her
+            li(class=title=='Contact'?'active':undefined)
+              a(href='/contact') Home &amp; Design
+        li(class=title=='Contact'?'active':undefined)
+          a(href='/dashboard/users') Users
+        li(class=title=='Contact'?'active':undefined)
+          a(href='/dashboard/campaigns') Campaigns
+        li(class=title=='Contact'?'active':undefined)
+          a(href='/dashboard/products') Products
+        li(class=title=='Contact'?'active':undefined)
+          a(href='/dashboard/sections') Sections
+        li(class=title=='Contact'?'active':undefined)
+          a(href='/dashboard/collections') Collections
+        li(class=title=='Contact'?'active':undefined)
+          a(href='/dashboard/blogs') Blogs

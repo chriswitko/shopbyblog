@@ -1,0 +1,56 @@
+extends ../layout
+
+block content
+  .container
+    .row
+      .col-sm-12.container-shadow2
+        //- .clearfix.container-fix.container-fb.p20(style='background:url(/img/patterns/suda.jpg) no-repeat 50% 50%;background-size:cover;')
+        .clearfix.container-fix.container-fb.p20
+          .page-header.no-border
+            h3.m0.align-center.mb15.lato Create your profile
+            h4.m0.align-center.lato Join us to find and buy all the things that inspire you.
+            .clearfix.align-center.mt20.mb10
+              ul.list-unstyled.list-inline
+                li
+                  i.fa.fa-angle-right
+                  | Follow your favorite bloggers
+                li
+                  i.fa.fa-angle-right
+                  | Get the best products recommendations
+                li
+                  i.fa.fa-angle-right
+                  | Discover new blogs and products
+            .clearfix.align-center
+              ul.list-unstyled.list-inline
+                li
+                  a.btn.btn-block.btn-facebook.btn-social(href='/auth/facebook')
+                    i.fa.fa-facebook
+                    | #{__('Sign up with Facebook')}
+                li
+                  a.btn.btn-block.btn-twitter.btn-social(href='/auth/twitter')
+                    i.fa.fa-twitter
+                    | #{__('Sign up with Twitter')}
+
+          .clearfix
+            form.form-horizontal.bg-clouds.p15(id='signup-form', method='POST')
+              input(type='hidden', name='_csrf', value=_csrf)
+              .form-group
+                label.col-sm-3.control-label(for='email') &nbsp;
+                .col-sm-7
+                  p.static-form-control.mb0.imp or, register using your email address
+              .form-group
+                label.col-sm-3.control-label(for='email') Email
+                .col-sm-7
+                  input.form-control(type='email', name='email', id='email', placeholder='Email', autofocus, autocomplete='off')
+              .form-group
+                label.col-sm-3.control-label(for='password') Password
+                .col-sm-7
+                  input.form-control(type='password', name='password', id='password', placeholder='Password', autocomplete='off')
+              .form-group
+                label.col-sm-3.control-label(for='confirmPassword') Confirm Password
+                .col-sm-7
+                  input.form-control(type='password', name='confirmPassword', id='confirmPassword', placeholder='Confirm Password', autocomplete='off')
+              .form-group
+                .col-sm-offset-3.col-sm-7
+                  button.btn.btn-danger(type='submit')
+                    | Sign up

@@ -1,0 +1,126 @@
+extends ../layout
+
+block content
+  .container
+    .clearfix.container-fix.container-fb.p15
+      .page-header.m0
+        h3.m0 #{__('ORDER SPONSORED LINK')}
+
+      .row.mt20
+        .col-sm-12
+          form.form-horizontal(id='orderForm', role='form', method='post', enctype='multipart/form-data')
+            input(type='hidden', name='_csrf', value=_csrf)
+            input(type='hidden', name='invoiceCurrencyCode', value='#{currentLang=="pl"?"PLN":"EUR"}')
+            .form-group
+              label(class='col-sm-2 control-label', for='url')
+              .col-sm-8
+                p.imp.m0 #{__('Enter URL to website where customer can buy selected product.')}
+            .form-group.p15.bg-clouds
+              label(class='col-sm-2 control-label', for='url') #{__('URL')}
+              .col-sm-8
+                input.form-control(type='url', name='url', id='url', value=campaign.url, placeholder='#{__("Enter URL to website")}', autocomplete='off', autofocus=true)
+            .form-group
+              label(class='col-sm-2 control-label', for='url') &nbsp;
+              .col-sm-8
+                p.imp.color-red #{__('Estimated price per day')}: #{currentLang=='pl'?pricing[0].totalPerDayFormatted:pricing[0].euro.totalPerDayFormatted}
+
+                .clearfix
+                  p.imp #{__('What you will get')}:
+                  .clearfix
+                    ul.list-unstyled
+                      li
+                        i.fa.fa-check.color-red
+                        | This product will be marked as promoted on bloggers website: <strong>warszaskibiegacz.pl</strong>
+                      li
+                        i.fa.fa-check.color-red
+                        | Your link will be placed next to this product by the time of campaign
+                      li
+                        i.fa.fa-check.color-red
+                        | We will send notification to our users who follow this blogger and upvote this product
+                .clearfix
+                  p.imp #{__('Select your option')}:
+                .clearfix
+                  table.table.table-striped.table-bordered(width='100%')
+                    tr
+                      td(width='30')
+                        input(type='radio', name='days', value='5', id='days-5')
+                      td(width='200')
+                        label(for='days-5') #{__('5 days')}
+                      td
+                        label(for='days-5') #{currentLang=='pl'?pricing[0].totalBruttoFormatted:pricing[0].euro.totalBruttoFormatted}
+                    tr
+                      td
+                        input(type='radio', name='days', value='10', id='days-10')
+                      td
+                        label(for='days-10') #{__('10 days')}
+                      td
+                        label(for='days-10') #{currentLang=='pl'?pricing[1].totalBruttoFormatted:pricing[1].euro.totalBruttoFormatted}
+                    tr
+                      td
+                        input(type='radio', name='days', value='15', id='days-15')
+                      td.imp
+                        label(for='days-15') #{__('15 days')}
+                        span &nbsp;&nbsp;
+                        //- span.badge
+                          i.fa.fa-star
+                          //- span.color-black #{__('Popular')}
+                      td.imp
+                        label(for='days-15') #{currentLang=='pl'?pricing[2].totalBruttoFormatted:pricing[2].euro.totalBruttoFormatted}
+                    tr
+                      td
+                        input(type='radio', name='days', value='20', id='days-20')
+                      td
+                        label(for='days-20') #{__('20 days')}
+                      td
+                        label(for='days-20') #{currentLang=='pl'?pricing[3].totalBruttoFormatted:pricing[3].euro.totalBruttoFormatted}
+                    tr
+                      td
+                        input(type='radio', name='days', value='25', id='days-25')
+                      td
+                        label(for='days-25') #{__('25 days')}
+                      td
+                        label(for='days-25') #{currentLang=='pl'?pricing[4].totalBruttoFormatted:pricing[4].euro.totalBruttoFormatted}
+                    tr
+                      td
+                        input(type='radio', name='days', value='30', id='days-30', checked='checked')
+                      td
+                        label(for='days-30') #{__('30 days')}
+                      td
+                        label(for='days-30') #{currentLang=='pl'?pricing[5].totalBruttoFormatted:pricing[5].euro.totalBruttoFormatted}
+
+
+            .form-group.mb0.mt20
+              .col-sm-offset-2.col-sm-8
+                ul.list-unstyled.list-inline.m0.list-on-left
+                  li
+                    button.btn.btn-danger(type='submit')
+                      | #{__('Verify & Pay')}
+                  li
+                    a.btn.btn-link(href='/')
+                      | #{__('Cancel')}
+
+            .form-group.mb0.mt20
+              .col-sm-offset-2.col-sm-8
+                .clearfix
+                  p.m0.imp.small #{__('Have a questions? Write us')} <a href="mailto:hello@shopbyblog.com">hello@shopbyblog.com</a>
+
+//-
+  include faq.jade
+
+block js
+
+  script.
+    var validator = new FormValidator('orderForm', [
+      {
+        name: 'url',
+        rules: 'required'
+      }
+    ], function(errors, event) {
+      if (errors.length > 0) {
+        $('.p-err').remove();
+        for(i=0;i<=errors.length-1;i++) {
+          $('#'+errors[i].id).before('<p class="p-err small color-red">'+errors[i].message+'</p>');
+        }
+      }
+    });
+    validator.setMessage('required', '#{__("The %s field is required.")}');

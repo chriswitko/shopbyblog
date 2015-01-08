@@ -1,0 +1,176 @@
+extends ../layout
+
+block content
+  .container
+    .clearfix.container-fix.container-fb.p15
+      .page-header.m0
+        h3.m0 #{__('YOUR ORDER SUMMARY')}
+
+      .row.mt20
+        .col-sm-12
+          .clearfix
+            form.form-horizontal(role='form', action='/ads/edit?cid=#{campaign._id}&pay=1', method='post', enctype='multipart/form-data')
+              input(type='hidden', name='_csrf', value=_csrf)
+              input(type='hidden', name='invoiceCurrencyCode', value='#{currentLang=="pl"?"PLN":"EUR"}')
+              .form-group
+                .clearfix
+                  label.col-sm-2.control-label(for='url') #{__('Your Link')}
+                  .col-sm-8
+                    p.form-control-static
+                      a(href='#{campaign.url}', target='_blank') #{campaign.url}
+                .clearfix
+                  label.col-sm-2.control-label(for='product-title') #{__('Product')}
+                  .col-sm-8
+                    p.form-control-static
+                      a(href='/product/#{campaign.product.permalink}', target='_blank') #{campaign.product.title}
+                .clearfix
+                  label.col-sm-2.control-label(for='product-title') #{__('Blog')}
+                  .col-sm-8
+                    p.form-control-static
+                      a(href='/#{product.author.permalink}', target='_blank') #{product.author.getName()}
+                .clearfix
+                  label.col-sm-2.control-label(for='url') #{__('Days')}
+                  .col-sm-8
+                    p.form-control-static #{campaign.price.days}
+              hr
+
+              .form-group(class=payNow?'hide':'')
+                label(class='col-sm-2 control-label', for='role')
+                .col-sm-8
+                  .checkbox-inline
+                    input(type='checkbox', name='isInvoiced', checked=campaign.price.isInvoiced, velue='1', style='margin-top:2px', id='invoice', onclick='$("#invoice-data").toggle()')
+                    label(for='invoice') #{__('Click here, if you would like to recieve invoice')}
+                  #invoice-data.clearfix.mt20(style='display:none')
+                    .form-group
+                      label.col-sm-2.control-label(for='vatNumber') #{__('VAT No')}
+                      .col-sm-10
+                        input.form-control(type='text', name='vatNumber', id='vatNumber', value='', autocomplete='off')
+                    .form-group
+                      label.col-sm-2.control-label(for='fullname') #{__('Company')}
+                      .col-sm-10
+                        input.form-control(type='text', name='fullname', id='fullname', value='', autocomplete='off')
+                    .form-group
+                      label.col-sm-2.control-label(for='address1') #{__('Address 1')}
+                      .col-sm-10
+                        input.form-control(type='text', name='address1', id='address1', value='', autocomplete='off')
+                    .form-group
+                      label.col-sm-2.control-label(for='address2') #{__('Address 2')}
+                      .col-sm-10
+                        input.form-control(type='text', name='address2', id='address2', value='', autocomplete='off')
+                    .form-group
+                      label.col-sm-2.control-label(for='postcode') #{__('Postcode')}
+                      .col-sm-10
+                        input.form-control(type='text', name='postcode', id='postcode', value='', autocomplete='off')
+                    .form-group
+                      label.col-sm-2.control-label(for='city') #{__('City')}
+                      .col-sm-10
+                        input.form-control(type='text', name='city', id='city', value='', autocomplete='off')
+                    .form-group
+                      label.col-sm-2.control-label(for='country') #{__('Country')}
+                      .col-sm-10
+                        input.form-control(type='text', name='country', id='country', value='', autocomplete='off')
+
+                hr
+
+              .form-group
+                label.col-sm-2.control-label(for='email')
+                .col-sm-8
+                  .row
+                    .col-sm-4
+                      p.form-control-static
+                        h3.m0 #{__('Total to pay')}:
+                    .col-sm-8
+                      p.form-control-static
+                        h3.m0.underline
+                          if campaign.invoice.invoiceCurrencyCode=='EUR'
+                            | #{campaign.price.euro.totalBruttoFormatted}
+                          else if campaign.invoice.invoiceCurrencyCode=='PLN'
+                            | #{campaign.price.totalPriceFormatted}
+
+              .form-group
+                label.col-sm-2.control-label(for='email') &nbsp;
+                .col-sm-8
+                  ul.list-unstyled
+                    li
+                      i.fa.fa-angle-right
+                      | #{__('Click button below to pay for this campaign.')}
+                    li
+                      i.fa.fa-angle-right
+                      | #{__('We accept payments by Credit Cards and Transfers in selected countries.')}
+                    li
+                      i.fa.fa-angle-right
+                      | #{__('Your link will start displaying after we verify your payment.')}
+              .form-group(class=payNow?'hide':'')
+                .col-sm-offset-2.col-sm-8
+                  ul.list-unstyled.list-inline.m0.list-on-left
+                    li
+                      button.btn.btn-danger(type='submit')
+                        | #{__('Proceed')}
+                    li
+                      button.btn.btn-default(type='button', onclick='location="/"')
+                        | #{__('Cancel')}
+
+          .clearfix
+            form.hid(id='providerPayPal', name='_xclick', action='https://www.sandbox.paypal.com/cgi-bin/webscr', method='post')
+              input(type='hidden', name='cmd', value='_xclick')
+              input(type='hidden', name='business', value='chris.witko-facilitator@gmail.com')
+              input(type='hidden', name='currency_code', value='#{campaign.invoice.invoiceCurrencyCode}')
+              input(type='hidden', name='item_name', value='ShopByBlog Ad')
+              input(type='hidden', name='item_number', value='ADSL#{campaign.price.days}')
+              input(type='hidden', name='custom', value='#{campaign._id}')
+              if campaign.invoice.invoiceCurrencyCode=='EUR'
+                input(type='hidden', name='amount', value='#{campaign.price.euro.totalBrutto}')
+              else if campaign.invoice.invoiceCurrencyCode=='PLN'
+                input(type='hidden', name='amount', value='#{campaign.price.totalPrice}')
+              input(type='hidden', name='return', value='http://localhost:3005/payments/paypal/payed')
+              input(type='hidden', name='cancel_return', value='http://localhost:3005/ads/payment?cid=#{campaign._id}&ret=1')
+              input(type='hidden', name='rm', value='2')
+
+            form.hid(id='providerTransferuj', action='https://secure.transferuj.pl', method='post', name='payment', accept-charset="utf-8")
+              input(name='id', value='17460', type='hidden')
+              input(name='kwota', value='#{campaign.price.totalPrice}', type='hidden')
+              input(name='opis', value='ShopByBlog Ad ADSL#{campaign.price.days}', type='hidden')
+              input(name='crc', value='#{campaign._id}', type='hidden')
+              input(name='md5sum', value='#{md5sum}', type='hidden')
+              //- input(type='hidden', name='pow_url', value='http://localhost:3005/payments/paypal/payed?cid=#{campaign._id}')
+              //- input(type='hidden', name='pow_url_blad', value='http://localhost:3005/ads/payment?cid=#{campaign._id}&ret=1')
+
+            form.form-horizontal
+              .form-group.p15.bg-clouds(class=payNow?'':'hide')
+                .col-sm-offset-2.col-sm-8
+                  .clearfix
+                    ul.list-unstyled.list-inline.m0.list-on-left
+                      li.processBtns
+                        button.btn.btn-danger.btn-lg(type='button', onclick='processPayPal()')
+                          | #{__('Pay by Credit Card')}
+                      if campaign.invoice.invoiceCurrencyCode=='PLN'
+                        li.processBtns
+                          button.btn.btn-primary.btn-lg(type='button', onclick='processTransferuj()')
+                            | #{__('Pay by Bank Transfer')}
+                      li.hid.processInProgress
+                        button.btn.btn-default.btn-lg(type='button')
+                          i.fa.fa-circle-o-notch.fa-spin
+                          | #{__('Please wait...')}
+
+              .form-group.mb0.mt20
+                .col-sm-offset-2.col-sm-8
+                  .clearfix
+                    p.m0.imp.small #{__('Have a questions? Write us')} <a href="mailto:hello@shopbyblog.com">hello@shopbyblog.com</a>
+
+
+//-
+  include faq.jade
+
+block js
+  script.
+    var processPayPal = function() {
+      $('.processBtns').addClass('hid');
+      $('.processInProgress').removeClass('hid');
+      $('#providerPayPal').submit();
+    };
+
+    var processTransferuj = function() {
+      $('.processBtns').addClass('hid');
+      $('.processInProgress').removeClass('hid');
+      $('#providerTransferuj').submit();
+    }

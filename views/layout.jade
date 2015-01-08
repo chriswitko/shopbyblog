@@ -1,0 +1,38 @@
+doctype html
+html
+  head(prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#")
+    include partials/head
+
+    block jshead
+  body(class=bg?'with-static-bg':'')
+    if !hideNav
+      include partials/navbar
+
+    #close-discussion-panel.close-discussion-body.close-discussion.hid(onclick='$("#close-discussion-panel").addClass("hid");$("#sidebar-offcanvas").stop().animate({right: -$("#sidebar-offcanvas").width()});')
+    #sidebar-offcanvas.hid(style='background:white;position:fixed;right:0;top:0px;height:100%;z-index:9999;border-left: 1px solid rgba(0,0,0,0.1);box-shadow: 0 0 20px rgba(0,0,0,0.25);overflow-y:scroll')
+
+    if (user && showSearchBox)
+      form(action='/search', method='get')
+        .container-wide.mb0.mt0.p20(style='background:white')
+          .container
+            .row
+              .col-sm-12
+                input.form-control.input-lg.p0.lato100(style='border:0;box-shadow:none;font-size:50px;letter-spacing:-1px;line-height:normal;height:60px;', autocomplete='off', type='text', placeholder='Search for people or products...', name='q', value='#{q||""}', autofocus=true)
+
+    .container
+      include partials/flash
+
+    if !user&&!hideSubscriptionBox
+        include subscribe
+
+    block content
+
+    if !hideFooter
+      include partials/footer
+
+    != js('application')
+
+    if currentLang=='pl'
+        script(src='/js/lib/locale/pl.js')
+
+    block js

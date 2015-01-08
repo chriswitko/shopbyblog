@@ -1,0 +1,21 @@
+script(id='grid-item-section', type='text/x-handlebars-template').
+  {{#each sections}}
+
+    <div class="col-sm-3 col-xs-6 mb15">
+      <div class="grid-element">
+        <a href="/{{section.permalink}}">
+          <div style="background:#f8f8f8 url({{section.coverImg}}) no-repeat 50% 50%;background-size:cover;" class="grid-image clearfix">
+            <div style="width:100%;position:relative;background: linear-gradient(#fff,#000);transition: background 1s ease-out;opacity:0.3;height:100%;" class="grid-overfly">
+              <div style="position:absolute;left:0;text-align:center;width:100%;display:none;" class="grid-overfly-txt">
+                <h1 class="m0 p10 grid-txt lato" style="color:#fff">{{section.name}}</h1>
+              </div>
+            </div>
+          </div>
+          <div style="position:absolute;left:15px;bottom:0;text-align:left;width:100%;" class="grid-overfly-txt2">
+            <h5 class="m0 p10 grid-txt lato" style="color:#fff;text-shadow: 2px 2px 3px rgba(0,0,0,0.3);">{{section.name}}</h1>
+          </div>
+        </a>
+      </div>
+    </div>
+
+  {{/each}}

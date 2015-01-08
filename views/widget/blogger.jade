@@ -1,0 +1,110 @@
+extends ../layout
+
+block content
+  .container
+    .clearfix.container-fix.container-fb.p15
+      .row
+        .col-sm-12
+          h3.mt0.lato400 Widget for Blogger
+          p.mb0.lato400 Embedded Posts are a simple way to put public posts - by a Page or a person on Facebook - into the content of your web site or web page. Only public posts from Facebook Pages and profiles can be embedded.
+
+  .container
+    .clearfix.container-fix.container-fb.p15
+      .row.mt20
+        .col-sm-12
+          form.form-horizontal(role='form', method='post', enctype='multipart/form-data')
+            input(type='hidden', name='_csrf', value=_csrf)
+            .form-group
+              label(class='col-sm-2 control-label', for='locale') Language
+              .col-sm-8
+                select.form-control(name='locale', id='locale', onchange='refreshPreview()')
+                  option(value='pl') Polish
+                  //- option(value='en') English
+            .form-group
+              label(class='col-sm-2 control-label', for='cta') Title
+              .col-sm-8
+                select.form-control(name='cta', id='cta', onchange='refreshPreview()')
+                  option(value='1') Recommended
+                  option(value='2') Like it
+                  option(value='3') Where to buy it?
+            .form-group
+              label(class='col-sm-2 control-label', for='cols') Format
+              .col-sm-2
+                select.form-control(name='format', id='format', onchange='refreshPreview()')
+                  option(value='2x5') 2x5
+                  option(value='3x4') 3x4
+                  option(value='4x1') 4x1
+                  option(value='4x2') 4x2
+              .col-sm-8
+                label.control-label.notimp Columns x Rows
+            .form-group
+              label(class='col-sm-2 control-label', for='width') Max Width (px)
+              .col-sm-2
+                input.form-control(type='text', name='width', id='width', value='300', placeholder='300', autocomplete='off', onchange='refreshPreview()')
+              .col-sm-8
+                label.control-label.notimp Leave empty or enter 0 to auto-width
+            .form-group
+              label(class='col-sm-2 control-label', for='showFollowButton') &nbsp;
+              .col-sm-8.pt5
+                label
+                  input(type='checkbox', name='showFollowButton', id='showFollowButton', value='1', checked='true', onchange='refreshPreview()')
+                  span &nbsp; Show Follow button
+            .form-group
+              label(class='col-sm-2 control-label', for='url') &nbsp;
+              .col-sm-8
+                .clearfix.container-fb.p15
+                  #widget-preview.clearfix.align-center
+                    <script src="/js/widget/sbbwidget.js"></script>
+                    <iframe src="" title="Instagram Widget" class="sbbwidget-widget" allowTransparency="true" frameborder="0" scrolling="no" style="border:none; overflow:hidden;width:100%;"></iframe>
+
+            .form-group
+              label(class='col-sm-2 control-label', for='url') &nbsp;
+              .col-sm-8
+                .clearfix.container-fb.p15
+                  p.mt0.imp Place the code for your widget wherever you want the widget to appear on your page.
+                  #widget-code.clearfix
+                    textarea.form-control(readonly="1", rows="7", spellcheck="false", onclick="this.focus(); this.select()")
+
+            .form-group.mb0.mt20
+              .col-sm-offset-2.col-sm-8
+                .clearfix
+                  p.m0.imp.small Have a questions? Write us <a href="#">hello@shopbyblog.com</a>
+
+
+  include ../ads/faq.jade
+
+block js
+
+  script.
+    var x = '//' + (location.hostname=='localhost'?location.hostname+':3005':location.hostname); // set s3 bucket
+
+    var wVariant = 'blogger';
+    var wTheme = 'default';
+
+    function refreshPreview() {
+      var wFormat = $('#format').val();
+      //- if(wFormat=='4x1'||wFormat=='4x2') $('#width').val('');
+
+      var wWidth = parseInt($('#width').val());
+      var wCTA = $('#cta').val();
+      var wLocale = $('#locale').val();
+      var sWidth = wWidth?'max-width:'+wWidth+'px;':'';
+      var showFollowButton = $('#showFollowButton').is(':checked')?1:0;
+
+      var wSrc = x + '/js/widget/' + wVariant + '_' + wTheme + '.html?eid=#{eid}&amp;locale=' + wLocale + '&amp;cta=' + wCTA + '&amp;showFollowButton=' + showFollowButton + '&amp;format=' + wFormat + '&amp;t=' + Math.floor(Date.now() / 1000);
+
+
+      if(wWidth) $('#widget-preview .sbbwidget-widget').css('max-width', wWidth + 'px');
+      else $('#widget-preview .sbbwidget-widget').css('max-width', '100%');
+
+      var html_code = '&lt;script src=&quot;' + x + '/js/widget/sbbwidget.js&quot;&gt;&lt;/script&gt;\n';
+          html_code += '&lt;iframe src=&quot;' + wSrc + '&quot; title=&quot;ShopByBlog Widget&quot; class=&quot;sbbwidget-widget&quot; allowTransparency=&quot;true&quot; frameborder=&quot;0&quot; scrolling=&quot;no&quot; style=&quot;border:none; overflow:hidden;width:100%;'+sWidth+'&quot;&gt;&lt;/iframe&gt;';
+
+      $('#widget-code textarea').text($("<div/>").html(html_code).text());
+      $('#widget-preview iFrame').attr('src', $("<div/>").html(wSrc).text());
+    }
+
+    $(document).ready(function() {
+      refreshPreview();
+    })
+

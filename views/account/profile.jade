@@ -1,0 +1,327 @@
+extends ../layout
+
+block content
+  .container.mt20
+    .row
+      .col-xs-12
+        ul.nav.nav-tabs(role="tablist")
+          li.active(role="presentation")
+            a(href="#home", role="tab", data-toggle="tab") Your Profile
+          //- li(role="presentation")
+            a(href="#widget", role="tab", data-toggle="tab") Widget
+          if user.isVerified
+            li(role="presentation")
+              a(href="#blog", role="tab", data-toggle="tab") Blog
+            li(role="presentation")
+              a(href="#insights", role="tab", data-toggle="tab") Rozliczenia
+          li(role="presentation")
+            a(href="#password", role="tab", data-toggle="tab") Password
+          //- li(role="presentation")
+            a(href="#linked", role="tab", data-toggle="tab") Linked accounts
+          //- li(role="presentation")
+            <a href="#following" role="tab" data-toggle="tab">Following</a></li>
+          li(role="presentation")
+            a(href="#delete", role="tab", data-toggle="tab") Delete account
+          //- <li role="presentation"><a href="#messages" role="tab" data-toggle="tab">Messages</a></li>
+          //- <li role="presentation"><a href="#settings" role="tab" data-toggle="tab">Settings</a></li>
+        //- </ul>
+
+  .container.mt0
+    .col-xs-12.container-fix.mt0.tab-content
+      .tab-pane(role="tabpanel", id="insights")
+        //- .page-header.m0
+          //- h3.m0 Insights
+
+        .clearfix
+          .clearfix
+            table.table.table-bordered.m0
+              tr
+                td.align-center(width='20%')
+                  h2 #{user.meta.followers}
+                  p #{__("Followers")}
+                td.align-center(width='20%')
+                  h2 #{user.meta.campaigns}
+                  p #{__("Campaigns")}
+                td.align-center(width='20%')
+                  if user.business.baseCurrency=='PLN'
+                    h2 #{sprintf('%0.2f', user.business.totalEstimatedRevenue)} zł
+                  if user.business.baseCurrency=='EUR'
+                    h2 &euro;#{sprintf('%0.2f', user.business.euro.totalEstimatedRevenue)}
+                  p #{__("Estimated Revenue")}*
+                td.align-center(width='20%')
+                  if user.business.baseCurrency=='PLN'
+                    h2 #{sprintf('%0.2f', user.business.totalRevenue)} zł
+                  if user.business.baseCurrency=='EUR'
+                    h2 &euro;#{sprintf('%0.2f', user.business.euro.totalRevenue)}
+                  p #{__("Revenue")}
+                td.align-center(width='20%')
+                  if user.business.baseCurrency=='PLN'
+                    h2 #{sprintf('%0.2f', user.business.totalPaid)} zł
+                  if user.business.baseCurrency=='EUR'
+                    h2 &euro;#{sprintf('%0.2f', user.business.euro.totalPaid)}
+                  p #{__("Paid")}
+            .clearfix.mt5
+              p.m0.small.notimp Last updated at: 10/10/2015 13:54
+
+
+        //- .clearfix.p10.bg-clouds.mt20
+          p.m0
+            i.fa.fa-question-circle
+            a.imp(href='') Find out how to increase revenue with us.
+
+        //- .clearfix.mt20
+          .page-header.m0
+            h3.m0 Views / Clicks &nbsp;
+              small Current week
+          .clearfix(style='height:300px;')
+            canvas(id="canvas", height="300", width='100%')
+
+        .clearfix.mt20
+          .page-header.m0
+            h3.m0 Campaigns
+          .clearfix.mt20
+            table.table.table-bordered.m0(width='100%')
+              thead
+                tr
+                  th Product
+                  th(width='180') Start/End
+                  th(width='100') Views
+                  th(width='100') Clicks
+              tbody
+                tr
+                  td
+                    a(href='') Koszulka zielona
+                  td 06-01-2015 - 30-01-2015
+                  td 300
+                  td 30
+          .clearfix.mt20
+            .clearfix
+              p.m0 No data.
+
+        .clearfix.mt20
+          .page-header.m0
+            h3.m0 Popular products
+          .clearfix.mt20
+            .clearfix
+              p.m0 No data.
+
+        .clearfix.mt20
+          .page-header.m0
+            h3.m0 Payments
+          .clearfix.mt20
+            .clearfix
+              p.m0 No data.
+
+      .tab-pane(role='tabpanel', id='linked')
+        .page-header.m0
+          h3.m0 Linked Accounts
+
+        .clearfix.mt20
+          if user.instagram
+            p: a.text-danger(href='/settings/unlink/instagram') Unlink your Instagram account
+          else
+            p: a(href='/auth/instagram') Link your Instagram account
+
+          if user.google
+            p: a.text-danger(href='/settings/unlink/google') Unlink your Google account
+          else
+            p: a(href='/auth/google') Link your Google account
+
+          if user.facebook
+            p: a.text-danger(href='/settings/unlink/facebook') Unlink your Facebook account
+          else
+            p: a(href='/auth/facebook') Link your Facebook account
+
+          if user.twitter
+            p: a.text-danger(href='/settings/unlink/twitter') Unlink your Twitter account
+          else
+            p: a(href='/auth/twitter') Link your Twitter account
+
+          //- if user.github
+          //-   p: a.text-danger(href='/settings/unlink/github') Unlink your GitHub account
+          //- else
+          //-   p: a(href='/auth/github') Link your GitHub account
+
+          //- if user.linkedin
+          //-   p: a.text-danger(href='/settings/unlink/linkedin') Unlink your LinkedIn account
+          //- else
+          //-   p: a(href='/auth/linkedin') Link your LinkedIn account
+
+
+      .tab-pane(role='tabpanel', id='delete')
+        .page-header.m0
+          h3.m0 Delete Account
+
+        .clearfix.mt20
+          p.m0 You can delete your account, but keep in mind this action is irreversible. <strong>Please send us an email with request to remove your profile.</strong>
+          //- form(action='/settings/delete', method='POST')
+            input(type='hidden', name='_csrf', value=_csrf)
+            button.btn.btn-danger(type='submit')
+              span.ion-trash-b
+              | Delete my account
+
+      .tab-pane(role='tabpanel', id='password')
+        .page-header.m0
+          h3.m0 Change Password
+
+        .clearfix.mt20
+          form.form-horizontal(action='/settings/password', method='POST')
+            input(type='hidden', name='_csrf', value=_csrf)
+            .form-group
+              label.col-sm-3.control-label(for='password') New Password
+              .col-sm-4
+                input.form-control(type='password', name='password', id='password', autocomplete='off')
+            .form-group
+              label.col-sm-3.control-label(for='confirmPassword') Confirm Password
+              .col-sm-4
+                input.form-control(type='password', name='confirmPassword', id='confirmPassword', autocomplete='off')
+            .form-group
+              .col-sm-offset-3.col-sm-4
+                button.btn.btn.btn-primary(type='submit')
+                  span.ion-locked
+                  | Change Password
+
+      .tab-pane.active(role="tabpanel", id="home")
+        .page-header.m0
+          h3.m0 Profile Information
+
+        .clearfix.mt20
+          form.form-horizontal(action='/settings/profile', method='post', enctype='multipart/form-data')
+            input(type='hidden', name='_csrf', value=_csrf)
+            .form-group
+              label.col-sm-2.control-label(for='email') Username
+              .col-sm-4
+                p.form-control-static #{user.username}
+            //- .form-group
+              label.col-sm-2.control-label(for='email') Permalink
+              .col-sm-4
+                p.form-control-static #{user.permalink}
+            .form-group
+              label.col-sm-2.control-label(for='email') Email
+              .col-sm-4
+                input.form-control(type='email', name='email', id='email', value='#{user.email}', autocomplete='off')
+            .form-group
+              label.col-sm-2.control-label(for='name') Name
+              .col-sm-10
+                input.form-control(type='text', name='name', id='name', value='#{user.profile.name}', autocomplete='off')
+            .form-group
+              label.col-sm-2.control-label(for='gender') Gender
+              .col-sm-4(style='padding-left:35px;')
+                label.radio
+                  input(type='radio', checked=user.profile.gender=='male', name='gender', value='male', data-toggle='radio')
+                  span Male
+                label.radio
+                  input(type='radio', checked=user.profile.gender=='female', name='gender', value='female', data-toggle='radio')
+                  span Female
+            .form-group
+              label.col-sm-2.control-label(for='location') City
+              .col-sm-4
+                input.form-control(type='text', name='location', id='location', value='#{user.profile.location}', autocomplete='off')
+            .form-group
+              label.col-sm-2.control-label(for='country') Country
+              .col-sm-4
+                input.form-control(type='text', name='country', id='country', value='#{user.profile.country}', autocomplete='off')
+            .form-group
+              label.col-sm-2.control-label(for='gravatar') Image
+                p.small
+                  a.small(href='')
+                    i.fa.fa-times
+                    | Remove
+              .col-sm-4.pt10
+                .clearfix.mb10
+                  img.img-circle(src="#{user.gravatar()}", class='profile', width='100', height='100')
+                .clearfix
+                  input(type='file', name='filename')
+            if user.isVerified
+              .form-group
+                label.col-sm-2.control-label(for='background') Background
+                  p.small
+                    a.small(href='')
+                      i.fa.fa-times
+                      | Remove
+                .col-sm-4.pt10
+                  - if (user.background())
+                    img.img-responsive(src="#{user.background()}", height='100')
+                  .clearfix
+                    input(type='file', name='background')
+
+            if user.isVerified
+              .form-group
+                label.col-sm-2.control-label(for='website') Website
+                .col-sm-10
+                  input.form-control(type='text', name='website', id='website', value='#{user.profile.website}', autocomplete='off')
+              .form-group
+                label.col-sm-2.control-label(for='about') About
+                .col-sm-10
+                  textarea.form-control(rows='5', name='about', id='about') #{user.profile.about}
+              .form-group
+                label.col-sm-2.control-label(for='twitter') Twitter URL
+                .col-sm-10
+                  input.form-control(type='text', name='links[twitter]', id='twitter', value='#{user.links.twitter||""}', autocomplete='off')
+              .form-group
+                label.col-sm-2.control-label(for='facebook') Facebook URL
+                .col-sm-10
+                  input.form-control(type='text', name='links[facebook]', id='facebook', value='#{user.links.facebook||""}', autocomplete='off')
+              .form-group
+                label.col-sm-2.control-label(for='youtube') YouTube URL
+                .col-sm-10
+                  input.form-control(type='text', name='links[youtube]', id='youtube', value='#{user.links.youtube||""}', autocomplete='off')
+              .form-group
+                label.col-sm-2.control-label(for='instagram') Instagram URL
+                .col-sm-10
+                  input.form-control(type='text', name='links[instagram]', id='instagram', value='#{user.links.instagram||""}', autocomplete='off')
+
+
+            .form-group
+              .col-sm-offset-2.col-sm-4
+                button.btn.btn-danger(type='submit') Update Profile
+
+  .container
+    .clearfix.mt10
+      small.notimp * Estimated Revenue is calculated based on campaign which are not ended, and will be added to your revenue after they finished.
+
+    //- section.mt50
+      h3.m0 FAQ
+      hr
+
+      h4 I'm blogger. How ShopByBlog works for me?
+      p Product Hunt surfaces the best new products, every day. It's a place for product-loving enthusiasts to share and geek out about the latest mobile apps, websites, hardware projects, and tech creations.
+
+      p You can read more about our story on <a href="http://pando.com/2013/12/04/can-the-democratic-power-of-a-platform-like-hacker-news-be-applied-to-products/" target="_blank">PandoDaily</a>, <a href="http://www.fastcolabs.com/3023152/open-company/the-wisdom-of-the-20-minute-startup" target="_blank">Fast Company</a>, <a href="http://techcrunch.com/2014/06/04/product-hunt-is-the-social-news-site-of-tech-products-read-by-influential-people/" target="_blank">TechCrunch</a>, <a href="http://thenextweb.com/insider/2014/06/05/product-hunt-is-leveling-the-playing-field-to-help-good-apps-and-startups-get-attention/" target="_blank">The Next Web</a>, <a href="http://www.businessinsider.com/product-hunt-2014-6" target="_blank">Business Insider</a>, <a href="http://www.foxbusiness.com/on-air/risk-and-reward/index.html#/v/3639940132001" target="_blank">Fox Business</a>, and <a href="http://www.forbes.com/sites/sethporges/2014/07/03/the-creator-of-product-hunt-spills-the-hit-sites-dirty-details" target="_blank">Forbes</a>.</p>
+
+
+
+block js
+  script.
+    var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+
+    var barChartData = {
+      labels : ["January","February","March","April","May","June","July"],
+      datasets : [
+        {
+          fillColor : "rgba(220,220,220,0.5)",
+          strokeColor : "rgba(220,220,220,0.8)",
+          highlightFill: "rgba(220,220,220,0.75)",
+          highlightStroke: "rgba(220,220,220,1)",
+          data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+        },
+        {
+          fillColor : "rgba(151,187,205,0.5)",
+          strokeColor : "rgba(151,187,205,0.8)",
+          highlightFill : "rgba(151,187,205,0.75)",
+          highlightStroke : "rgba(151,187,205,1)",
+          data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+        }
+      ]
+
+    }
+    window.onload = function(){
+      var ctx = document.getElementById("canvas").getContext("2d");
+      window.myBar = new Chart(ctx).Line(barChartData, {
+        responsive : true,
+        maintainAspectRatio: false,
+        scaleShowGridLines : false,
+        bezierCurve : false
+      });
+    }
+

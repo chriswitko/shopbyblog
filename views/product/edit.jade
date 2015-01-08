@@ -1,0 +1,91 @@
+extends ../layout
+
+block content
+  .container
+    .clearfix.container-fix.container-fb.p20
+      .page-header.m0
+        h3.m0 #{product.permalink?'PRODUCT: '+product.title:'POST A NEW PRODUCT'}
+
+      //- .clearfix
+        ul.list-unstyled
+          li You have to be verified user as blogger to post new products, if not find latest products, find out why, claim your blog.
+      .clearfix.mt20
+        form.form-horizontal(role='form', action='/add', method='post', enctype='multipart/form-data')
+          input(type='hidden', name='_csrf', value=_csrf)
+          input(type='hidden', name='mode', value=product.permalink?'edit':'add')
+          input(type='hidden', name='id', value=product.permalink?product.id:'')
+          //- - if (user.role>=2)
+            .form-group
+              label(class='col-sm-2 control-label', for='inspiredBy') Inspired By
+              .col-sm-8
+                input.form-control(type='text', name='inspiredBy', id='inspiredBy', placeholder='Enter blog name')
+          .form-group
+            label(class='col-sm-2 control-label', for='postUrl') Blog Post URL
+            .col-sm-8
+              input.form-control(type='text', name='postUrl', id='postUrl', placeholder='Enter blog post URL', value=product.postUrl||user.profile.website, autocomplete='off', autofocus=true)
+          .form-group
+            label(class='col-sm-2 control-label', for='section') Category
+            .col-sm-8
+              label.radio.radio-inline
+                input(type='radio', checked=product.section==1, name='section', value='1', data-toggle='radio')
+                span For Him
+              label.radio.radio-inline
+                input(type='radio', checked=product.section==2, name='section', value='2', data-toggle='radio')
+                span For Her
+              label.radio.radio-inline
+                input(type='radio', checked=product.section==3, name='section', value='3', data-toggle='radio')
+                span Home &amp; Design
+          .form-group
+            label(class='col-sm-2 control-label', for='title') Product Name
+            .col-sm-8
+              input.form-control(type='text', name='title', id='title', placeholder='Enter product name', value=product.title, autocomplete='off')
+          .form-group
+            label(class='col-sm-2 control-label', for='body') Tagline
+            .col-sm-8
+              input.form-control(type='text', name='body', id='body', placeholder='Enter product tagline', value=product.body, autocomplete='off')
+          //- .form-group
+            label(class='col-sm-2 control-label', for='url') Product URL
+            .col-sm-8
+              input.form-control(type='text', name='url', id='url', placeholder='Enter product URL', value=product.url, autocomplete='off')
+              //- .clearfix.mt15
+                button.btn.btn-sm.btn-default(type='button', onclick='grabUrl($("#url").val())') Grab data from URL...
+                span.lm10(id='grab_msg')
+          .form-group
+            label(class='col-sm-2 control-label', for='image_source') Image
+            .col-sm-8
+              ul.list-unstyled(id='image_source')
+                li(id='image_source_upload_area')
+                  //- label(class='checkbox')
+                    input(type='radio', name='image_source', id='image_source_upload', value='upload', onchange='switchShow("image_source", "image_source_upload")', checked)
+                    span &nbsp; Upload image from my device
+                  .clearfix.mt5
+                    input(type='file', name='filename')
+                //- li(id='image_source_url_area')
+                  label(class='checkbox')
+                    input(type='radio', name='image_source', id='image_source_url', value='url', onchange='switchShow("image_source", "image_source_url")')
+                    span &nbsp; Download image from a different URL
+                  .clearfix.mt10.hide
+                    input.form-control(type='text', name='image_url', id='image_url', placeholder='Enter image URL', autocomplete='off')
+          if product.title
+            .form-group
+              label(class='col-sm-2 control-label', for='image_source')
+              .col-sm-8
+                a.notimp(href='/product/#{product.permalink}/remove') Remove this product...
+          if (user.role>=2)
+            hr.hr-label.hr-red
+            .clearfix.sn-label.sn-label-red.align-center.mb10.lato700
+              i.fa.fa-lock
+              | Admin Area
+            .form-group
+              label(class='col-sm-2 control-label', for='tags') Tags
+              .col-sm-8
+                input.form-control(type='text', name='tags', id='tags', placeholder='Enter tags', value=product.getTags(), autocomplete='off')
+          .form-group
+            .col-sm-offset-2.col-sm-8
+              ul.list-unstyled.list-inline.m0.list-on-left
+                li
+                  button.btn.btn-danger(type='submit')
+                    | Post it!
+                li
+                  button.btn.btn-default(type='button', onclick='location="#{product?"/product/"+product.permalink:"/"}"')
+                    | Cancel

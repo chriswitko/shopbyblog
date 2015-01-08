@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  .container
+    .clearfix.container-fix.container-fb.p15
+      .page-header.m0
+        h3.mt0 Have a questions? Contact us.
+
+      .clearfix.mt20
+        form.form-horizontal(role='form', method='post')
+          input(type='hidden', name='_csrf', value=_csrf)
+          .form-group
+            label(class='col-sm-2 control-label', for='email') Email
+            .col-sm-8
+              input.form-control(type='text', name='email', id='email', value='#{user?user.email:""}')
+          .form-group
+            label(class='col-sm-2 control-label', for='name') Name
+            .col-sm-8
+              input.form-control(type='text', name='name', id='name', autofocus=true)
+          .form-group
+            label(class='col-sm-2 control-label', for='message') Message
+            .col-sm-8
+              textarea.form-control(type='text', name='message', id='message', rows='7')
+          .form-group
+            .col-sm-offset-2.col-sm-8
+              button.btn.btn-primary(type='submit')
+                | Send

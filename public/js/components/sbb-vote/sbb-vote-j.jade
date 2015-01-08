@@ -1,0 +1,74 @@
+<!-- https://www.polymer-project.org/docs/start/creatingelements.html -->
+<!-- https://www.polymer-project.org/docs/elements/core-elements.html#core-ajax -->
+<!-- https://github.com/polymer -->
+<link rel="import" href="/js/components/polymer/polymer.html">
+<link rel="import" href="/js/components/core-ajax/core-ajax.html">
+
+<polymer-element name="sbb-vote-j" class="" attributes="product counter active">
+  <template>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/css/static.css" rel="stylesheet">
+    <core-ajax id="ajax" url="/product/{{product}}/vote" params='{"ref":"vote"}' handleAs="json" on-core-response="{{voted}}"></core-ajax>
+    <link rel="stylesheet" href="./sbb-vote.css?2">
+    <ul class="list-unstyled list-inline mb0 mt5 ml0 mr0 list-on-left small">
+      <li>
+        <a class="notimp" href="#">
+          <i class="fa fa-star">
+          | Want (2)
+        </a>
+      </li>
+      <li>
+        <a class="notimp" href="#">
+          <i class="fa fa-shopping-cart">
+          | Buy
+        </a>
+      </li>
+    </ul>
+    <span class="vote" on-tap="{{clickAction}}">
+      <div class="grid-counter">
+        <i style="font-size:18px;margin:3px 0 0 0;line-height:24px;" class="fa fa-chevron-up"></i>
+        <div class="clearfix">
+          <h5 style="padding:0;margin:0;">{{counter}}</h5>
+        </div>
+      </div>
+    </span>
+  </template>
+
+  <script>
+
+    Polymer('sbb-vote-j', {
+
+      active: false,
+      counter: '0',
+      product: '',
+
+      activeChanged: function() {
+        // console.log('zmiana');
+        this.classList.toggle('selected', this.active);
+      },
+
+      clickAction: function(e) {
+        if(window.SBB_USER&&window.SBB_USER._id) {
+          var ajax = document.querySelector("core-ajax");
+          this.$.ajax.go()
+        } else {
+          swal({title: "Please sign in...", text: "You need to sign in to proceed.", type: "error", confirmButtonText: "OK" });
+        }
+      },
+
+      voted: function(e, data) {
+        // console.log('vote', data);
+        // data.response
+        // this.active = true;
+        // this.counter++;
+        this.counter = data.response.meta.upvotes;
+        this.active = !this.active;
+        // this.activeChanged();
+      }
+
+    });
+
+
+  </script>
+
+</polymer-element>

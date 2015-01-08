@@ -1,0 +1,134 @@
+extends ../layout
+
+block content
+
+  .container.container-fix
+    .page-header.m0
+      h3.m0 NOTIFICATIONS
+    //- .row.mb20
+      .col-sm-12
+        h3.day NOTIFICATIONS
+    .row.mt20
+      .col-sm-12
+        //- .clearfix.p10.bg-clouds
+          p.m0 Commenting is limited for now but will open to those recommended by the community.
+            br
+            a(href='') Learn more
+
+        .clearfix
+          table.m0.table-notifications(width='100%')
+            tr
+              td(width='50', align='top')
+                a.pull-left(href='')
+                  img.img-circle(src='http://pbs.twimg.com/profile_images/495581209846874113/_iZlPtQW_normal.jpeg', width='35')
+              td
+                .clearfix
+                  ul.list-unstyled.list-inline.m0.list-on-left.pull-left.list-text
+                    li
+                      a.imp(href='') afrank
+                    li
+                      span posted
+                    li
+                      a.imp(href='') Nike Zoom Shoes
+                    li
+                      span in
+                    li
+                      a.imp(href='') For Him
+                    li
+                      a.notimp.small(href='') 2 days ago
+                //- .clearfix.mt10
+                  .row
+                    .col-sm-4.grid-products
+                      a(href='', target='_blank')
+                        .grid-element.clearfix(style='position:relative;')
+                          .grid-image.clearfix.img-thumbnail(style='background:#f8f8f8 url(/uploads/l_3d70d52ad98a8ddc3912980534d022d5.jpg) no-repeat 50% 50%;background-size:cover;')
+                    .col-sm-8.small.visible-xs-block.visible-lg-inline.visible-sm-inline.visible-md-inline
+                      .clearfix.p10.gbox
+                        .row
+                          .col-sm-12
+                            h4.mt0.mb10
+                              //- i.fa.fa-star.color-gold
+                              | #{__('WHERE TO BUY')} &nbsp;
+                              span.pull-right
+                                a(href='')
+                                  small Sponsored &nbsp;
+                                    i.fa.fa-info-circle.mr0
+                          .col-sm-12
+                            .clearfix.p102
+                              ul.list-unstyled.m0
+                                li
+                                  .clearfix(style='line-height:31px;')
+                                    .pull-left
+                                      a.imp.color-g-blue(href='/l') hem.com
+                                    .pull-right
+                                      a.btn.btn-link.btn-sm.imp.pr0.color-g-green(href='') BUY NOW
+
+                        //- .col-sm-12.mt20
+                          h4.mt0.mb10 #{__('FIND OUT MORE')}
+                        //- .col-sm-12
+                          ul.list-unstyled.m0
+                            li
+                              a(href='/l') Amazon.com
+                              //- | &nbsp;
+                              //- a.underline.imp(href='') Buy now for $120
+                            li
+                              //- i.fa.fa-rss
+                              a(href='') techcrounch.com
+
+                      //- .clearfix
+                        h5.mt0.mb5
+                          i.fa.fa-star.color-gold
+                          | WHERE TO BUY
+                      //- ul.list-unstyled.mt0.bg-premium.p10
+                        li
+                          .dt.m0.small
+                            a(href='/l') Amazon.com
+                            | &nbsp;
+                            a.underline.imp(href='') Buy now for $120
+                        li
+                          .dt.m0.small
+                            a(href='/l') alipons.pl
+                            | &nbsp;
+                            a.underline.imp(href='') Buy now for $120
+                        li
+                          .dt.m0.small
+                            a(href='/l') sklepbiegacza.pl
+                            | &nbsp;
+                            a.underline.imp(href='') Get 10% discount
+                      //- .clearfix
+                        p.m0.align-right.small
+                          small.notimp Sponsored Links
+
+            tr
+              td(width='50')
+                a.pull-left(href='')
+                  img.img-circle(src='http://pbs.twimg.com/profile_images/495581209846874113/_iZlPtQW_normal.jpeg', width='35')
+              td
+                p.m0
+                  a.imp(href='') afrank
+                  | &nbsp;
+                  span posted
+                  | &nbsp;
+                  a.imp(href='') Kitchen Aid
+                //- .clearfix.mt10.small
+                  .row
+                    .col-sm-4.pr10.mb10
+                      img.img-thumbnail.img-rounded(src='/uploads/l_3d70d52ad98a8ddc3912980534d022d5.jpg')
+
+            tr
+              td(width='50')
+                a.pull-left(href='')
+                  img.img-circle(src='http://pbs.twimg.com/profile_images/495581209846874113/_iZlPtQW_normal.jpeg', width='35')
+              td
+                p.m0
+                  a.imp(href='') afrank
+                  | &nbsp;
+                  span posted
+                  | &nbsp;
+                  a.imp(href='') Snowboard desk Vibrant achive X200
+
+
+
+    .row.mb10
+      .col-sm-12.align-center
+        a.btn.btn-default.btn-lg(href='') load more...
