@@ -120,7 +120,10 @@ var csrfExclude = ['/api/comments', '/payments/paypal/payed'];
 //     next();
 // });
 
-app.set('port', process.env.PORT || 3005);
+var PORT = (env=='production'?80:3005);
+
+// app.set('port', process.env.PORT || 3005);
+app.set('port', PORT);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.set('json spaces', 2);
@@ -461,7 +464,7 @@ if (process.env.NODE_ENV === 'development') {
  */
 
 app.listen(app.get('port'), function() {
-  console.log('Express server listening on port %d in %s mode', app.get('port'), app.get('env'));
+  console.log('Express server listening on port %d in %s mode', PORT, app.get('env'));
 });
 
 module.exports = app;
