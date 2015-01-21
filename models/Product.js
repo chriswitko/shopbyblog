@@ -1,5 +1,8 @@
 "use strict";
 
+var env = process.env.NODE_ENV || 'development';
+var secrets = require('../config/secrets')[env];
+
 var _ = require('lodash');
 
 var mongoose = require('mongoose');
@@ -29,14 +32,14 @@ var productSchema = new mongoose.Schema({
     comments: { type: Number, default: 0 },
     views: { type: Number, default: 0 },
     clicks: { type: Number, default: 0 }, // from sponsored area = find more & buy now
-    upvotes: { type: Number, default: 0 },
+    upvotes: { type: Number, default: 0, index: true },
     lastCommentedAt: { type: Date }
   },
 
-  isHidden: { type: Boolean, default: false },
+  isHidden: { type: Boolean, default: false, index: true },
   isInactive: { type: Boolean, default: false },
-  baseScore: { type: Number, default: 0 },
-  score: { type: Number, default: 0 },
+  baseScore: { type: Number, default: 0, index: true },
+  score: { type: Number, default: 0, index: true },
 
   tags: [],
 
@@ -46,8 +49,8 @@ var productSchema = new mongoose.Schema({
   status: { type: Number, default: helper.productStatus.STATUS_PENDING },
   sticky: { type: Boolean, default: false },
 
-  author: {type : Schema.ObjectId, ref : 'User'},
-  publisher : {type : Schema.ObjectId, ref : 'User'},
+  author: {type : Schema.ObjectId, ref : 'User', index: true},
+  publisher : {type : Schema.ObjectId, ref : 'User', index: true},
 
   postedAt: Date
 });
@@ -71,10 +74,10 @@ productSchema.pre('save', function(next) {
 
 productSchema.methods.getOpenGraph = function() {
   return {
-    title: '',
-    description: '',
-    url: '',
-    image: ''
+    title: this.title,
+    description: this.body,
+    url: secrets.sbbConfig.website + '/product/' + this.permalink,
+    image: secrets.sbbConfig.s3ImagesHost + '/images/l_' + this.imageFileName
   }
 }
 

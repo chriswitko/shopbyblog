@@ -2,26 +2,37 @@ extends layout
 
 block content
   .container
-    .clearfix.container-fix.container-fb.p15
+    .clearfix.container-fix
       .page-header.m0
-        h3.mt0 Have a questions? Contact us.
+        h3.mt0 Masz pytania? Napisz do nas.
 
       .clearfix.mt20
         form.form-horizontal(role='form', method='post')
           input(type='hidden', name='_csrf', value=_csrf)
           .form-group
-            label(class='col-sm-2 control-label', for='email') Email
+            .col-sm-2 &nbsp;
+            .col-sm-8
+              p Jeżeli masz pytania, upewnij się czy nie ma już odpowiedzi w naszym dziale <a href="/help">pomocy</a>:
+              ul
+                li
+                  a(href='/help') Pomoc dla użytkowników
+                li
+                  a(href='/help#bloggers') Pomoc dla blogerów
+                li
+                  a(href='/help#advertisers') Pomoc dla reklamodawców
+          .form-group
+            label(class='col-sm-2 control-label', for='email', autofocus=true) Email
             .col-sm-8
               input.form-control(type='text', name='email', id='email', value='#{user?user.email:""}')
           .form-group
-            label(class='col-sm-2 control-label', for='name') Name
+            label(class='col-sm-2 control-label', for='name') Imię
             .col-sm-8
-              input.form-control(type='text', name='name', id='name', autofocus=true)
+              input.form-control(type='text', name='name', id='name')
           .form-group
-            label(class='col-sm-2 control-label', for='message') Message
+            label(class='col-sm-2 control-label', for='message') Wiadomość
             .col-sm-8
               textarea.form-control(type='text', name='message', id='message', rows='7')
           .form-group
             .col-sm-offset-2.col-sm-8
               button.btn.btn-primary(type='submit')
-                | Send
+                | Wyślij

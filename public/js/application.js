@@ -28,6 +28,8 @@
 //= require lib/jquery-ui.min
 //= require lib/jquery.select-to-autocomplete.js
 
+//= require lib/underscore.js
+
 //= require lib/pickdate/picker.js
 //= require lib/pickdate/picker.date.js
 //= require lib/pickdate/picker.time.js

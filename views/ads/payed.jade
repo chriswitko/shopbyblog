@@ -1,16 +1,44 @@
 extends ../layout
 
 block content
+  if (status)
+    script.
+      ga('sbb.send', 'event', 'Sale', 'Advertisers', 'user_#{campaign.user._id}');
+      ga('sbb.send', 'event', 'Sale', 'Popular Products', 'product_#{campaign.product._id}');
   .container
-    .clearfix.container-fix.container-fb.p15
-      .page-header.m0
-        h3.m0 PAYMENT CONFIRMATION
+    .row.mt20
+      .col-sm-push-1.col-sm-10.align-center
+        if status
+          h1.mt0.mb10.lato.lato100(style='font-size:60px;line-height:60px;') Dziękujemy!
+          h3.lato.lato400.mt20 Twoja płatność została potwierdzona.
+        //- else
+        //-   h1.mt0.mb10.lato.lato100(style='font-size:60px;line-height:60px;') Problem z płatnością
+        //-   h3.lato.lato400.mt20 Twoja płatność nie została potwierdzona.
 
-      .row.mt20
+    .clearfix.container-fix.p15
+      .row
         .col-sm-12
           form.form-horizontal(role='form', method='post', enctype='multipart/form-data')
             input(type='hidden', name='_csrf', value=_csrf)
             .form-group
               label(class='col-sm-2 control-label', for='url')
               .col-sm-8
-                | Thank You! Your payment has been confirmed.
+                if status
+                  p Twoja kampania zostanie uruchomiona w przeciągu 5 minut. Na Twój adres e-mail przesłany zostanie e-mail z potwierdzenie.
+                  ul.list-unstyled
+                    li
+                      i.fa.fa-angle-right
+                      a.imp(href='/product/#{campaign.product.permalink}') Przejdź do strony produktu
+                    li
+                      i.fa.fa-angle-right
+                      a.imp(href='/ads/report?cid=#{campaign._id}') Przejdź do raportu z kampanii
+                else
+                  p Twoja płatność nie została potwierdzona. Prosimy spróbować ponownie. W przypadku pytań prosimy o kontant na #{__('hello@shopbyblog.com')}.
+                  ul.list-unstyled
+                    li
+                      a(href='/ads/payment?cid=#{campaign._id}') Przejdź ponownie do płatności za kampanię
+
+            .form-group.mb0.mt20
+              .col-sm-offset-2.col-sm-8
+                .clearfix
+                  p.m0.imp.small #{__('Have a questions? Write us')} <a href="/contact">#{__('hello@shopbyblog.com')}</a>

@@ -2,6 +2,8 @@
 
 // Load Balancer, Counters
 
+var env = process.env.NODE_ENV || 'development';
+
 var _ = require('lodash');
 var async = require('async');
 var og = require('open-graph-scraper');
@@ -14,11 +16,10 @@ var lwip = require('lwip');
 var fs = require('fs');
 var moment = require('moment');
 var nodemailer = require('nodemailer');
-var secrets = require('../config/secrets');
+var secrets = require('../config/secrets')[env];
 
 var jf = require('jsonfile')
 
-var mailingTemplatesDir   = path.join(__dirname, '/../views/mailing');
 var emailTemplates = require('email-templates');
 
 var oxr = require('open-exchange-rates');
@@ -39,11 +40,69 @@ var Following = require('../models/Following');
 var Campaign = require('../models/Campaign');
 var Notification = require('../models/Notification');
 
+var followUser = function(followee, follower, cb) {
+  var locales = {}
+  // console.log('fe', followee)
+  // console.log('fr', follower)
+
+  async.series({
+    findFollowing: function(done) {
+      Following.findOne({followee: followee, follower: follower}, function(err, following) {
+        locales.following = following||new Following();
+        done();
+      });
+    },
+    updateFollowing: function(done) {
+      locales.following.followee = followee;
+      locales.following.follower = follower;
+      locales.following.end = undefined;
+
+      if(!locales.following.start) locales.following.start = new Date();
+      locales.following.last = new Date();
+
+      locales.following.save(function() {
+        done();
+      });
+    },
+    getFollowee: function(done) {
+      User.findOne({_id: followee}, function(err, followee) {
+        // console.log('followee', followee._id)
+        locales.followee = followee
+        done();
+      })
+    },
+    updateCountersForFollowee: function(done) {
+      updateCountersForUser(locales.followee, function() {
+        done();
+      })
+    },
+    getFollower: function(done) {
+      // console.log('follower', follower._id)
+      User.findOne({_id: follower}, function(err, follower) {
+        locales.follower = follower
+        done();
+      })
+    },
+    updateCountersForFollower: function(done) {
+      updateCountersForUser(locales.follower, function() {
+        done();
+      })
+    }
+  }, function() {
+    cb({
+      code: 200,
+      status: 'success',
+      following: true
+    })
+  })
+}
+
 var refreshJsonFile = function(profile, cb) {
   if(!profile) return cb(false);
 
   var locales = {};
       locales.profile = profile;
+      locales.output = [];
 
   async.series({
     getAddedProducts: function(done) {
@@ -51,20 +110,34 @@ var refreshJsonFile = function(profile, cb) {
       locales.products = [];
 
       if(!locales.profile) return cb(false);
-      if(locales.profile) criteria.author = locales.profile._id;
+      if(locales.profile) criteria.publisher = locales.profile._id;
+      criteria.isHidden = false;
       Product.find(criteria).sort({createdAt: -1}).exec(function(err, products) {
-        if(products) locales.products = locales.products.concat(_.map(products, function(product) {return {product: {title: product.title, imageFileName: product.imageFileName, permalink: product.permalink, id: product._id, createdAt: product.createdAt, votes: product.meta.votes}}}));
+        if(products) locales.products = locales.products.concat(_.map(products, function(product) {return {title: product.title, imageFileName: product.imageFileName, permalink: product.permalink, id: product._id, _id: product._id, createdAt: product.createdAt, votes: product.meta.votes}}));
         done()
+      })
+    },
+    assignAds: function(done) {
+      async.forEachSeries(locales.products, function(product, cb) {
+        getActiveAdsByProduct(product, function(ads) {
+          product.isPromoted = ads.length?true:false;
+          locales.output.push({product: product});
+          cb();
+        })
+      }, function() {
+        done();
       })
     },
     saveFile: function(done) {
       var output = {
         profile: {id: locales.profile._id, permalink: locales.profile.permalink, username: locales.profile.username, followers: locales.profile.meta.followers},
-        products: locales.products
+        products: locales.output
       }
-      var file = './public/js/widget/data/u_' + locales.profile._id + '.json'
+      var file = path.join(__dirname, '/../public/js/widget/data/u_' + locales.profile._id + '.json')
+      // console.log('file', file)
 
       jf.writeFile(file, output, function(err) {
+        // console.log('err json', err);
         done();
       })
     }
@@ -83,21 +156,21 @@ var uploadProductImagesToCDN = function(filename, cb) {
         doneParallel();
       });
     },
-    m: function(doneParallel) {
-      uploadToS3('./public/uploads/m_'+filename, 'images', 'm_'+filename, function() {
-        doneParallel();
-      });
-    },
+    // m: function(doneParallel) {
+    //   uploadToS3('./public/uploads/m_'+filename, 'images', 'm_'+filename, function() {
+    //     doneParallel();
+    //   });
+    // },
     l: function(doneParallel) {
       uploadToS3('./public/uploads/l_'+filename, 'images', 'l_'+filename, function() {
         doneParallel();
       });
     },
-    o: function(doneParallel) {
-      uploadToS3('./public/uploads/o_'+filename, 'images', 'o_'+filename, function() {
-        doneParallel();
-      });
-    }
+    // o: function(doneParallel) {
+    //   uploadToS3('./public/uploads/o_'+filename, 'images', 'o_'+filename, function() {
+    //     doneParallel();
+    //   });
+    // }
   }, function() {
     cb(true);
   });
@@ -113,7 +186,7 @@ var uploadToS3 = function(file, folder, filename, cb) {
 
   s3.putFile(file, '/' + folder + '/' + filename, function(err, output){
     cb({
-      url: output.client._httpMessage.url,
+      // url: output.client._httpMessage.url,
       err: err
     })
   });
@@ -133,14 +206,14 @@ var sendPlainEmail = function(options, cb) {
 
   var mailOptions = {
     to: options.to,
-    from: options.from||'hello@shopbyblog.com',
+    from: options.from||secrets.gaEmail,
     subject: options.subject,
     text: options.text//'Hello,\n\n' + 'This is a confirmation that the password for your account ' + options.user.email + ' has just been changed.\n'
   };
 
   transporter.sendMail(mailOptions, function(err) {
-    console.log('SENDING OPTIONS:', mailOptions);
-    console.log('SENDING:', err);
+    // console.log('SENDING OPTIONS:', mailOptions);
+    // console.log('SENDING:', err);
     cb(true);
   });
 }
@@ -148,10 +221,11 @@ var sendPlainEmail = function(options, cb) {
 var sendHtmlEmail = function(options, cb) {
   if(!options||!options.to) return cb(false);
 
-  console.log('dir', mailingTemplatesDir);
+  var mailingTemplatesDir   = path.join(__dirname, '/../views/mailing/pl');
+  // console.log('dir', mailingTemplatesDir);
   emailTemplates(mailingTemplatesDir, function(err, template) {
     if (err) {
-      console.log('err4', err);
+      // console.log('err4', err);
       return cb(false);
     } else {
 
@@ -163,15 +237,19 @@ var sendHtmlEmail = function(options, cb) {
         }
       });
 
+      options.sbb = secrets.sbbConfig;
+      options.moment = moment;
+
       template(options.templateName, options, function(err, html, text) {
         if (err) {
-          console.log('err1', err);
+          // console.log('err1', err);
           return cb(false);
         } else {
           var mailOptions = {
             to: options.to,
-            from: options.from||'hello@shopbyblog.com',
+            from: options.from||secrets.gaEmail,
             subject: options.subject,
+            generateTextFromHTML: true,
             html: html,
             text: text//'Hello,\n\n' + 'This is a confirmation that the password for your account ' + options.user.email + ' has just been changed.\n'
           };
@@ -186,10 +264,10 @@ var sendHtmlEmail = function(options, cb) {
             // text: text}
           , function(err, responseStatus) {
             if (err) {
-              console.log('err2', err);
+              // console.log('err2', err);
               return cb(false);
             } else {
-              console.log('err3', responseStatus.message);
+              // console.log('err3', responseStatus.message);
               return cb(true);
             }
           });
@@ -198,12 +276,6 @@ var sendHtmlEmail = function(options, cb) {
     }
 
   });
-
-  // transporter.sendMail(mailOptions, function(err) {
-    // console.log('SENDING OPTIONS:', mailOptions);
-    // console.log('SENDING:', err);
-    // cb(true);
-  // });
 }
 
 var campaignPrice = function(params, cb) {
@@ -400,15 +472,52 @@ var updateCountersForProduct = function(product, cb) {
 
   async.parallel({
     updateProductVotes: function(done) {
+      Vote.aggregate([
+        { $match: {product: product._id, end: null} },
+        { $group: {_id: null, count: { $sum: 1 } } }
+      ], function(err, totalOutput) {
+        if(!totalOutput||!totalOutput[0]) return done();
+        locales.totalVotes = totalOutput[0].count;
+        Product.update({_id: product._id}, {$set: {'meta.upvotes': totalOutput[0].count}}).exec(function() {
+          done()
+        });
+      });
+    },
+    updateProductComments: function(done) {
+      Comment.aggregate([
+        { $match: {product: product._id} },
+        { $group: {_id: null, count: { $sum: 1 } } }
+      ], function(err, totalOutput) {
+        if(!totalOutput||!totalOutput[0]) return done();
+        locales.totalComments = totalOutput[0].count;
+        Product.update({_id: product._id}, {$set: {'meta.comments': totalOutput[0].count}}).exec(function() {
+          done()
+        });
+      });
+    },
+  }, function() {
+    return cb(locales);
+  })
+}
+
+var updateCountersForProductCOUNT = function(product, cb) {
+  var locales = {};
+
+  async.parallel({
+    updateProductVotes: function(done) {
       Vote.count({product: product._id, end: null}, function(err, totalCount) {
         locales.totalVotes = totalCount;
-        Product.update({_id: product._id}, {$set: {'meta.upvotes': totalCount}}).exec(done());
+        Product.update({_id: product._id}, {$set: {'meta.upvotes': totalCount}}).exec(function() {
+          done()
+        });
       })
     },
     updateProductComments: function(done) {
       Comment.count({product: product._id}, function(err, totalCount) {
         locales.totalComments = totalCount;
-        Product.update({_id: product._id}, {$set: {'meta.comments': totalCount}}).exec(done());
+        Product.update({_id: product._id}, {$set: {'meta.comments': totalCount}}).exec(function() {
+          done()
+        });
       })
     },
   }, function() {
@@ -418,8 +527,110 @@ var updateCountersForProduct = function(product, cb) {
 
 var updateCountersForUser = function(user, cb) {
   var locales = {};
+  var params = {};
+
+  moment.locale('en-US');
+  var nowNow = moment().zone('+01:00').format('ddd MMM DD YYYY HH:mm:ss z');
 
   async.parallel({
+    updateUserCampaigns: function(done) {
+      Campaign.aggregate([
+        { $match: {'price.isPaid': true, blogger: user._id} },
+        { $group: {_id: null, count: { $sum: 1 } } }
+      ], function(err, totalOutput) {
+        if(!totalOutput||!totalOutput[0]) return done();
+        locales.totalCampaigns = totalOutput[0].count;
+        params['meta.campaigns'] = totalOutput[0].count;
+        done()
+      });
+    },
+    updateUserActiveCampaigns: function(done) {
+      Campaign.aggregate([
+        { $match: {'price.isPaid': true, isLive: true, blogger: user._id} },
+        { $group: {_id: null, count: { $sum: 1 } } }
+      ], function(err, totalOutput) {
+        if(!totalOutput||!totalOutput[0]) return done();
+        locales.totalCampaigns = totalOutput[0].count;
+        params['meta.activeCampaigns'] = totalOutput[0].count;
+        done()
+      });
+    },
+    updateUserProducts: function(done) {
+      Product.aggregate([
+        { $match: {author: user._id, isHidden: false} },
+        { $group: {_id: null, count: { $sum: 1 } } }
+      ], function(err, totalOutput) {
+        if(!totalOutput||!totalOutput[0]) return done();
+        locales.totalProducts = totalOutput[0].count;
+        params['meta.products'] = totalOutput[0].count;
+        done()
+      });
+    },
+    updateUserVotes: function(done) {
+      Vote.aggregate([
+        { $match: {follower: user._id, end: null} },
+        { $group: {_id: null, count: { $sum: 1 } } }
+      ], function(err, totalOutput) {
+        if(!totalOutput||!totalOutput[0]) return done();
+        locales.totalVotes = totalOutput[0].count;
+        params['meta.upvotes'] = totalOutput[0].count;
+        done()
+      });
+    },
+    updateUserComments: function(done) {
+      Comment.aggregate([
+        { $match: {user: user._id} },
+        { $group: {_id: null, count: { $sum: 1 } } }
+      ], function(err, totalOutput) {
+        if(!totalOutput||!totalOutput[0]) return done();
+        locales.totalComments = totalOutput[0].count;
+        params['meta.comments'] = totalOutput[0].count;
+        done()
+      });
+    },
+    updateUserFollowing: function(done) {
+      Following.aggregate([
+        { $match: {follower: user._id, end: undefined} },
+        { $group: {_id: null, count: { $sum: 1 } } }
+      ], function(err, totalOutput) {
+        if(!totalOutput||!totalOutput[0]) return done();
+        locales.totalFollowing = totalOutput[0].count;
+        params['meta.following'] = totalOutput[0].count;
+        done()
+      });
+    },
+    updateUserFollowers: function(done) {
+      Following.aggregate([
+        { $match: {followee: user._id, end: undefined} },
+        { $group: {_id: null, count: { $sum: 1 } } }
+      ], function(err, totalOutput) {
+        if(!totalOutput||!totalOutput[0]) return done();
+        locales.totalFollowers = totalOutput[0].count;
+        params['meta.followers'] = totalOutput[0].count;
+        done()
+      });
+    },
+  }, function() {
+    User.update({_id: user._id}, {$set: params}).exec(function() {
+      return cb(locales);
+    });
+  })
+}
+
+var updateCountersForUserCOUNT = function(user, cb) {
+  var locales = {};
+
+  async.parallel({
+    testAggr: function(done) {
+      Product.aggregate([
+        { $match: {author: user._id, isHidden: false} },
+        { $group: {_id: null, count: { $sum: 1 } } }
+      ], function(err, totalOutput) {
+        // console.log('output', totalOutput)
+        // console.log('output', totalOutput[0]?totalOutput[0].count:'none')
+        done();
+      });
+    },
     updateUserProducts: function(done) {
       Product.count({author: user._id}, function(err, totalCount) {
         locales.totalProducts = totalCount;
@@ -471,7 +682,11 @@ var getActiveAdsByProduct = function(product, cb) {
   moment.locale('en-US');
   var nowNow = moment().zone('+01:00').format('ddd MMM DD YYYY HH:mm:ss z');
   // console.log('fromnow', nowNow);
-  Campaign.find({isPaid: true, product: product._id, start: {$lte: nowNow}, end: {$gte: nowNow}})
+  // console.log('ad params', {'price.isPaid': true, product: product._id, start: {$lte: nowNow}, end: {$gte: nowNow}})
+  Campaign.find({'price.isPaid': true, product: product._id, start: {$lte: nowNow}, end: {$gte: nowNow}})
+    .populate({
+      path: 'user'
+    })
     .sort({createdAt:-1})
     .exec(function(err, ads) {
       if(ads) locales.ads = _.map(ads, function(ad) {return {ad: ad}});
@@ -528,3 +743,4 @@ exports.sendHtmlEmail = sendHtmlEmail;
 exports.uploadToS3 = uploadToS3;
 exports.uploadProductImagesToCDN = uploadProductImagesToCDN;
 exports.refreshJsonFile = refreshJsonFile;
+exports.followUser = followUser;

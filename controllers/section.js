@@ -39,18 +39,36 @@ exports.deals = function(req, res) {
   var permalink = req.route.path.replace('/', '');
 
   res.render('deals', {
-    title: "Weekly Deals",
+    title: "Oferty dnia",
     navUrl: permalink,
     section: {section: {permalink: 'deals'}}
   });
 };
 
-exports.search = function(req, res) {
-  // if(!req.query.q) return res.redirect('/');
+exports.subscriptions = function(req, res) {
+  var permalink = req.route.path.replace('/', '');
 
+  res.render('subscriptions', {
+    title: "Moje subskrypcje",
+    navUrl: permalink,
+    section: {section: {permalink: 'subscriptions'}}
+  });
+};
+
+exports.favorites = function(req, res) {
+  var permalink = req.route.path.replace('/', '');
+
+  res.render('favorites', {
+    title: "Ulubione",
+    navUrl: permalink,
+    section: {section: {permalink: 'favorites'}}
+  });
+};
+
+exports.search = function(req, res) {
   res.render('search', {
-    q: req.query.q,
-    title: 'Search for ' + (req.query.q||'people or products...'),
+    q: req.query.q||'',
+    title: (req.query.q?'Wynik szukania: ' + req.query.q:'Szukaj produktów i blogerów...'),
     section: {section: {name: 'search'}},
     showSearchBox: true
   });

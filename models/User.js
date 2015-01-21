@@ -1,5 +1,7 @@
 "use strict";
 
+var env = process.env.NODE_ENV || 'development';
+
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 var crypto = require('crypto');
@@ -8,7 +10,8 @@ var monguurl = require('monguurl');
 var timestamps = require("mongoose-times")
 var mongoosePaginate = require('mongoose-paginate')
 
-var helper = require("../config/helper")
+var secrets = require('../config/secrets')[env];
+var helper = require("../config/helper");
 
 var ROLE_USER = 1, ROLE_MODERATOR = 2, ROLE_ADMIN = 3;
 var VARIANT_USER = 1, VARIANT_BLOGGER = 2, VARIANT_STORE = 3;
@@ -23,8 +26,8 @@ var schemaOptions = {
 };
 
 var userSchema = new mongoose.Schema({
-  username: { type: String, unique: true, lowercase: true },
-  permalink: { type: String, unique: true, index: { unique: true } },
+  username: { type: String, lowercase: true },
+  permalink: { type: String, index: true },
   email: { type: String, unique: true, lowercase: true },
   password: String,
   website: String,
@@ -62,25 +65,29 @@ var userSchema = new mongoose.Schema({
     emailInvitesLeft: { type: Number, default: 5},
     emailInvitesSent: { type: Number, default: 0},
     campaigns: { type: Number, default: 0},
-    products: { type: Number, default: 0},
-    upvotes: { type: Number, default: 0},
-    karma: { type: Number, default: 0},
+    activeCampaigns: { type: Number, default: 0},
+    products: { type: Number, default: 0, index: true},
+    upvotes: { type: Number, default: 0, index: true},
+    karma: { type: Number, default: 0, index: true},
     comments: { type: Number, default: 0},
     following: { type: Number, default: 0},
     followers: { type: Number, default: 0},
     lastActionAt: Date // last vote action then we calculate number of active users per blogger
   },
 
-  isGhost: { type: Boolean, default: false },
-  isPending: { type: Boolean, default: false },
-  isVerified: { type: Boolean, default: false },
-  isHidden: { type: Boolean, default: false },
-  isRemoved: { type: Boolean, default: false },
+  isGhost: { type: Boolean, default: false, index: true },
+  isPending: { type: Boolean, default: false, index: true },
+  isVerified: { type: Boolean, default: false, index: true },
+  isHidden: { type: Boolean, default: false, index: true },
+  isRemoved: { type: Boolean, default: false, index: true },
 
-  pleaseRefreshJson: { type: Boolean, default: false },
-  pleaseRefreshRevenue: { type: Boolean, default: false },
+  pleaseRefreshJson: { type: Boolean, default: false, index: true },
+  pleaseRefreshRevenue: { type: Boolean, default: false, index: true },
   lastRefreshJsonAt: Date,
   lastRefreshRevenueAt: Date,
+
+  agreedNewsletter: { type: Boolean, default: true, index: true },
+  lastNewsletterAt: Date,
 
   blogger: {
     feedlyId: {type: String, default: ''},
@@ -88,7 +95,10 @@ var userSchema = new mongoose.Schema({
     last12mPageUniqueViews: {type: Number, default: 0},
     last12mPageAvgMinOnSite: {type: Number, default: 0},
     section: { type: Number, default: helper.section.SECTION_FORHIM },
-    locale: { type: String, default: 'en' }
+    locale: { type: String, default: 'pl' },
+    platform: String, // wordpress, tumblr, blogger etc.
+    isWidgetActive: {type: Boolean, default: false},
+    lastWidgetPingAt: Date
   },
 
   profile: {
@@ -99,7 +109,7 @@ var userSchema = new mongoose.Schema({
     picture: { type: String, default: '' },
     about: { type: String, default: '' },
     country: { type: String, default: '' },
-    locale: { type: String, default: 'en' }
+    locale: { type: String, default: 'pl' }
   },
 
   links: {
@@ -168,7 +178,7 @@ userSchema.virtual('photo').get(function() {
   var size = 200;
 
   if(this.imageFileName) {
-    return '/uploads/s_' + this.imageFileName;
+    return secrets.s3ImagesHost + '/avatars/s_' + this.imageFileName;
   }
 
   if (!this.email) {
@@ -179,12 +189,21 @@ userSchema.virtual('photo').get(function() {
   return 'https://gravatar.com/avatar/' + md5 + '?s=' + size + '&d=retro';
 });
 
+userSchema.methods.getOpenGraph = function() {
+  return {
+    title: this.getName(),
+    description: this.profile.about,
+    url: secrets.sbbConfig.website + '/' + this.permalink,
+    image: this.gravatar()
+  }
+}
+
 userSchema.methods.gravatar = function(size) {
   var size = 200;
   if (!size) size = 200;
 
   if(this.imageFileName) {
-    return '/uploads/s_' + this.imageFileName;
+    return secrets.s3ImagesHost + '/avatars/s_' + this.imageFileName;
   }
 
   if (!this.email) {
@@ -197,7 +216,7 @@ userSchema.methods.gravatar = function(size) {
 
 userSchema.methods.background = function() {
   if(this.backgroundFileName) {
-    return '/uploads/o_' + this.backgroundFileName;
+    return secrets.s3ImagesHost + '/bgs/o_' + this.backgroundFileName;
   }
 
   return '';
@@ -214,8 +233,8 @@ userSchema.methods.getRole = function() {
 };
 
 userSchema.methods.getPermalink = function() {
-  if(this.permalink) return '/' + this.permalink;
-  else return '/' + this.id;
+  if(this.permalink&&this.isVerified) return '/' + this.permalink;
+  else return '/me';
 };
 
 userSchema.methods.getExternalLink = function() {
@@ -223,7 +242,7 @@ userSchema.methods.getExternalLink = function() {
   else return this.getPermalink();
 };
 
-userSchema.plugin(monguurl({source: 'username', target: 'permalink'}));
+// userSchema.plugin(monguurl({source: 'username', target: 'permalink'}));
 userSchema.plugin(timestamps, { created: 'createdAt', lastUpdated: 'updatedAt' })
 userSchema.plugin(mongoosePaginate)
 

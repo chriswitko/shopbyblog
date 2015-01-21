@@ -11,21 +11,25 @@ polymer-element(name='sbb-product-tb', attributes='product counter active permal
         li
           span.notimp.bind(on-tap='{{clickAction}}')
             i.fa.fa-star
-            | #{__("Want")} ({{counter}})
+            | #{__("Favourite")} ({{counter}})
         li
           a.notimp(href='/product/{{permalink}}')
             i.fa.fa-shopping-cart
             | #{__("Special offers")}
     template(bind, if="{{ variant=='preview' }}")
-      ul.list-unstyled.list-inline.m0.list-on-right
+      ul.list-unstyled.list-inline.m0.list-on-left
         li
           span.bind(on-tap='{{clickAction}}')
             i.fa.fa-star
-            | #{__("Want")} ({{counter}})
+            | #{__("Favourite")} ({{counter}})
+        li
+          a(href='{{postUrl}}', target='_blank')
+            i.fa.fa-rss
+            | Przeczytaj na blogu
         li
           a(href='/product/{{permalink}}#comments')
             i.fa.fa-comment
-            | #{__("Comments")} (<span id="commentsCounter">{{comments}}</span>)
+            | #{__("Add comment")} (<span id="commentsCounter">{{comments}}</span>)
         //- li
           a(href='/product/{{permalink}}/edit')
             i.fa.fa-share
@@ -60,7 +64,8 @@ polymer-element(name='sbb-product-tb', attributes='product counter active permal
           var ajax = document.querySelector("core-ajax");
           this.$.ajax.go()
         } else {
-          swal({title: "Please sign in...", text: "You need to sign in to proceed.", type: "error", confirmButtonText: "OK" });
+          location = '/login';
+          //- swal({title: "Please sign in...", text: "You need to sign in to proceed.", type: "error", confirmButtonText: "OK" });
         }
       },
 

@@ -2,7 +2,7 @@
 
 var SBB = $.inherit(/** @lends A.prototype */{
     __constructor : function() { // constructor
-      console.log('init SBB');
+      // console.log('init SBB');
     },
 
     getUrlVars: function(){
@@ -54,13 +54,13 @@ var SBB = $.inherit(/** @lends A.prototype */{
 
     initHandlebars: function() {
       Handlebars.registerHelper ("isFullfield", function (block) {
-        console.log('isFullfield', window.isFullfield)
+        // console.log('isFullfield', window.isFullfield)
         if(window.isFullfield) return block.fn(this)
         else return block.inverse(this)
       });
 
       Handlebars.registerHelper ("isLastDate", function (block) {
-        console.log('isLastDate', window.isLastDate)
+        // console.log('isLastDate', window.isLastDate)
         if(window.isLastDate) return block.fn(this)
         else return block.inverse(this)
       });
@@ -121,9 +121,9 @@ var SBB = $.inherit(/** @lends A.prototype */{
 
     },
 
-    initResizeGrid: function() {
+    initResizeGrid: function(initId) {
       SBB.initFonts();
-      console.log('init', 'initResizeGrid');
+      // console.log('init', 'initResizeGrid: ' + (initId?initId:'default'));
       $(window).resize(function(){
         $('.grid-products').find('.grid-image').each(function(index) {
           $(this).css({'height': (($(this).closest('.grid-element').width()))+'px'});
@@ -134,7 +134,6 @@ var SBB = $.inherit(/** @lends A.prototype */{
           $(this).find('.grid-overfly-txt').each(function(index) {
             $(this).css({'top': (($(this).parent().height()/2)-($(this).height()/2))+'px'});
           });
-
         });
       }).trigger('resize')
     },
@@ -164,7 +163,7 @@ var SBB = $.inherit(/** @lends A.prototype */{
     initRefreshNotificationsBadge: function() {
       // https://github.com/cowboy/jquery-dotimeout
       $.doTimeout( 'getNotifications', 5000, function(){
-        console.log('updating notifs...');
+        // console.log('updating notifs...');
         return true;
       });
     },
@@ -173,7 +172,7 @@ var SBB = $.inherit(/** @lends A.prototype */{
       this.initMoment();
       this.initHandlebars();
       this.initBootstrap();
-      this.initResizeGrid();
+      // this.initResizeGrid();
       this.initLinkBind();
       this.initActionsBind();
       // this.initRefreshNotificationsBadge();
@@ -190,7 +189,7 @@ var SBB = $.inherit(/** @lends A.prototype */{
 
 var SBBUser = $.inherit(SBB, {
     __constructor : function(property) { // constructor
-      console.log('init SBBUser');
+      // console.log('init SBBUser');
       this.init();
     },
 
@@ -205,6 +204,7 @@ var SBBUser = $.inherit(SBB, {
 
       var request = api.follow.read({followee: ctx.followee_id, follower: ctx.follower_id});
       request.done(function (data) {
+        ga('sbb.send', 'event', 'Users', 'Follow', 'user_'+ctx.followee_id);
         $('#action-btn-follow-'+ctx.followee_id).addClass('hid');
         $('#action-btn-unfollow-'+ctx.followee_id).removeClass('hid');
       })
@@ -216,6 +216,7 @@ var SBBUser = $.inherit(SBB, {
 
       var request = api.unfollow.read({followee: ctx.followee_id, follower: ctx.follower_id});
       request.done(function (data) {
+        ga('sbb.send', 'event', 'Users', 'Unfollow', 'user_'+ctx.followee_id);
         $('#action-btn-follow-'+ctx.followee_id).removeClass('hid');
         $('#action-btn-unfollow-'+ctx.followee_id).addClass('hid');
       })
@@ -246,7 +247,7 @@ var SBBUser = $.inherit(SBB, {
 
 var SBBProduct = $.inherit(SBB, {
     __constructor : function(property) { // constructor
-      console.log('init SBBProduct');
+      // console.log('init SBBProduct');
       this.init();
     },
 
@@ -272,6 +273,28 @@ var SBBProduct = $.inherit(SBB, {
       })
     },
 
+    getSubscriptions : function(options, cb) {
+      if(!options) options = {};
+      var api = new $.RestClient('/api/');
+          api.add('subscriptions');
+
+      var request = api.subscriptions.read(options);
+      request.done(function (data) {
+        cb(data);
+      })
+    },
+
+    getFavorites : function(options, cb) {
+      if(!options) options = {};
+      var api = new $.RestClient('/api/');
+          api.add('favorites');
+
+      var request = api.favorites.read(options);
+      request.done(function (data) {
+        cb(data);
+      })
+    },
+
     search : function(options, cb) {
       if(!options) options = {};
       var api = new $.RestClient('/api/products/');
@@ -290,7 +313,7 @@ var SBBProduct = $.inherit(SBB, {
 
 var SBBSection = $.inherit(SBB, {
     __constructor : function(property) { // constructor
-      console.log('init SBBSection');
+      // console.log('init SBBSection');
       this.init();
     },
 
@@ -344,7 +367,7 @@ var SBBSection = $.inherit(SBB, {
 
 var SBBCollection = $.inherit(SBB, {
     __constructor : function(property) { // constructor
-      console.log('init SBBCollection');
+      // console.log('init SBBCollection');
       this.init();
     },
 
@@ -392,7 +415,7 @@ var SBBCollection = $.inherit(SBB, {
 
 var SBBComment = $.inherit(SBB, {
     __constructor : function(property) { // constructor
-      console.log('init SBBComment');
+      // console.log('init SBBComment');
       this.init();
     },
 

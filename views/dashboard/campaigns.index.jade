@@ -37,7 +37,7 @@ block content
                     td
                       p.m0
                         if campaign.start
-                          | #{moment(campaign.start).format('DD/MM/YYYY HH:mm')} - #{moment(campaign.start).format('DD/MM/YYYY HH:mm')}
+                          | #{moment(campaign.start).format('DD/MM/YYYY HH:mm')} - #{moment(campaign.end).format('DD/MM/YYYY HH:mm')}
                         else
                           | &mdash;
                     td
@@ -65,7 +65,6 @@ block content
                           a.btn.btn-default(href='') Remove
 
     .container-wide
-      .row
-        .col-sm-12
-          .clearfix.mt10.align-right
-            p.m0.small Found <strong>#{pagination.total}</strong> campaigns
+      .pagination.mt0.pt0
+        ul.pagination
+          != createPagination(pagination.pages, pagination.page)

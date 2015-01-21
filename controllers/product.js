@@ -13,6 +13,7 @@ var moment = require('moment');
 var clj_fuzzy = require('clj-fuzzy');
 var knox = require('knox');
 
+var jf = require('jsonfile')
 
 var helper = require('../config/helper');
 var lb = require('./lb');
@@ -21,6 +22,74 @@ var Product = require('../models/Product');
 var Vote = require('../models/Vote');
 var User = require('../models/User');
 var Campaign = require('../models/Campaign');
+var Following = require('../models/Following');
+
+exports.algoliaSearchUpdate = function(req, res) {
+  var Algolia = require('algolia-search');
+  // search only api: 89b8c88f987fc2b1299bc88f529e5f2e
+  var client = new Algolia('DY6CRRRG54', 'aa405ae3231c428007b1b6d2cbdf5280');
+
+  async.series({
+    generateJsonFileWithProducts: function(done) {
+      Product.find({})
+      .populate({
+        path: 'publisher',
+        select: 'profile.name'
+      })
+      .select('_id permalink title body imageFileName meta publisher isHidden sticky').exec(function(err, products) {
+        if(!products) return done();
+
+        var data = _.map(products, function(product) {
+          product = product.toJSON();
+          product.objectID = product._id;
+          return product;
+        });
+
+        var file = './_storage/products.json';
+
+        jf.writeFile(file, data, function(err) {
+          done();
+        })
+      })
+    },
+    uploadToAlgolia: function(done) {
+      var index = client.initIndex('products');
+      var fileJSON = require('../_storage/products.json');
+      index.addObjects(fileJSON, function(error, content) {
+        // if (error) console.error("SEARCH ERROR: %s", content.message);
+        done();
+      });
+    }
+  }, function() {
+    res.json({
+      status: 'success'
+    })
+  })
+}
+
+exports.algoliaSearch = function(req, res) {
+  if(!req.query.q) return res.json({status: 'missing q'});
+
+  var Algolia = require('algolia-search');
+  var client = new Algolia('DY6CRRRG54', '89b8c88f987fc2b1299bc88f529e5f2e');
+  var locales = {};
+
+  async.series({
+    searchViaAlgolia: function(done) {
+      var index = client.initIndex('products');
+      index.search(req.query.q, function(error, content) {
+        locales.products = content.hits;
+        done();
+      });
+    }
+  }, function() {
+    res.json({
+      status: 'success',
+      products: locales.products
+    })
+  })
+}
+
 
 exports.simpleUploadToS3 = function(req, res) {
   var s3 = knox.createClient({
@@ -79,7 +148,7 @@ exports.index = function(req, res) {
       Product.findOne({permalink: req.params.permalink})
         .populate({
           path: 'author',
-          select: '_id username permalink profile email blogger meta'
+          select: '_id username permalink profile email blogger meta picture imageFileName'
         })
         .exec(function(err, product) {
           if(product) locales.product = product
@@ -113,6 +182,17 @@ exports.index = function(req, res) {
         done();
       }
     },
+    findFollowing: function(done) {
+      if(req.user&&locales.product&&locales.product.author) {
+        Following.findOne({followee: locales.product.author.id, follower: req.user.id}, function(err, following) {
+          if(following&&!following.end) locales.isFollowing = true;
+          else locales.isFollowing = false;
+          done();
+        });
+      } else {
+        done();
+      }
+    },
     findVote: function(done) {
       if(req.user&&locales.product) {
         Vote.findOne({product: locales.product._id, follower: req.user.id, end: null}, function(err, vote) {
@@ -142,13 +222,17 @@ exports.index = function(req, res) {
       isPublisher: req.user?((req.user.role>=2)||(locales.product.publisher?locales.product.publisher.toString() == req.user._id.toString():false)):false,
       fromNow: moment(locales.product.createdAt).fromNow(),
       og: locales.product.getOpenGraph(),
-      pricing: locales.pricing
+      pricing: locales.pricing,
+      hideSubscriptionBox: true,
+      isFollowing: locales.isFollowing,
+      isOwner: req.user&&req.user._id.toString()==locales.product.author._id.toString()
     });
   })
 };
 
 exports.list = function(req, res) {
   var locales = {}
+
   var criteria = {}
   var page = req.query.page || 1
   var limit = req.query.limit || 12
@@ -161,25 +245,23 @@ exports.list = function(req, res) {
         done();
       })
     },
+    getVerifiedUsersOnly: function(done) {
+      locales.blogger_ids = [];
+      User.find({isVerified: true, isHidden: {$ne: true}}, function(err, bloggers) {
+        locales.blogger_ids = _.map(bloggers, function(blogger) {return blogger._id});
+        done();
+      })
+    },
     getProducts: function(done) {
-      if(req.query.section) criteria.section = req.query.section;
-      if(req.query.tags) criteria.tags = {$in: _.map(req.query.tags.toString().split(','), function(tag) {return tag.trim()})}
+      // criteria.isHidden = false;
+      // criteria['meta.upvotes'] = {$gte: 2};
+      // criteria.sticky = true;
+      // if(req.query.section) criteria.section = req.query.section;
+      // if(req.query.tags) criteria.tags = {$in: _.map(req.query.tags.toString().split(','), function(tag) {return tag.trim()})}
 
-      Product.paginate(criteria, page, limit, function(err, pages, products, total) {
+      Product.paginate({publisher: {$in:locales.blogger_ids}, isHidden: false, $or: [{'meta.upvotes': {$gte: 2}}, {sticky: true}]}, page, limit, function(err, pages, products, total) {
         locales.products = [];
-        // lb.getActiveAdsByProduct(locales.product, function(ads) {
-        //   locales.ads = ads
-        //   done();
-        // })
-        // if(products) locales.products = _.map(products, function(product) {
-        //   day = moment(new Date(product.createdAt)).format('YYYYMMDD');
-        //   product = product.toJSON();
-        //   if(day!=locales.lastDay) product.isNewDay = true
-        //   if(req.user) product.isVoted = locales.votes.indexOf(product._id.toString())>-1?true:false;
-        //   else product.isVoted = false;
-        //   locales.lastDay = day
-        //   return {product: product}
-        // })
+        if(!products) return done();
         async.forEachSeries(products, function(product, cb) {
           var day = moment(new Date(product.createdAt)).format('YYYYMMDD');
           product = product.toJSON();
@@ -210,7 +292,7 @@ exports.deals = function(req, res) {
   var locales = {}
   var criteria = {}
   var page = req.query.page || 1
-  var limit = req.query.limit || 12
+  var limit = req.query.limit || 48
 
   async.series({
     getVotes: function(done) {
@@ -220,10 +302,17 @@ exports.deals = function(req, res) {
         done();
       })
     },
+    getVerifiedUsersOnly: function(done) {
+      locales.blogger_ids = [];
+      User.find({isVerified: true, isHidden: {$ne: true}}, function(err, bloggers) {
+        locales.blogger_ids = _.map(bloggers, function(blogger) {return blogger._id});
+        done();
+      })
+    },
     getDeals: function(done) {
       locales.deals_ids = []
       var nowNow = moment().zone('+01:00').format('ddd MMM DD YYYY HH:mm:ss z');
-      Campaign.find({start: {$lte: nowNow}, end: {$gte: nowNow}})
+      Campaign.find({start: {$lte: nowNow}, end: {$gte: nowNow}, 'price.isPaid': true, blogger: {$in: locales.blogger_ids}})
         .sort({createdAt:-1})
         .exec(function(err, deals) {
           if(deals) locales.deals_ids = _.uniq(_.map(deals, function(deal) {return deal.product.toString()}), function(deal) {return deal});
@@ -258,6 +347,144 @@ exports.deals = function(req, res) {
     res.json({
       code: 200,
       status: 'success',
+      products: _.shuffle(locales.products)
+    });
+  })
+};
+
+exports.subscriptions = function(req, res) {
+  var locales = {};
+      locales.users = [];
+  var criteria = {};
+  var page = req.query.page || 1;
+  var limit = req.query.limit || 50;
+
+  async.series({
+    getVotes: function(done) {
+      if(!req.user) return done();
+      Vote.find({follower: req.user._id, end: null}, function(err, votes) {
+        locales.votes = _.map(votes, function(vote) {return vote.product.toString()});
+        done();
+      })
+    },
+    getDeals: function(done) {
+      locales.deals_ids = []
+      var nowNow = moment().zone('+01:00').format('ddd MMM DD YYYY HH:mm:ss z');
+      Campaign.find({start: {$lte: nowNow}, end: {$gte: nowNow}})
+        .sort({createdAt:-1})
+        .exec(function(err, deals) {
+          if(deals) locales.deals_ids = _.uniq(_.map(deals, function(deal) {return deal.product.toString()}), function(deal) {return deal});
+          done()
+        });
+    },
+    getFollowers: function(done) {
+      criteria.follower = req.user._id;
+      criteria.end = undefined;
+      // console.log(criteria)
+
+      Following.paginate(criteria, page, limit, function(err, pages, users, total) {
+        if(users) locales.users = _.map(users, function(user) {return user.followee});
+        done(err, users);
+      })
+    },
+    getProducts: function(done) {
+      Product.paginate({publisher: {$in: locales.users}}, page, limit, function(err, pages, products, total) {
+        locales.products = [];
+        async.forEachSeries(products, function(product, cb) {
+          var day = moment(new Date(product.createdAt)).format('YYYYMMDD');
+          product = product.toJSON();
+          if(day!=locales.lastDay) product.isNewDay = true
+          if(req.user) product.isVoted = locales.votes.indexOf(product._id.toString())>-1?true:false;
+          else product.isVoted = false;
+          locales.lastDay = day
+          lb.getActiveAdsByProduct(product, function(ads) {
+            product.ads = ads
+            locales.products.push({product: product})
+            cb();
+          })
+        }, function() {
+          done()
+        })
+      }, {populate: 'author', sortBy: { createdAt : -1 }})
+    }
+  }, function() {
+    res.json({
+      code: 200,
+      status: 'success',
+      products: locales.products
+    });
+  })
+};
+
+exports.favorites = function(req, res) {
+  var locales = {}
+  var criteria = {}
+  var page = req.query.page || 1
+  var limit = req.query.limit || 50
+
+  locales.products = [];
+  locales.products_ids = [];
+
+  async.series({
+    getUser: function(done) {
+      User.findOne({_id: req.user._id}, function(err, user) {
+        locales.user = user
+        done();
+      })
+    },
+    getVotes: function(done) {
+      if(!locales.user||!req.user) return done();
+      Vote.find({follower: req.user._id, end: null}, function(err, votes) {
+        locales.votes = _.map(votes, function(vote) {return vote.product.toString()});
+        done();
+      })
+    },
+    getVotedProducts: function(done) {
+      Vote.find({follower: locales.user._id, end: null})
+        .sort({start: -1})
+        .exec(function(err, votes) {
+          if(votes) locales.products_ids = locales.products_ids.concat(_.map(votes, function(vote) {return vote.product}));
+          done();
+        })
+    },
+    getProducts: function(done) {
+      var criteria = {};
+      criteria.isHidden = false;
+      criteria._id = {$in: locales.products_ids}
+
+      Product.paginate(criteria, page, limit, function(err, pages, products, total) {
+        locales.pagination = {page: page, limit: limit, pages: pages, total: total}
+        // if(products) {
+          locales.products = [];
+          async.forEachSeries(products, function(product, cb) {
+            var day = moment(new Date(product.createdAt)).format('YYYYMMDD');
+            product = product.toJSON();
+            if(day!=locales.lastDay) product.isNewDay = true
+            if(req.user) product.isVoted = locales.votes.indexOf(product._id.toString())>-1?true:false;
+            else product.isVoted = false;
+            locales.lastDay = day
+            lb.getActiveAdsByProduct(product, function(ads) {
+              product.ads = ads
+              if(ads.length) product.sortIdx = 1;
+              else product.sortIdx = 0;
+              locales.products.push(product)
+              cb();
+            })
+          }, function() {
+            done()
+          });
+      }, {populate: 'author', sortBy: { createdAt : -1, score: -1 }})
+    },
+    sortOutput: function(done) {
+      locales.products = _.sortBy(locales.products, ['sortIdx', 'score', 'createdAt']).reverse()
+      locales.products = _.map(locales.products, function(product) {return {product: product}})
+      done();
+    }
+  }, function() {
+    res.json({
+      code: 200,
+      status: 'success',
+      pagination: locales.pagination,
       products: locales.products
     });
   })
@@ -277,6 +504,8 @@ exports.search_beta = function(req, res) {
 
 exports.search = function(req, res) {
   var locales = {}
+      locales.products = [];
+
   var criteria = {}
   var page = req.query.page || 1
   var limit = req.query.limit || 12
@@ -289,23 +518,27 @@ exports.search = function(req, res) {
         done();
       })
     },
-    getProducts: function(done) {
+    getSeaarch: function(done) {
       if(!req.query.q) return done();
-      if(req.query.section) criteria.section = req.query.section;
-      if(req.query.tags) criteria.tags = {$in: _.map(req.query.tags.toString().split(','), function(tag) {return tag.trim()})}
-      criteria.tags = {$in: _.map(req.query.q.toString().split(' '), function(tag) {return tag.trim()})}
-      criteria.typos = {$in: _.map(req.query.q.toString().split(' '), function(tag) {return clj_fuzzy.phonetics.soundex(tag.trim())})}
-      console.log(criteria)
+      var Algolia = require('algolia-search');
+      var client = new Algolia('DY6CRRRG54', '89b8c88f987fc2b1299bc88f529e5f2e');
 
-      // Product.search(req.query.q, {}, {conditions: criteria, populate: [{path: 'author',select: '_id username permalink profile email'}], sort: { createdAt : -1 }, limit: 12}, function(err, products) {
-      Product.find({$or: [{tags: criteria.tags}, {typos: criteria.typos}]})
+      var index = client.initIndex('products');
+      index.search(req.query.q, function(error, content) {
+        locales.products = _.map(content.hits, function(product) {return product._id});
+        done();
+      });
+    },
+    getProducts: function(done) {
+      if(!locales.products) return done();
+
+      Product.find({_id: {$in: locales.products}})
         .populate({
           path: 'author',
           select: '_id username permalink profile email'
         })
         .sort({createdAt: -1})
         .exec(function(err, products) {
-          // if(products.results) locales.products = _.map(products.results, function(product) {
           if(products) locales.products = _.map(products, function(product) {
             var day =  moment(new Date(product.createdAt)).format('YYYYMMDD');
             product = product.toJSON();
@@ -329,7 +562,7 @@ exports.search = function(req, res) {
 
 exports.add = function(req, res) {
   res.render('product/edit', {
-    title: 'Post a new product',
+    title: 'Dodaj produkt',
     product: new Product()
   });
 };
@@ -348,22 +581,98 @@ exports.edit = function(req, res) {
           if(product) locales.product = product
           done()
         })
-    }
+    },
+    getAds: function(done) {
+      if(!locales.product) return done();
+      locales.ads = []
+      if(locales.product) {
+        lb.getActiveAdsByProduct(locales.product, function(ads) {
+          if(!ads) return done();
+          locales.ads = ads
+          done();
+        })
+      } else {
+        done();
+      }
+    },
   }, function() {
     if(!locales.product) return res.redirect('/')
-    res.render('product/edit', {
-      title: 'Edit Product',
-      product: locales.product
-    });
+    if(locales.ads.length) {
+      req.flash('errors', { msg: 'Ten produkt posiada aktualnie aktywne kampanie. Edycja będzie możliwa po ich zakończeniu.' });
+      res.redirect('/product/'+locales.product.permalink);
+    } else {
+      res.render('product/edit', {
+        title: 'Edytuj produkt',
+        product: locales.product
+      });
+    }
+  })
+};
+
+exports.remove = function(req, res) {
+  var locales = {}
+
+  async.series({
+    getProduct: function(done) {
+      Product.findOne({permalink: req.params.permalink})
+        .populate({
+          path: 'publisher',
+        })
+        .exec(function(err, product) {
+          if(!product) return res.redirect('/')
+          if(product) locales.product = product
+          done()
+        })
+    },
+    getAds: function(done) {
+      if(!locales.product) return done();
+      locales.ads = []
+      if(locales.product) {
+        lb.getActiveAdsByProduct(locales.product, function(ads) {
+          if(!ads) return done();
+          locales.ads = ads
+          done();
+        })
+      } else {
+        done();
+      }
+    },
+    removeProduct: function(done) {
+      if(!locales.ads.length) {
+        Product.update({_id: locales.product._id}, {$set: {isHidden: true}}, function() {
+          done();
+        })
+      } else {
+        done();
+      }
+    },
+    pleaseRefreshJson: function(done) {
+      User.update({_id: locales.product.publisher||locales.product.author}, {$set: {pleaseRefreshJson: true}}).exec(function() {
+        done()
+      });
+    },
+    updateMetasForProductAuthor: function(done) {
+      lb.updateCountersForUser(locales.product.publisher, function(total) {
+        done();
+      });
+    },
+  }, function() {
+    if(locales.ads.length) {
+      req.flash('errors', { msg: 'Ten produkt posiada aktualnie aktywne kampanie. Zmiany będą możliwe po ich zakończeniu.' });
+      res.redirect('/product/'+locales.product.permalink);
+    } else {
+      req.flash('success', { msg: 'Produkt został usunięty.' });
+      res.redirect('/');
+    }
   })
 };
 
 exports.post_add = function(req, res) {
-  req.assert('postUrl', 'Blog post URL is not valid').isURL();
+  req.assert('postUrl', 'Adres do bloga musi być podany').isURL();
   // req.assert('url', 'Product URL is not valid').isURL();
-  req.assert('title', 'Product name is required').notEmpty();
-  req.assert('body', 'Tagline is required').notEmpty();
-  req.assert('image_url', 'Image URL is required').optional().isURL();
+  req.assert('title', 'Nazwa produkty jest wymagana').notEmpty();
+  req.assert('body', 'Krótki opis produktu jest wymagany').notEmpty();
+  req.assert('image_url', 'Zdjęcie jest wymagane').optional().isURL();
 
   var errors = req.validationErrors();
 
@@ -377,7 +686,7 @@ exports.post_add = function(req, res) {
 
   if(req.body.mode=='add'&&!req.files.filename) {
     if(!errors) errors = []
-    errors.push({ param: 'filename', msg: 'Image is required', value: undefined })
+    errors.push({ param: 'filename', msg: 'Zdjęcie jest wymagane', value: undefined })
     req.flash('errors', errors);
     return res.redirect('/add');
   }
@@ -460,6 +769,17 @@ exports.post_add = function(req, res) {
         })
       })
     },
+    loadProduct: function(done) {
+      if(!req.body.id) return done();
+      Product.findOne({_id: req.body.id})
+        .populate({
+          path: 'publisher',
+        })
+        .exec(function(err, product) {
+        locales.product = product;
+        done();
+      })
+    },
     uploadToCDN: function(done) {
       lb.uploadProductImagesToCDN(locales.filename?locales.filename:locales.product.imageFileName, function() {
         done();
@@ -467,14 +787,33 @@ exports.post_add = function(req, res) {
     },
     removeUpload: function(done) {
       if(!locales.path) return done();
-      fs.unlink(locales.path, function() {
-        done();
-      })
-    },
-    loadProduct: function(done) {
-      if(!req.body.id) return done();
-      Product.findOne({_id: req.body.id}, function(err, product) {
-        locales.product = product;
+      async.parallel({
+        u: function(doneParallel) {
+          fs.unlink(locales.path, function() {
+            done();
+          })
+        },
+        o: function(doneParallel) {
+          fs.unlink('./public/uploads/o_'+locales.filename, function() {
+            doneParallel();
+          })
+        },
+        l: function(doneParallel) {
+          fs.unlink('./public/uploads/l_'+locales.filename, function() {
+            doneParallel();
+          })
+        },
+        m: function(doneParallel) {
+          fs.unlink('./public/uploads/m_'+locales.filename, function() {
+            doneParallel();
+          })
+        },
+        s: function(doneParallel) {
+          fs.unlink('./public/uploads/s_'+locales.filename, function() {
+            doneParallel();
+          })
+        },
+      }, function() {
         done();
       })
     },
@@ -498,6 +837,9 @@ exports.post_add = function(req, res) {
         locales.product.author = req.user
         locales.product.publisher = req.user
       }
+      if(!locales.product.publisher) {
+        locales.product.publisher = locales.product.author;
+      }
       locales.product.postedAt = req.user.role>=2?new Date():null
 
       locales.product.tags = req.body.tags
@@ -516,12 +858,27 @@ exports.post_add = function(req, res) {
         done();
       }
     },
+    pleaseRefreshJson: function(done) {
+      User.update({_id: locales.product.publisher||locales.product.author}, {$set: {pleaseRefreshJson: true}}).exec(function() {
+        done()
+      });
+    },
+    updateMetasForProductAuthor: function(done) {
+      if(locales.product.isNew) {
+        lb.updateCountersForUser(req.user, function(total) {
+          done();
+        });
+      } else {
+        lb.updateCountersForUser(locales.product.publisher, function(total) {
+          done();
+        });
+      }
+    },
   }, function() {
-    if(req.user.role>=2) req.flash('success', { msg: 'Success! Your product has been posted.' });
-    else req.flash('success', { msg: 'Your product has been added and waiting for approval.' });
+    if(locales.product.isNew) req.flash('success', { msg: 'Produkt został dodany.' });
+    else req.flash('success', { msg: 'Zmiany zostały zapisane.' });
 
     res.redirect('/product/'+locales.saved.permalink)
-    // res.end(util.inspect(req.files));
   })
 
 
@@ -563,6 +920,9 @@ exports.vote = function(req, res) {
       Product.findOne({_id: req.params.permalink})
         .populate({
           path: 'author',
+        })
+        .populate({
+          path: 'publisher',
         })
         .exec(function(err, product) {
           locales.product = product;
@@ -637,6 +997,14 @@ exports.vote = function(req, res) {
         done();
       }
     },
+    autoFollowUser: function(done) {
+      if(!locales.product.publisher.isVerified||!locales.shouldCreateNotification) return done();
+      if(req.user&&!locales.product.publisher._id.toString()==req.user._id.toString()) return done();
+      // console.log('to follow', locales.product.author._id)
+      lb.followUser(locales.product.author._id, req.user._id, function(output) {
+        done();
+      });
+    }
   }, function() {
     res.json({
       code: 200,
@@ -653,6 +1021,17 @@ exports.unvote = function(req, res) {
   var locales = {}
 
   async.series({
+    findProduct: function(done) {
+      if(!req.user) return done();
+      Product.findOne({_id: req.params.permalink})
+        .populate({
+          path: 'author',
+        })
+        .exec(function(err, product) {
+          locales.product = product;
+          done();
+        });
+    },
     findFollowing: function(done) {
       if(!req.user) return done();
       Vote.findOne({product: req.params.permalink, follower: req.user._id}, function(err, vote) {
@@ -672,7 +1051,12 @@ exports.unvote = function(req, res) {
       locales.vote.save(function() {
         done();
       });
-    }
+    },
+    updateMetasForProductAuthor: function(done) {
+      lb.updateCountersForUser(locales.product.author, function(total) {
+        done();
+      });
+    },
   }, function() {
     res.json({
       code: 200,

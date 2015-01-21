@@ -1,0 +1,48 @@
+<link rel="import" href="/js/components/polymer/polymer.html">
+<link rel="import" href="/js/components/core-ajax/core-ajax.html">
+
+polymer-element(name='sbb-deals', attributes='')
+  template
+    link(href='//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css', rel='stylesheet')
+    core-ajax#ajax(auto, url='/api/deals', params='{"limit":"3"}', handleas='json', on-core-response='{{loaded}}')
+    != css('styles')
+    .container.container-grid.pb0.pt0.grid-products(bind, hidden?="{{ !items.length }}")
+      .row
+        .col-sm-12
+          h3.day.mt0 Oferty dnia
+      #c.row.grid-products
+        template(repeat="{{items}}")
+          .col-sm-4
+            .grid-element.container-fb(style="position:relative;display:block;overflow:hidden;")
+              .clearfix
+                a(href="/product/{{product.permalink}}")
+                  .img-thumbnail.grid-image.clearfix(style="background:#f8f8f8 url(#{imagesUrl}/images/s_{{product.imageFileName}}) no-repeat 50% 50%;background-size:cover")
+              .grid-avatar(style="position:absolute;top:20px;right:20px;")
+                spam.badge(hidden?="{{ !product.ads.length }}")
+                  i.fa.fa-star.color-red
+                  span.color-black #{__("Today's Deal")}
+              .grid-body.clearfix.mt10
+                .clearfix.overflow
+                  p.m0.imp.lato.overflow
+                    a.overflow(href="/product/{{product.permalink}}") {{title}}
+                .clearfix.overflow
+                  sbb-product-tb(variant='grid', product="{{product._id}}", active='{{product.isVoted}}', permalink='{{product.permalink}}', counter='{{product.meta.upvotes}}')
+
+  script.
+
+    Polymer('sbb-deals', {
+
+      items: [],
+
+      ready: function() {
+        //- window.SBB.initResizeGrid();
+        //- console.log('width', this.width);
+      },
+
+      loaded: function(e, data) {
+        this.items = data.response.products;
+      }
+
+    });
+
+

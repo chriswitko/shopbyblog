@@ -2,9 +2,9 @@ extends ../layout
 
 block content
   .container
-    .clearfix.container-fix.container-fb.p20
+    .clearfix.container-fix
       .page-header.m0
-        h3.m0 #{product.permalink?'PRODUCT: '+product.title:'POST A NEW PRODUCT'}
+        h3.m0 #{product.permalink?'PRODUKT: '+product.title:'DODAJ NOWY PRODUKT'}
 
       //- .clearfix
         ul.list-unstyled
@@ -20,38 +20,7 @@ block content
               .col-sm-8
                 input.form-control(type='text', name='inspiredBy', id='inspiredBy', placeholder='Enter blog name')
           .form-group
-            label(class='col-sm-2 control-label', for='postUrl') Blog Post URL
-            .col-sm-8
-              input.form-control(type='text', name='postUrl', id='postUrl', placeholder='Enter blog post URL', value=product.postUrl||user.profile.website, autocomplete='off', autofocus=true)
-          .form-group
-            label(class='col-sm-2 control-label', for='section') Category
-            .col-sm-8
-              label.radio.radio-inline
-                input(type='radio', checked=product.section==1, name='section', value='1', data-toggle='radio')
-                span For Him
-              label.radio.radio-inline
-                input(type='radio', checked=product.section==2, name='section', value='2', data-toggle='radio')
-                span For Her
-              label.radio.radio-inline
-                input(type='radio', checked=product.section==3, name='section', value='3', data-toggle='radio')
-                span Home &amp; Design
-          .form-group
-            label(class='col-sm-2 control-label', for='title') Product Name
-            .col-sm-8
-              input.form-control(type='text', name='title', id='title', placeholder='Enter product name', value=product.title, autocomplete='off')
-          .form-group
-            label(class='col-sm-2 control-label', for='body') Tagline
-            .col-sm-8
-              input.form-control(type='text', name='body', id='body', placeholder='Enter product tagline', value=product.body, autocomplete='off')
-          //- .form-group
-            label(class='col-sm-2 control-label', for='url') Product URL
-            .col-sm-8
-              input.form-control(type='text', name='url', id='url', placeholder='Enter product URL', value=product.url, autocomplete='off')
-              //- .clearfix.mt15
-                button.btn.btn-sm.btn-default(type='button', onclick='grabUrl($("#url").val())') Grab data from URL...
-                span.lm10(id='grab_msg')
-          .form-group
-            label(class='col-sm-2 control-label', for='image_source') Image
+            label(class='col-sm-2 control-label', for='image_source') Zdjęcie
             .col-sm-8
               ul.list-unstyled(id='image_source')
                 li(id='image_source_upload_area')
@@ -66,26 +35,68 @@ block content
                     span &nbsp; Download image from a different URL
                   .clearfix.mt10.hide
                     input.form-control(type='text', name='image_url', id='image_url', placeholder='Enter image URL', autocomplete='off')
+          .form-group
+            label(class='col-sm-2 control-label', for='postUrl') Adres strony
+            .col-sm-8
+              input.form-control(type='text', name='postUrl', id='postUrl', placeholder='Wprowadź adres strony do wpisu na blogu', value=product.postUrl||user.profile.website, autocomplete='off', autofocus=true)
+          //- .form-group
+            label(class='col-sm-2 control-label', for='section') Category
+            .col-sm-8
+              label.radio.radio-inline
+                input(type='radio', checked=product.section==1, name='section', value='1', data-toggle='radio')
+                span For Him
+              label.radio.radio-inline
+                input(type='radio', checked=product.section==2, name='section', value='2', data-toggle='radio')
+                span For Her
+              label.radio.radio-inline
+                input(type='radio', checked=product.section==3, name='section', value='3', data-toggle='radio')
+                span Home &amp; Design
+          .form-group
+            label(class='col-sm-2 control-label', for='title') Nazwa produktu
+            .col-sm-8
+              input.form-control(type='text', name='title', id='title', placeholder='Wprowadź nazwę produktu', value=product.title, autocomplete='off')
+          .form-group
+            label(class='col-sm-2 control-label', for='body') Krótki opis
+            .col-sm-8
+              input.form-control(type='text', name='body', id='body', placeholder='Wprowadź krótki opis / opinię', value=product.body, autocomplete='off')
+          //- .form-group
+            label(class='col-sm-2 control-label', for='url') Product URL
+            .col-sm-8
+              input.form-control(type='text', name='url', id='url', placeholder='Enter product URL', value=product.url, autocomplete='off')
+              //- .clearfix.mt15
+                button.btn.btn-sm.btn-default(type='button', onclick='grabUrl($("#url").val())') Grab data from URL...
+                span.lm10(id='grab_msg')
           if product.title
             .form-group
               label(class='col-sm-2 control-label', for='image_source')
               .col-sm-8
-                a.notimp(href='/product/#{product.permalink}/remove') Remove this product...
-          if (user.role>=2)
+                a.notimp(href='/product/#{product.permalink}/remove') Usuń ten produkt...
+          //- if (user.role>=2)
             hr.hr-label.hr-red
             .clearfix.sn-label.sn-label-red.align-center.mb10.lato700
               i.fa.fa-lock
               | Admin Area
             .form-group
-              label(class='col-sm-2 control-label', for='tags') Tags
+              label(class='col-sm-2 control-label', for='tags') Tagi
               .col-sm-8
                 input.form-control(type='text', name='tags', id='tags', placeholder='Enter tags', value=product.getTags(), autocomplete='off')
           .form-group
             .col-sm-offset-2.col-sm-8
               ul.list-unstyled.list-inline.m0.list-on-left
-                li
-                  button.btn.btn-danger(type='submit')
-                    | Post it!
-                li
-                  button.btn.btn-default(type='button', onclick='location="#{product?"/product/"+product.permalink:"/"}"')
-                    | Cancel
+                li.processBtns
+                  button.btn.btn-danger(type='submit', onclick='processForm()')
+                    | Zapisz zmiany
+                li.processBtns
+                  button.btn.btn-default(type='button', onclick='location="#{product.permalink?"/product/"+product.permalink:"/"}"')
+                    | Anuluj
+                li.hid.processInProgress
+                  button.btn.btn-default(type='button')
+                    i.fa.fa-circle-o-notch.fa-spin
+                    | #{__('Please wait...')}
+
+block js
+  script.
+    function processForm() {
+      $('.processBtns').addClass('hid');
+      $('.processInProgress').removeClass('hid');
+    }

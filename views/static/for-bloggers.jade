@@ -1,127 +1,99 @@
 extends ../layout
 
 block content
-  if (user&&!user.isVerified&&user.isPending)
+  if (user&&!user.isVerified&&user.isPending&&!messages.success)
     include for-bloggers-approval
 
   .container.container-clean.pb0.mb20(style='position:relative;')
-    //- div(style='position:absolute;left:-25px;top:-10px;')
-      img(src='./img/phlogo.png', width='100')
     .row
       .col-sm-push-1.col-sm-10.align-center
-        h1.mt0.mb10.lato.lato900 Recommend products to your readers and let them find & buy easily
-        p.m0.lato.lato400 Join the #1 bloggers network and start deliver the best products recommendations
+        h1.mt0.mb10.lato.lato100(style='font-size:60px;line-height:60px;') Zwiększ swoje zarobki <br/>z ShopByBlog
+        h3.lato.lato400.mt20 Dołącz do sieci affiliacyjnej tylko dla blogerów i zarabiaj na polecaniu produktów swoim czytelnikom.
 
   .container
-    .clearfix.container-fix.p20
+    .container-fix.p20
+      .row
+        .col-sm-push-1.col-sm-10
+          img.img-responsive(src='/img/mbair_stores.jpg')
+
+  .container
+    .clearfix.container-fix.container-fb2.p20
       .row.pb20
         .col-sm-4.align-center
           .clearfix
-            i.fa.fa-thumbs-up.fa-4x.notimp
-          h2.mb10 Recommend
-          p.m0 Build your profile and <u class="lato700">deliver daily products recommendations</u> to your readers. It's easy & free.
+            //- i.fa.fa-thumbs-up.fa-4x.notimp
+            <svg class="svg-icon" viewBox="0 0 20 20"><path fill="none" d="M16.85,7.275l-3.967-0.577l-1.773-3.593c-0.208-0.423-0.639-0.69-1.11-0.69s-0.902,0.267-1.11,0.69L7.116,6.699L3.148,7.275c-0.466,0.068-0.854,0.394-1,0.842c-0.145,0.448-0.023,0.941,0.314,1.27l2.871,2.799l-0.677,3.951c-0.08,0.464,0.112,0.934,0.493,1.211c0.217,0.156,0.472,0.236,0.728,0.236c0.197,0,0.396-0.048,0.577-0.143l3.547-1.864l3.548,1.864c0.18,0.095,0.381,0.143,0.576,0.143c0.256,0,0.512-0.08,0.729-0.236c0.381-0.277,0.572-0.747,0.492-1.211l-0.678-3.951l2.871-2.799c0.338-0.329,0.459-0.821,0.314-1.27C17.705,7.669,17.316,7.343,16.85,7.275z M13.336,11.754l0.787,4.591l-4.124-2.167l-4.124,2.167l0.788-4.591L3.326,8.5l4.612-0.67l2.062-4.177l2.062,4.177l4.613,0.67L13.336,11.754z"></path></svg>
+          h2.mb10 Polecaj
+          p.m0 Stwórz własny profil i zarabiaj na rekomendacjach produktów.
         .col-sm-4.align-center
           .clearfix
-            i.fa.fa-comments.fa-4x.notimp
-          h2.mb10 Engage
-          p.m0 Increase engagement in your blog, <u class="lato700">give your user one place to find & buy</u> the best products.
+            //- i.fa.fa-comments.fa-4x.notimp
+            <svg class="svg-icon" viewBox="0 0 20 20"><path fill="none" d="M16.198,10.896c-0.252,0-0.455,0.203-0.455,0.455v2.396c0,0.626-0.511,1.137-1.138,1.137H5.117c-0.627,0-1.138-0.511-1.138-1.137V7.852c0-0.626,0.511-1.137,1.138-1.137h5.315c0.252,0,0.456-0.203,0.456-0.455c0-0.251-0.204-0.455-0.456-0.455H5.117c-1.129,0-2.049,0.918-2.049,2.047v5.894c0,1.129,0.92,2.048,2.049,2.048h9.488c1.129,0,2.048-0.919,2.048-2.048v-2.396C16.653,11.099,16.45,10.896,16.198,10.896z"></path><path fill="none" d="M14.053,4.279c-0.207-0.135-0.492-0.079-0.63,0.133c-0.137,0.211-0.077,0.493,0.134,0.63l1.65,1.073c-4.115,0.62-5.705,4.891-5.774,5.082c-0.084,0.236,0.038,0.495,0.274,0.581c0.052,0.019,0.103,0.027,0.154,0.027c0.186,0,0.361-0.115,0.429-0.301c0.014-0.042,1.538-4.023,5.238-4.482l-1.172,1.799c-0.137,0.21-0.077,0.492,0.134,0.629c0.076,0.05,0.163,0.074,0.248,0.074c0.148,0,0.294-0.073,0.382-0.207l1.738-2.671c0.066-0.101,0.09-0.224,0.064-0.343c-0.025-0.118-0.096-0.221-0.197-0.287L14.053,4.279z"></path></svg>
+          h2.mb10 Udostępniaj
+          p.m0 Udostępniaj polecane produkty przy pomocy naszego widgeta.
         .col-sm-4.align-center
           .clearfix
-            i.fa.fa-money.fa-4x.notimp
-          h2.mb10 Earn
-          p.m0 You recommend products and we deliver sponsored links to each of them. <u class="lato700">You earn 70% on every campaign</u>.
+            //- i.fa.fa-money.fa-4x.notimp
+            <svg class="svg-icon" viewBox="0 0 20 20"><path fill="none" d="M12.173,16.086c0.72,0,1.304-0.584,1.304-1.305V6.089c0-0.72-0.584-1.304-1.304-1.304c-0.721,0-1.305,0.584-1.305,1.304v8.692C10.868,15.502,11.452,16.086,12.173,16.086z M11.738,6.089c0-0.24,0.194-0.435,0.435-0.435s0.435,0.194,0.435,0.435v8.692c0,0.24-0.194,0.436-0.435,0.436s-0.435-0.195-0.435-0.436V6.089zM16.52,16.086c0.72,0,1.304-0.584,1.304-1.305v-11.3c0-0.72-0.584-1.304-1.304-1.304c-0.721,0-1.305,0.584-1.305,1.304v11.3C15.215,15.502,15.799,16.086,16.52,16.086z M16.085,3.481c0-0.24,0.194-0.435,0.435-0.435s0.435,0.195,0.435,0.435v11.3c0,0.24-0.194,0.436-0.435,0.436s-0.435-0.195-0.435-0.436V3.481z M3.48,16.086c0.72,0,1.304-0.584,1.304-1.305v-3.477c0-0.72-0.584-1.304-1.304-1.304c-0.72,0-1.304,0.584-1.304,1.304v3.477C2.176,15.502,2.76,16.086,3.48,16.086z M3.045,11.305c0-0.24,0.194-0.435,0.435-0.435c0.24,0,0.435,0.194,0.435,0.435v3.477c0,0.24-0.195,0.436-0.435,0.436c-0.24,0-0.435-0.195-0.435-0.436V11.305z M18.258,16.955H1.741c-0.24,0-0.435,0.194-0.435,0.435s0.194,0.435,0.435,0.435h16.517c0.24,0,0.435-0.194,0.435-0.435S18.498,16.955,18.258,16.955z M7.826,16.086c0.72,0,1.304-0.584,1.304-1.305V8.696c0-0.72-0.584-1.304-1.304-1.304S6.522,7.977,6.522,8.696v6.085C6.522,15.502,7.106,16.086,7.826,16.086z M7.392,8.696c0-0.239,0.194-0.435,0.435-0.435s0.435,0.195,0.435,0.435v6.085c0,0.24-0.194,0.436-0.435,0.436s-0.435-0.195-0.435-0.436V8.696z"></path></svg>
+          h2.mb10 Zarabiaj
+          p.m0 Jako blogger zarabiasz na każdym sponsorowanym linku.
 
   if (!user)
     include for-bloggers-signup
   else if (user&&!user.isVerified&&!user.isPending)
-    include for-bloggers-new
+    .container.container-clean.pb0(style='position:relative;')
+      .row.mb20
+        .col-sm-push-1.col-sm-10.align-center
+          h1.mt0.mb10.lato.lato900 Sprawdź ile zarobisz z ShopByBlog!
+      .row.mb15
+        .col-sm-12.align-center
+          form.form-inline
+            .input-control
+              label Miesięczna liczba unikalnych użytkowników bloga: &nbsp;
+              input.form-control(type='text', id='uu', value='30000', placeholder='Wprowadź liczbę')
+              | &nbsp;&nbsp;
+              button.btn.btn-primary(type='button', onclick='calcMyRevenue()') Przelicz
+      #calc.row.mb15.hid
+        .col-sm-8.col-sm-push-2.align-center
+          .container-fb.bg-clouds
+            h5.lato100 Twoje miesięczne zarobki powinny wynosić od <strong id="min"></strong> do <strong id="max"></strong> zł przy 10 miejscach reklamowych.
   else if (user&&!user.isVerified&&user.isPending)
     //- include for-bloggers-approval
   else
     include for-bloggers-ready
 
-  .container.pb0.mb20
-    .clearfix.container-fix.p20
-      .row.mb10
-        .col-sm-12
-          small.imp FEATURED BLOGGERS
-      .row
-        .col-sm-12
-          include ../grid.blogs.jade
-
+  //- sbb-people(title='#{__("DOŁĄCZYLI DO NAS")}', theme='default', variant='whotofollow', permalink='#{user?user.permalink:""}', follower='#{user?user._id:""}')
 
   .container.container-clean.pb0.mb20(style='position:relative;')
     .row.mb20
       .col-sm-push-1.col-sm-10.align-center
-        h1.mt0.mb10.lato.lato900 How it works
-        p.m0.lato.lato400 In a few simple steps you will be able to start earning money
+        h1.mt0.mb10.lato.lato900 Jak to działa?
+        p.m0.lato.lato400 W kilku prostych krokach możesz zacząć zarabiać na polecanych przez Ciebie produktach
 
   .container
-    .clearfix.container-fix.p20
+    .clearfix.container-fix.container-fb2.p20
       .row
-        .col-sm-1.align-right
-          i.fa.fa-angle-double-right.fa-4x.notimp
-        .col-sm-5
-          h5 Create your profile
+        .col-sm-6
+          h5.lato700
+            i.fa.fa-circle
+            | Zarejestruj się
           p.m0 Register today and start delivering products recommendation to your readers.
-        .col-sm-1.align-right
-          i.fa.fa-angle-double-right.fa-4x.notimp
-        .col-sm-5
-          h5 Claim your blog
+        .col-sm-6
+          h5.lato700
+            i.fa.fa-circle
+            | Zgłoś swojego bloga
           p.m0 We need only few minutes to confirm your profile as a verified blogger.
       .row
-        .col-sm-1.align-right
-          i.fa.fa-angle-double-right.fa-4x.notimp
-        .col-sm-5
-          h5 Add recommended products
+        .col-sm-6
+          h5.lato700
+            i.fa.fa-circle
+            | Dodaj polecane produkty
           p.m0 Update your profile with daily recommendations. This way you increase chance to have more active campaign.
-        .col-sm-1.align-right
-          i.fa.fa-angle-double-right.fa-4x.notimp
-        .col-sm-5
-          h5 Put our widget on your blog
+        .col-sm-6
+          h5.lato700
+            i.fa.fa-circle
+            | Umieść nasz widget na swojej stronie
           p.m0 Widget is a way to promote recommended products on your blog. It's very easy to generate and put on blog.
-          //- p.small
-            a.notimp.underline(href='')
-              i.fa.fa-external-link
-              span Check our widget example
-      .row
-        .col-sm-1.align-right
-          i.fa.fa-angle-double-right.fa-4x.notimp
-        .col-sm-5
-          h5 Earn money
-          p.m0 You will get 70% from every campaign. More recommended products deliver more campaigns.
-
-  //- .container.container-clean.pb0.mb20(style='position:relative;')
-  //-   .row.mb20
-  //-     .col-sm-push-1.col-sm-10.align-center
-  //-       h1.mt0.mb10.lato.lato900 Widget Examples
-  //-       p.m0.lato.lato400 Check below our examples of widgets, for him, her and home &design. 100% responsive, clean & customized.
-
-  //- .container
-  //-   .clearfix.container-fix.p20
-  //-     .row
-  //-       .col-sm-4.align-center
-  //-         h3.mt0.mb0 For Him
-  //-         small.notimp Preview only
-  //-       .col-sm-4.align-center
-  //-         h3.mt0.mb0 For Her
-  //-         small.notimp Preview only
-  //-       .col-sm-4.align-center
-  //-         h3.mt0.mb0 Home & Design
-  //-         small.notimp Preview only
-
-  //- .container
-  //-   .clearfix.container-fix.p20
-  //-     .row
-  //-       .col-sm-4
-  //-         <script src="/js/widget/sbbwidget.js"></script>
-  //-         <iframe src="/js/widget/bootstrap.html?wid=XX1125" title="Instagram Widget" class="snapwidget-widget" allowTransparency="true" frameborder="0" scrolling="no" style="border:none; overflow:hidden; width:100%;"></iframe>
-  //-       .col-sm-4
-  //-         <script src="/js/widget/sbbwidget.js"></script>
-  //-         <iframe src="/js/widget/bootstrap.html?wid=XX1125" title="Instagram Widget" class="snapwidget-widget" allowTransparency="true" frameborder="0" scrolling="no" style="border:none; overflow:hidden; width:100%;"></iframe>
-  //-       .col-sm-4
-  //-         <script src="/js/widget/sbbwidget.js"></script>
-          <iframe src="/js/widget/bootstrap.html?wid=XX1125" title="Instagram Widget" class="snapwidget-widget" allowTransparency="true" frameborder="0" scrolling="no" style="border:none; overflow:hidden; width:100%;"></iframe>
 
   if (!user)
     include for-bloggers-signup
@@ -132,75 +104,74 @@ block content
   else
     include for-bloggers-ready
 
-  .container.container-clean.pb0
-    .row.mb20
-      .col-sm-push-1.col-sm-10.align-center
-        h1.mt0.mb10.lato.lato900 Why?
-        p.m0.lato.lato400 In a few simple steps you will be able to start earning money
-
-  .container
-    .clearfix.container-fix.p20
-      .row
-        .col-sm-12
-          ul.m0
-            li
-              h5 There is only one invoice
-              p.m0 Many ad networks deliver random content, often not incontext to your blog.
-            li
-              h5 We pay for your recommendations, not for clicks or views
-              p.m0 Many ad networks deliver random content, often not incontext to your blog.
-            li
-              h5 Recommend products that suits your blog
-              p.m0 Many ad networks deliver random content, often not incontext to your blog.
-            li
-              h5 Give fast answer to questions like "Where can I buy this product?"
-              p.m0 Your readers often ask you where to buy products you write in your posts? Out widget is very handy place to deliver this answer.
-            li
-              h5 Engage your users around products and learn more about them
-              p.m0 We deliver great insights about products you recommend. Now you will learn more witch products are the most popular.
-            li
-              h5 Don't loose your time
-              p.m0 We take care on looking for new adverstisers, who will add sponsored links to each of your recommendations.
-
-  if (!user)
-    include for-bloggers-signup
-  else if (user&&!user.isVerified&&!user.isPending)
-    include for-bloggers-new
-  else if (user&&!user.isVerified&&user.isPending)
-    //- include for-bloggers-approval
-  else
-    include for-bloggers-ready
-
-
-  .container
-
-    section.mt50
-      h3.m0 FAQ
-      hr
-
-      h4 I'm blogger. How ShopByBlog works for me?
-      p Product Hunt surfaces the best new products, every day. It's a place for product-loving enthusiasts to share and geek out about the latest mobile apps, websites, hardware projects, and tech creations.
-
-      p You can read more about our story on <a href="http://pando.com/2013/12/04/can-the-democratic-power-of-a-platform-like-hacker-news-be-applied-to-products/" target="_blank">PandoDaily</a>, <a href="http://www.fastcolabs.com/3023152/open-company/the-wisdom-of-the-20-minute-startup" target="_blank">Fast Company</a>, <a href="http://techcrunch.com/2014/06/04/product-hunt-is-the-social-news-site-of-tech-products-read-by-influential-people/" target="_blank">TechCrunch</a>, <a href="http://thenextweb.com/insider/2014/06/05/product-hunt-is-leveling-the-playing-field-to-help-good-apps-and-startups-get-attention/" target="_blank">The Next Web</a>, <a href="http://www.businessinsider.com/product-hunt-2014-6" target="_blank">Business Insider</a>, <a href="http://www.foxbusiness.com/on-air/risk-and-reward/index.html#/v/3639940132001" target="_blank">Fox Business</a>, and <a href="http://www.forbes.com/sites/sethporges/2014/07/03/the-creator-of-product-hunt-spills-the-hit-sites-dirty-details" target="_blank">Forbes</a>.</p>
-
-    section
-      h4 How much I can earn?
-      p You get 60% and we 40% of each deals we'll setup.
-
-      ul
-        li URL - Direct link to the product page (avoid links to press or blogs)
-        li Product Name
-        li Tagline - Very short description of the product (make it catchy!)
-
+  .container-wide.bg-clouds.p20
+    .container
+      .clearfix
+        .row
+          .col-sm-6(style='border-right:2px solid #d6d6d6')
+            h3.mt0.mb10.lato.lato700.align-center Korzyści dla Ciebie
+            .clearfix.mt20
+              ul.m0
+                li
+                  h5.lato700 Dodajesz produkty, które chcesz polecić
+                  p.m0 Ty decydujesz co chcesz promować i polecać swoim czytelnikom. Dopasuj polecane produkty do treści na swoim blogu.
+                li
+                  h5.lato700 My szukamy sprzedawców, którzy posiadają dodane produkty
+                  p.m0 Możesz skoncentrować się na swoich czytelnikach i tworzeniu treści, my dla Ciebie znajdziemy reklamodawców.
+                li
+                  h5.lato700 Otrzymujesz 70% przychodów z każdej kampanii
+                  p.m0 Twój blog ma ogromny potencjał reklamowy, dlatego 70% kwoty netto od każdego linku sponsorowanego jest wypłacany Tobie.
+                li
+                  h5.lato700 Tylko jedna faktura. Wypłata każdego miesiąca.
+                  p.m0 Wystawiasz nam tylko jedną fakturę lub rachunek w miesiącu. Bez zbędnej biurokracji.
+                //- li
+                  h5.lato700 Płacimy za rekomendacje a nie za kliknięcia czy wyświetlenia
+                  p.m0 Many ad networks deliver random content, often not incontext to your blog.
+                //- li
+                  h5.lato700 Dopasuj polecane produkty do treści na swoim blogu
+                  p.m0 Many ad networks deliver random content, often not incontext to your blog.
+                li
+                  h5.lato700 Nie trać czasu
+                  p.m0 Zatroszczymy się o wykorzystanie potencjału Twojego bloga i dostarczymy najlepszych reklamodawców.
+          .col-sm-6
+            h3.mt0.mb10.lato.lato700.align-center Korzyści dla Twoich czytelników
+            .clearfix.mt20
+              ul.m0
+                li
+                  h5.lato700 Szybki dostęp do polecanych produktów i informację gdzie je kupić
+                  p.m0 Czytelnicy często pytają "gdzie to kupić?", "który produkt polecasz". Od teraz odpowiedź dostaną od ręki na Twoim blogu.
+                li
+                  h5.lato700 Inspiracje, dostęp do nowości
+                  p.m0 Czytelnicy mogą znajdować pomysły na zakupy oraz zapoznawać się z Twoją opinią.
+                li
+                  h5.lato700 Atrakcyjne oferty dla Twoich czytelników
+                  p.m0 Każdy Twój czytelnik ma możliwość otrzymywania atrakcyjnych ofert na polecane produkty.
+                li
+                  h5.lato700 Bezpieczeństwo zakupów. Sprawdzone sklepy.
+                  p.m0 Każdy reklamodawca jest przez nas weryfikowany, aby proces zakupowy dla Twoich czytelników był przyjemny i bezpieczny.
   .container.container-clean.pb0.mb20(style='position:relative;')
     .row.mb20
       .col-sm-push-1.col-sm-10.align-center
-        h1.mt0.mb10.lato.lato900 Have a question? Write us!
+        h1.mt0.mb10.lato.lato900 Masz pytania? Napisz do nas.
 
     .row.mb15
       .col-sm-12.align-center
-        a.btn.btn-primary.btn-lg(href='/signup') info@shopbyblog.com
+        a.btn.btn-primary.btn-lg(href='/contact') #{__('hello@shopbyblog.com')}
 
-    //- section.mt20
-      .align-center
-        a.btn.btn-danger.btn-lg(href='/signup') Add my blog
+block js
+  script.
+    function calcMyRevenue() {
+      var uu = $('#uu').val();
+      if(!uu||uu<100) return;
+      var api = new $.RestClient('/api/calc/');
+          api.add('price');
+
+      var request = api.price.read({lang: 'pl', basePrice: 25, uu: parseFloat(uu)*12, followers:0, naa: 0, days: 30});
+      request.done(function (data) {
+        if(data) {
+          $('#min').html(parseFloat((data[5].totalNetto*0.7*3)).toFixed(2) + ' zł');
+          $('#max').html(parseFloat((data[5].totalNetto*0.7*20)).toFixed(2) + ' zł');
+          $('#calc').removeClass('hid');
+        }
+      })
+    };

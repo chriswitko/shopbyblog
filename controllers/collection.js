@@ -38,7 +38,7 @@ exports.index = function(req, res) {
 
 exports.add = function(req, res) {
   res.render('collection/edit', {
-    title: 'Create new Collection',
+    title: 'Nowa kolekcja',
     collection: new Collection()
   });
 };
@@ -61,16 +61,16 @@ exports.edit = function(req, res) {
   }, function() {
     if(!locales.collection) return res.redirect('/')
     res.render('collection/edit', {
-      title: 'Edit Collection',
+      title: 'Edycja kolekcji',
       collection: locales.collection
     });
   })
 };
 
 exports.post_add = function(req, res) {
-  req.assert('title', 'Collection name is required').notEmpty();
-  req.assert('body', 'Tagline is required').optional();
-  req.assert('image_url', 'Image URL is required').optional().isURL();
+  req.assert('title', 'Nazwa kolekcji jest wymagana').notEmpty();
+  req.assert('body', 'Opis kolekcji jest wymagany').optional();
+  req.assert('image_url', 'Zdjęcie jest wymagane').optional().isURL();
 
   var errors = req.validationErrors();
 
@@ -84,7 +84,7 @@ exports.post_add = function(req, res) {
 
   if(req.body.mode=='add'&&!req.files.filename) {
     if(!errors) errors = []
-    errors.push({ param: 'filename', msg: 'Image is required', value: undefined })
+    errors.push({ param: 'filename', msg: 'Zdjęcie jest wymagane', value: undefined })
     req.flash('errors', errors);
     return res.redirect('/collection/add');
   }
@@ -192,9 +192,9 @@ exports.post_add = function(req, res) {
     }
   }, function() {
     if(req.body.mode=='add')
-      req.flash('success', { msg: 'Success! Your collection has been created.' });
+      req.flash('success', { msg: 'Gratulacje! Kolekcja została utworzona.' });
     else
-      req.flash('success', { msg: 'Success! Your collection has been updated.' });
+      req.flash('success', { msg: 'Gratulacje! Zmiany zostały zapisane.' });
 
     res.redirect('/collection/'+locales.saved.permalink)
   })

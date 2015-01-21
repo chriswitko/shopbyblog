@@ -1,9 +1,13 @@
-extends ../layout.dark.jade
+extends ../layout.jade
+
+block jshead
+  meta(content='5;url=#{redirect_url}', http-equiv='refresh')
 
 block content
+  script.
+    ga('sbb.send', 'event', 'Products', 'Click', 'product_#{campaign.product}');
+    ga('sbb.send', 'event', 'Campaign', 'Click', 'campaign_#{campaign._id}');
   .container-wide.mt50
     .col-sm-12.align-center.mt50
       .clearfix.p20
-        h4.m0.color-white.lato100 We're redirecting you to the store. Please wait...
-        br
-        img(src='/svg-loaders/tail-spin.svg')
+        h4.m0.lato100 Trwa przekierowanie do sklepu...

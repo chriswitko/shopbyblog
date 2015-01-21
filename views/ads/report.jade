@@ -1,0 +1,143 @@
+extends ../layout
+
+block content
+  .container
+    .row
+      .col-xs-12
+        .page-header.mt0
+          h3.m0 Raport kampanii
+      .col-xs-8
+        .clearfix
+          ul.list-unstyled
+            li
+              | #{__('Your Link')}: &nbsp;
+              a(href='#{campaign.url}', target='_blank') #{campaign.url}
+            li
+              | #{__('Blog')}: &nbsp;
+              a(href='/#{product.author.permalink}', target='_blank') #{product.author.getName()}
+            li
+              | #{__('Product')}: &nbsp;
+              a(href='/product/#{campaign.product.permalink}', target='_blank') #{campaign.product.title}
+            li
+              | Data emisji: &nbsp;
+              span #{moment(campaign.start).format('DD/MM/YYYY HH:mm')}
+              | &nbsp; - &nbsp;
+              span #{moment(campaign.end).format('DD/MM/YYYY HH:mm')}
+
+      .col-xs-4.align-right
+        if !campaign.price.isPaid
+          a.btn.btn-danger.btn-lg(href='/ads/payment?cid=#{campaign._id}') Opłać i uruchom kampanię
+
+  .container.mt0.p0
+    .col-xs-12.container-fix.mt0.tab-content
+
+      .clearfix
+        .clearfix
+          table.table.table-bordered.m0.bg-clouds
+            tr
+              td.align-center(width='20%')
+                h2 #{campaign.meta.views}
+                p Wyświetlenia
+              td.align-center(width='20%')
+                h2 #{campaign.meta.clicks}
+                p Kliknięcia
+              td.align-center(width='20%')
+                h2 #{sprintf('%0.2f', campaign.meta.ctr)}%
+                p CTR(%)
+              td.align-center(width='20%')
+                h2 #{sprintf('%0.2f', campaign.meta.cpc)} zł
+                p CPC
+          .clearfix.mt5
+            p.m0.small.notimp Ostatnia aktualizacja: #{campaign.lastUpdatedAt?moment(campaign.lastUpdatedAt).format('DD/MM/YYYY HH:mm'):'-'}
+
+
+      if processedDays>1
+        .clearfix.mt20
+          .page-header.m0
+            h3.m0 Wyświetlenia / Kliknięcia &nbsp;
+              small Czas emisji: #{moment(campaign.start).format('DD/MM/YYYY HH:mm')} - #{moment(campaign.end).format('DD/MM/YYYY HH:mm')}
+          .clearfix(style='height:300px;')
+            canvas(id="canvas", height="300", width='100%')
+
+      if campaign.daily
+        .clearfix.mt20
+          .page-header.m0
+            h3.m0 Wyświetlenia dziennie
+          .clearfix.mt20
+            table.table.table-bordered.m0(width='100%')
+              thead
+                tr
+                  th(width='100%') Dzień
+                  th.align-right(width='100') Ilość
+              tbody
+                each daily, i in campaign.daily
+                  if daily.dimension=='View'
+                    tr
+                      td #{moment(daily.day).format('DD/MM/YYYY')}
+                      td.align-right #{daily.total}
+        .clearfix.mt20
+          .page-header.m0
+            h3.m0 Kliknięcia dziennie
+          .clearfix.mt20
+            table.table.table-bordered.m0(width='100%')
+              thead
+                tr
+                  th(width='100%') Dzień
+                  th.align-right(width='100') Ilość
+              tbody
+                each daily, i in campaign.daily
+                  if daily.dimension=='Click'
+                    tr
+                      td #{moment(daily.day).format('DD/MM/YYYY')}
+                      td.align-right #{daily.total}
+
+
+block js
+  if processedDays>1
+    script.
+      var labels = [];
+      var views = [];
+      var clicks = [];
+
+    each daily, i in campaign.daily
+      <script>labels.push('#{daily.day}')</script>
+
+    each daily, i in campaign.daily
+      if daily.dimension=='View'
+        <script>views.push(!{daily.total})</script>
+
+    each daily, i in campaign.daily
+      if daily.dimension=='Click'
+        <script>clicks.push(!{daily.total})</script>
+
+    script.
+      var barChartData = {
+        labels : _.uniq(labels, function(label) {return label}),
+        datasets : [
+          {
+            fillColor : "rgba(220,220,220,0.5)",
+            strokeColor : "rgba(220,220,220,0.8)",
+            highlightFill: "rgba(220,220,220,0.75)",
+            highlightStroke: "rgba(220,220,220,1)",
+            data : views
+          },
+          {
+            fillColor : "rgba(151,187,205,0.5)",
+            strokeColor : "rgba(151,187,205,0.8)",
+            highlightFill : "rgba(151,187,205,0.75)",
+            highlightStroke : "rgba(151,187,205,1)",
+            data : clicks
+          }
+        ]
+      };
+
+      window.onload = function(){
+        var ctx = document.getElementById("canvas").getContext("2d");
+        window.myBar = new Chart(ctx).Line(barChartData, {
+          responsive : true,
+          maintainAspectRatio: false,
+          scaleShowGridLines : false,
+          bezierCurve : false
+        });
+      }
+

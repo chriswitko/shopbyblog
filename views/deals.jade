@@ -5,26 +5,9 @@ block content
   include templates/sections.grid.jade
   include templates/collections.grid.jade
 
-  .container.container-clean.pb0
-    .row.mb10.pb0
-      .col-sm-12.align-center
-        h3.m0 Today's Deals
-        p The best selection of products with great price & discounts.
-
-  //- .container.hidden-xs
-    .row
-      .col-xs-12
-        ul.nav.nav-tabs(role="tablist")
-          li.active(role="presentation")
-            a(href="/deals", role="tab") All deals
-          - if (user)
-            li(role="presentation")
-              a.imp(href="/notifications", role="tab") My Deals (1)
-
-  .container.container-clean.pb0.mt100.hid
-    #empty.clearfix.mt0.hid.mb15
-      h4.m0.align-center Sorry, we couldn't find that item.
-      p.m0.align-center Here are some other items that might interest you.
+  #empty.container.container-clean.pb0.mt100.hid
+    .clearfix.mt0.mb15
+      h4.m0.align-center Brak produktów
 
   .container.container-grid.mt0
     .clearfix.mt0
@@ -45,6 +28,7 @@ block js
 
           $('#results-area').html(html);
           if(!data.products.length) $('#empty').removeClass('hid');
+          SBB.initResizeGrid();
         });
       }
     })

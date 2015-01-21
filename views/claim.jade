@@ -4,7 +4,7 @@ block content
   .container
     .clearfix.container-fix.container-fb.pt0
       .page-header.m0.bg-dark.p20.color-white
-        h3.mt0 DOŁĄCZ DO NAS. ZACZNIJ ZARBIAĆ NA SWOICH REKOMENDACJACH.
+        h3.mt0 DOŁĄCZ DO NAS. ZACZNIJ ZARBIAĆ NA SWOICH POLECENIACH.
         p.mb0 Wypełnij formularz poniżej. Informacje te przyspieszą proces weryfikacji i aktywacji konta blogera.
 
       .clearfix.p20
@@ -52,7 +52,7 @@ block content
               .col-sm-8
                 select.form-control(name="country", id="country", autofocus="autofocus", autocorrect="off", autocomplete="off")
                   !=citiesInHTML
-            .form-group
+            //- .form-group
               .clearfix
                 label.col-sm-2.control-label &nbsp;
                 .col-sm-8
@@ -113,7 +113,7 @@ block content
               .col-sm-8
                 .checkbox-inline
                   input(type='checkbox', name='isAgreed', id='isAgreed', checked='checked', velue='1', style='margin-top:2px')
-                  label(for='isAgreed') #{__('I have read and aggree to our')} <a class='underline' href='/terms' target='_blank'>#{__('Terms of Service')}</a>.
+                  label(for='isAgreed') #{__('I have read and aggree to our')} <a class='underline' href='/help#terms' target='_blank'>#{__('Terms of Service')}</a>.
 
 
             .form-group
@@ -126,7 +126,7 @@ block content
           .form-group.mb0.mt20
             .col-sm-offset-2.col-sm-8
               .clearfix
-                p.m0.imp.small #{__('Have a questions? Write us')} <a href="mailto:hello@shopbyblog.com">hello@shopbyblog.com</a>
+                p.m0.imp.small #{__('Have a questions? Write us')} <a href="/contact">#{__('hello@shopbyblog.com')}</a>
 
 
 block js

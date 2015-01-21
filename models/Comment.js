@@ -7,7 +7,7 @@ var timestamps = require("mongoose-times")
 var mongoosePaginate = require('mongoose-paginate')
 
 var commentSchema = new mongoose.Schema({
-  product: {type : Schema.ObjectId, ref : 'Product'},
+  product: {type : Schema.ObjectId, ref : 'Product', index: true},
   user: {type : Schema.ObjectId, ref : 'User'},
   body: {type : String}
 });

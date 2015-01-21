@@ -1,5 +1,9 @@
-footer
+footer.bg-clouds2
   .container.text-center
+    .row
+      .col-xs-12.align-center
+        a(href='https://twitter.com/search?q=%23shopbyblog&src=typd', target='_blank')
+          h4.lato400 #shopbyblog
     .row
       .col-xs-12
         ul.list-inline.list-unstyled.m0
@@ -10,19 +14,24 @@ footer
           li
             a(href='/for-bloggers') #{__('For Bloggers')}
           li
-            a(href='/sell-products') #{__('For Sellers')}
+            a(href='/sell-products') Dla reklamodawców
           //- li
             a(href='/ads') Ads
           //- li
-            a(href='/terms') Terms
+            a(href='/terms') #{__('Terms')}
           //- li
             a(href='/help') Help
-          li
+          //- li
             a(href='/privacy') #{__('Privacy')}
+          li
+            a(href='/help') #{__('Help')}
           li
             a(href='/contact') #{__('Contact')}
       .col-sm-12
-        p.m0.small &copy; 2015 #{__('ShopByBlog')}. #{__('All Rights Reserved')}
+        p.m0.small &copy; 2015 #{__('ShopByBlog')} · #{__('All Rights Reserved')} ·&nbsp;
+          a(href='/help#terms') #{__('Terms')}
+          | &nbsp;·&nbsp;
+          a(href='/help#privacy') #{__('Privacy')}
         //- .clearfix
           ul.list-inline.list-unstyled.m0
             li(class=currentLang=='en'?'imp':'notimp')

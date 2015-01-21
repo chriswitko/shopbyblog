@@ -8,7 +8,7 @@ script(id='temp-product-old', type='text/x-handlebars-template').
           <i class="fa fa-star color-red"/><span class="color-black">#{__("Today's Deal")}</span>
         </span>
         {{else}}
-        <a href="/{{product.author.permalink}}"><img src="{{product.author.photo}}" width="30" class="img-circle"/></a>
+        <a href="/{{product.author.permalink}}"><img src="{{product.author.photo}}" width="30" class="img-rounded"/></a>
         {{/if}}
       </div>
       <div class="grid-body clearfix">
@@ -40,7 +40,7 @@ script(id='temp-product', type='text/x-handlebars-template').
           <i class="fa fa-star color-red"/><span class="color-black">#{__("Today's Deal")}</span>
         </span>
         {{else}}
-        <a href="/{{product.author.permalink}}"><img src="{{product.author.photo}}" width="30" class="img-circle"/></a>
+        <a href="/{{product.author.permalink}}"><img src="{{product.author.photo}}" width="30" class="img-rounded"/></a>
         {{/if}}
       </div>
       <div class="grid-body clearfix mt10">
@@ -160,7 +160,7 @@ script(id='grid-item-product-only', type='text/x-handlebars-template').
             <i class="fa fa-star color-red"/><span class="color-black">#{__("Today's Deal")}</span>
           </span>
           {{else}}
-          <a href="/{{product.author.permalink}}"><img src="{{product.author.photo}}" width="30" class="img-circle"/></a>
+          <a href="/{{product.author.permalink}}"><img src="{{product.author.photo}}" width="30" class="img-rounded"/></a>
           {{/if}}
         </div>
         <div class="grid-body clearfix mt10">
@@ -186,7 +186,7 @@ script(id='grid-item-product-only', type='text/x-handlebars-template').
 script(id='temp-comment', type='text/x-handlebars-template').
   {{#each comments}}
     <div class="media">
-      <a href="/{{comment.user.permalink}}" class="pull-left"><img src="{{comment.user.photo}}" width="50" class="media-object img-circle"/></a>
+      <a href="/{{comment.user.permalink}}" class="pull-left"><img src="{{comment.user.photo}}" width="50" class="media-object img-rounded"/></a>
       <div class="media-body">
         <h4 class="media-heading m0">
           <ul class="list-unstyled list-inline small mb0 list-actions">

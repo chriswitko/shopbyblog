@@ -23,6 +23,29 @@ exports.sectionsIndex = function(req, res) {
   });
 };
 
+exports.usersActionWelcomeBlogger = function(req, res) {
+  var locales = {}
+
+  async.series({
+    getUser: function(done) {
+      User.findOne({_id: req.params.user_id}, function(err, user) {
+        locales.user = user
+        done(err, user);
+      })
+    },
+    sendMail: function(done) {
+      if(!locales.user.isVerified) return done();
+      lb.sendHtmlEmail({to: locales.user.email, user: locales.user, subject: 'Twoje konto blogera zostało aktywowane', templateName: 'blogger-verified'}, function(output) {
+        done();
+      });
+    }
+  }, function(err) {
+    if(!locales.user.isVerified) return res.redirect('/dashboard/users');
+    req.flash('success', { msg: 'Welcome message to ' + locales.user.email + ' have been sent' });
+    res.redirect('/dashboard/users');
+  })
+}
+
 exports.productsActionUploadToS3 = function(req, res) {
   var locales = {}
 
@@ -42,7 +65,36 @@ exports.productsActionUploadToS3 = function(req, res) {
     req.flash('success', { msg: 'Images for ' + locales.product.title + ' have been uploaded to S3' });
     res.redirect('/dashboard/products');
   })
+}
 
+exports.productsActionSticked = function(req, res) {
+  var locales = {}
+
+  async.series({
+    getProduct: function(done) {
+      Product.update({_id: req.params.product_id}, {$set: {sticky: true}}).exec(function() {
+        done();
+      })
+    },
+  }, function(err) {
+    req.flash('success', { msg: 'Product have been sticked' });
+    res.redirect('/dashboard/products');
+  })
+}
+
+exports.productsActionUnsticked = function(req, res) {
+  var locales = {}
+
+  async.series({
+    getProduct: function(done) {
+      Product.update({_id: req.params.product_id}, {$set: {sticky: false}}).exec(function() {
+        done();
+      })
+    },
+  }, function(err) {
+    req.flash('success', { msg: 'Product have been sticked' });
+    res.redirect('/dashboard/products');
+  })
 }
 
 exports.productsIndex = function(req, res) {
@@ -56,7 +108,7 @@ exports.productsIndex = function(req, res) {
         locales.products = products
         locales.pagination = {page: page, limit: limit, pages: pages, total: total}
         done(err, products);
-      }, {populate: ['author','publisher']})
+      }, {populate: ['author','publisher'], sortBy: { createdAt : -1 }})
     }
   }, function(err) {
     res.render('dashboard/products.index.jade', {
@@ -69,7 +121,7 @@ exports.productsIndex = function(req, res) {
 
 exports.usersIndex = function(req, res) {
   var locales = {}
-  var page = req.query.page || 1
+  var page = parseInt(req.query.page) || 1
   var limit = req.query.limit || 10
 
   async.series({
@@ -78,7 +130,7 @@ exports.usersIndex = function(req, res) {
         locales.users = users
         locales.pagination = {page: page, limit: limit, pages: pages, total: total}
         done(err, users);
-      })
+      }, {sortBy: { isVerified: -1, createdAt: -1 }})
     }
   }, function(err) {
     res.render('dashboard/users.index.jade', {
@@ -121,6 +173,8 @@ exports.usersUpdate = function(req, res, next) {
     user.isHidden = req.body.isHidden
     user.isRemoved = req.body.isRemoved
 
+    user.permalink = req.body.permalink
+
     user.profile.country = req.body.country || '';
 
     if(req.body.business&&req.body.business.baseShare) user.business.baseShare = req.body.business.baseShare;
@@ -128,6 +182,7 @@ exports.usersUpdate = function(req, res, next) {
 
     if(req.body.links&&req.body.links.rss) user.links.rss = lb.repairUrl(req.body.links.rss || '');
 
+    if(req.body.blogger&&req.body.blogger.platform) user.blogger.platform = req.body.blogger.platform || '';
     if(req.body.blogger&&req.body.blogger.feedlyId) user.blogger.feedlyId = req.body.blogger.feedlyId || '';
     if(req.body.blogger&&req.body.blogger.section) user.blogger.section = req.body.blogger.section || '';
     if(req.body.blogger&&req.body.blogger.locale) user.blogger.locale = req.body.blogger.locale || '';
@@ -150,7 +205,7 @@ exports.usersUpdate = function(req, res, next) {
 exports.campaignsIndex = function(req, res) {
   var locales = {}
   var page = req.query.page || 1
-  var limit = req.query.limit || 10
+  var limit = req.query.limit || 50
 
   async.series({
     getCampaigns: function(done) {

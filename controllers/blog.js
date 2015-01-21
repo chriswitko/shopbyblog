@@ -12,7 +12,8 @@ exports.search = function(req, res) {
 
   if(!req.query.q) return res.json({code: 200, status: 'error'});
 
-  rest.get('http://cloud.feedly.com/v3/search/feeds/?count=24&query=' + req.query.q).on('complete', function(data) {
+  rest.get('http://cloud.feedly.com/v3/search/feeds/?count=19&query=' + encodeURIComponent(req.query.q)).on('complete', function(data) {
+    if(!data||!data.results) res.json({results:[]});
     async.forEachSeries(data.results, function(blog, cb) {
       if(blog.visualUrl) {
         // console.log(blog);
@@ -21,7 +22,7 @@ exports.search = function(req, res) {
       cb()
     }, function() {
       res.json({
-        results: locales.output
+        results: _.shuffle(locales.output)
       })
     })
   });

@@ -1,0 +1,13 @@
+extends ../../layout/default
+
+block content
+  p(style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:19px;color:#666;font-weight:normal;margin:4px 15px 4px 0") Szanowny Użytkowniku,
+  br
+  p(style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:19px;color:#666;font-weight:normal;margin:4px 15px 4px 0") Informujemy, że uruchomiona została nowa kampania.
+  br
+  p(style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:19px;color:#666;font-weight:normal;margin:4px 15px 4px 0") - Adres do raportu kampanii: #{sbb.website}/ads/report?cid=#{campaign._id}
+  p(style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:19px;color:#666;font-weight:normal;margin:4px 15px 4px 0") - Blog: #{campaign.blogger.getName()} (#{campaign.blogger.getExternalLink()})
+  p(style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:19px;color:#666;font-weight:normal;margin:4px 15px 4px 0") - Produkt: #{campaign.product.title} (#{sbb.website}/product/#{campaign.product.permalink})
+  p(style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:19px;color:#666;font-weight:normal;margin:4px 15px 4px 0") - Termin emisji: #{moment(campaign.start).format('DD/MM/YYYY HH:mm')} - #{moment(campaign.end).format('DD/MM/YYYY HH:mm')}
+  br
+  p(style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:19px;color:#666;font-weight:normal;margin:4px 15px 4px 0") W przypadku pytań prosimy o kontakt.

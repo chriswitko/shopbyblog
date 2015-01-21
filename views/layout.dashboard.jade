@@ -24,12 +24,11 @@ html
     != css('styles')
     style.
       .ng-hide {display: none!important;}
-  body
+  body(style='padding-top:50px;')
     include partials/navbar.dashboard.jade
 
-    .container
-      include partials/flash
     .container-wide.p15
+      include partials/flash
       block content
 
     != js('application')

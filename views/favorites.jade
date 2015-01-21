@@ -1,0 +1,51 @@
+extends layout
+
+block content
+  include templates/products.grid.jade
+  include templates/sections.grid.jade
+  include templates/collections.grid.jade
+
+  //- .container.container-clean.pb0
+    .row.mb10.pb0
+      .col-sm-12.align-center
+        h3.m0 Moje subskrypcje
+        p Blogerzy, których obserwujesz i produkty przez nich polecane
+
+  //- .container.hidden-xs
+    .row
+      .col-xs-12
+        ul.nav.nav-tabs(role="tablist")
+          li.active(role="presentation")
+            a(href="/deals", role="tab") All deals
+          - if (user)
+            li(role="presentation")
+              a.imp(href="/notifications", role="tab") My Deals (1)
+
+  #empty.container.container-clean.pb0.mt100.hid
+    .clearfix.mt0.mb15
+      h4.m0.align-center Brak produktów
+      //- p.m0.align-center Here are some other items that might interest you.
+
+  .container.container-grid.mt0
+    .clearfix.mt0
+      #results-area
+
+block js
+
+  script.
+    $(document).ready(function() {
+      if($('#results-area')) {
+        SBBProduct.getFavorites({}, function(data) {
+          var source = $("#grid-item-product-only").html();
+
+          var template = Handlebars.compile(source);
+
+          var context = {products: data.products};
+          var html    = template(context);
+
+          $('#results-area').html(html);
+          if(!data.products.length) $('#empty').removeClass('hid');
+          SBB.initResizeGrid();
+        });
+      }
+    })

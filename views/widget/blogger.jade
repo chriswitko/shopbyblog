@@ -1,12 +1,12 @@
 extends ../layout
 
 block content
-  .container
-    .clearfix.container-fix.container-fb.p15
+  .container.mt0.mb20
+    .clearfix
       .row
         .col-sm-12
-          h3.mt0.lato400 Widget for Blogger
-          p.mb0.lato400 Embedded Posts are a simple way to put public posts - by a Page or a person on Facebook - into the content of your web site or web page. Only public posts from Facebook Pages and profiles can be embedded.
+          h3.mt0.mb0.lato400 Widget na bloga
+          p.mb0.lato400 Widget służy do udostępniania polecanych produktach na Twoim blogu.
 
   .container
     .clearfix.container-fix.container-fb.p15
@@ -14,36 +14,39 @@ block content
         .col-sm-12
           form.form-horizontal(role='form', method='post', enctype='multipart/form-data')
             input(type='hidden', name='_csrf', value=_csrf)
+            input(type='hidden', name='showFollowButton', id='showFollowButton', value='1')
             .form-group
-              label(class='col-sm-2 control-label', for='locale') Language
+              label(class='col-sm-2 control-label', for='locale') Język
               .col-sm-8
                 select.form-control(name='locale', id='locale', onchange='refreshPreview()')
-                  option(value='pl') Polish
+                  option(value='pl') Polski
                   //- option(value='en') English
             .form-group
-              label(class='col-sm-2 control-label', for='cta') Title
+              label(class='col-sm-2 control-label', for='cta') Nagłówek
               .col-sm-8
                 select.form-control(name='cta', id='cta', onchange='refreshPreview()')
-                  option(value='1') Recommended
-                  option(value='2') Like it
-                  option(value='3') Where to buy it?
+                  option(value='1') Polecam
+                  option(value='2') Lubię to
+                  option(value='3') Gdzie to kupić?
             .form-group
               label(class='col-sm-2 control-label', for='cols') Format
               .col-sm-2
                 select.form-control(name='format', id='format', onchange='refreshPreview()')
                   option(value='2x5') 2x5
+                  option(value='2x2') 2x2
+                  option(value='2x3') 2x3
                   option(value='3x4') 3x4
                   option(value='4x1') 4x1
                   option(value='4x2') 4x2
               .col-sm-8
-                label.control-label.notimp Columns x Rows
+                label.control-label.notimp Kolumny x Wiersze
             .form-group
-              label(class='col-sm-2 control-label', for='width') Max Width (px)
+              label(class='col-sm-2 control-label', for='width') Maksymalna szerokość (px)
               .col-sm-2
                 input.form-control(type='text', name='width', id='width', value='300', placeholder='300', autocomplete='off', onchange='refreshPreview()')
               .col-sm-8
-                label.control-label.notimp Leave empty or enter 0 to auto-width
-            .form-group
+                label.control-label.notimp Pozostaw puste lub wpisz 0 aby szerokość się automatycznie dopasowała
+            //- .form-group
               label(class='col-sm-2 control-label', for='showFollowButton') &nbsp;
               .col-sm-8.pt5
                 label
@@ -61,22 +64,38 @@ block content
               label(class='col-sm-2 control-label', for='url') &nbsp;
               .col-sm-8
                 .clearfix.container-fb.p15
-                  p.mt0.imp Place the code for your widget wherever you want the widget to appear on your page.
+                  p.mt0.imp Umieść poniższy kod w dowolnym miejscu na stronie, gdzie chcesz aby wyświetlał się widget.
                   #widget-code.clearfix
                     textarea.form-control(readonly="1", rows="7", spellcheck="false", onclick="this.focus(); this.select()")
 
             .form-group.mb0.mt20
               .col-sm-offset-2.col-sm-8
                 .clearfix
-                  p.m0.imp.small Have a questions? Write us <a href="#">hello@shopbyblog.com</a>
+                  p.m0.imp.small Masz pytania? Napisz do nas na <a href="/contact">#{__('hello@shopbyblog.com')}</a>
 
 
-  include ../ads/faq.jade
+  .container
+
+    section.mt50
+      h3.m0 Jak umieścić widget na moim blogu?
+      hr
+
+      h4 Wordpress
+      p Umieść kod widgeta w polu na stronie panelu bloga (Panel > Wygląd > Widżety)
+
+    section
+      h4 Tumblr
+      p Dodaj kod widgeta jako własny HTML (Dostosuj > Szablon > Użyj własnego HTML > umieść poniżej taga < div id="sidebar">)
+
+    section
+      h4 Blogger
+      p Dodaj kod widgeta jako dodatek (Panel > Wygląd > Dodaj dodatek > HTML/JavaScript)
 
 block js
 
   script.
-    var x = '//' + (location.hostname=='localhost'?location.hostname+':3005':location.hostname); // set s3 bucket
+    //- var x = '//' + (location.hostname=='localhost'?location.hostname+':3005':location.hostname); // set s3 bucket
+    var x = '//s3.amazonaws.com/shopbyblog/public'; // set s3 bucket
 
     var wVariant = 'blogger';
     var wTheme = 'default';
@@ -91,8 +110,7 @@ block js
       var sWidth = wWidth?'max-width:'+wWidth+'px;':'';
       var showFollowButton = $('#showFollowButton').is(':checked')?1:0;
 
-      var wSrc = x + '/js/widget/' + wVariant + '_' + wTheme + '.html?eid=#{eid}&amp;locale=' + wLocale + '&amp;cta=' + wCTA + '&amp;showFollowButton=' + showFollowButton + '&amp;format=' + wFormat + '&amp;t=' + Math.floor(Date.now() / 1000);
-
+      var wSrc = x + '/js/widget/' + wVariant + '_' + wTheme + '.html?eid=#{eid}&amp;locale=' + wLocale + '&amp;cta=' + wCTA + '&amp;showFollowButton=' + showFollowButton + '&amp;format=' + wFormat; // + '&amp;t=' + Math.floor(Date.now() / 1000)
 
       if(wWidth) $('#widget-preview .sbbwidget-widget').css('max-width', wWidth + 'px');
       else $('#widget-preview .sbbwidget-widget').css('max-width', '100%');
@@ -107,4 +125,3 @@ block js
     $(document).ready(function() {
       refreshPreview();
     })
-

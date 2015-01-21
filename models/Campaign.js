@@ -9,23 +9,39 @@ var mongoosePaginate = require('mongoose-paginate')
 var helper = require("../config/helper")
 
 var campaignSchema = new mongoose.Schema({
-  user: {type : Schema.ObjectId, ref : 'User'},
-  blogger: {type : Schema.ObjectId, ref : 'User'},
-  product: {type : Schema.ObjectId, ref : 'Product'},
+  user: {type : Schema.ObjectId, ref : 'User', index: true},
+  blogger: {type : Schema.ObjectId, ref : 'User', index: true},
+  product: {type : Schema.ObjectId, ref : 'Product', index: true},
 
   section: Number,
   title: String,
   url: String,
 
-  start: Date,
-  end: Date,
+  start: {type: Date, index: true},
+  end: {type: Date, index: true},
 
-  isLive: {type: Boolean, default: false},
+  isLive: {type: Boolean, default: true, index: true},
+  lastUpdatedAt: {type: Date},
+
+  isMailInitSent: {type: Boolean, default: false},
 
   notes: String,
 
   status: { type: Number, default: helper.campaign_status.CAMPAIGN_WAITING },
   variant: { type: Number, default: helper.campaign_variant.CAMPAIGN_ACTION_CLICK },
+
+  meta: {
+    views: {type: Number, default: 0},
+    clicks: {type: Number, default: 0},
+    ctr: {type: Number, default: 0},
+    cpc: {type: Number, default: 0},
+  },
+
+  daily: [{
+    day: {type: String},
+    dimension: {type: String},
+    total: {type: Number, default: 0},
+  }],
 
   price: {
     bloggerShare: {type: Number, default: 0.00}, // 0.7 default from user baseSahre
@@ -42,6 +58,10 @@ var campaignSchema = new mongoose.Schema({
     nettoPrice: {type: Number, default: 0.00}, // (basePrice + extraPrice) +/* vat (if applied)
     totalPrice: {type: Number, default: 0.00},
     totalPriceFormatted: String,
+
+    bloggerEstimatedRevenue: {type: Number, default: 0.00},
+    sbbEstimatedRevenue: {type: Number, default: 0.00},
+    extraEstimatedRevenue: {type: Number, default: 0.00},
 
     bloggerRevenue: {type: Number, default: 0.00},
     sbbRevenue: {type: Number, default: 0.00},

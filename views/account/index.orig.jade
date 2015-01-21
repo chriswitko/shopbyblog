@@ -1,0 +1,193 @@
+extends ../layout
+
+block content
+  script.
+    ga('sbb.send', 'event', 'Users', 'View', 'user_#{profile._id}');
+  include ../templates/products.grid.jade
+  if (profile.background())
+    .container-wide(style='position:absolute;width:100%;height:500px;background:url(#{profile.background()}) no-repeat top left;background-size:cover;')
+      .container-floor(style='position:absolute;width:100%;height:500px;')
+  .container.container-clean.pb10.pt0(class=(profile.background()?'with-floor':''))
+    //-
+    //- (style='background:url(https://fbcdn-sphotos-d-a.akamaihd.net/hphotos-ak-xap1/v/t1.0-9/10557325_514965595300615_921074563909204271_n.jpg?oh=90e5b66f12ca0963a0cfb9406c132fbf&oe=54FDBDDC&__gda__=1427758997_0101b010549600613d75fb408fd4837e) no-repeat 50% 50%;background-size:cover;')
+    .row.pb10.brto
+      .col-sm-push-5.col-sm-2.align-center
+        .clearfix(style='width:126px;height:126px;position:relative;margin:auto auto;')
+          //- - if (profile.isVerified||profile.role>=2)
+            .user-badge-large(style='position:absolute;right:10px;bottom:0;', rel='tooltip', data-placement='right', data-toggle='tooltip', title='Verified')
+              span.fa-stack.fa-lg
+                i.fa.fa-circle.fa-stack-2x.color-red
+                i.fa.fa-check.fa-stack-1x.fa-inverse
+          a(href='#{profile.getExternalLink()}', target='_blank', onclick="ga('sbb.send', 'event', 'Users', 'Retraffic', 'user_#{profile._id}');")
+            img.img-rounded(src='#{profile.gravatar()}', width='126', height='126')
+      .col-sm-12
+        .row
+          .col-sm-8.col-sm-push-2.align-center
+            h3
+              a(href='#{profile.getExternalLink()}', onclick="ga('sbb.send', 'event', 'Users', 'Retraffic', 'user_#{profile._id}');") #{profile.getName()}
+            - if (profile.isVerified&&profile.profile.about.length)
+              p #{profile.profile.about}
+        - if (profile.isVerified)
+          .row
+            .col-sm-8.col-sm-push-2.align-center
+              ul.list-unstyled.list-inline.m0
+                - if (profile.meta.followers)
+                  li
+                    a(href='#{profile.getExternalLink()}', target='_blank', onclick="ga('sbb.send', 'event', 'Users', 'Retraffic', 'user_#{profile._id}');")
+                      small #{profile.meta.followers} subskrypcji
+                - if (profile.profile.website)
+                  li
+                    a(href='#{profile.getExternalLink()}', target='_blank', onclick="ga('sbb.send', 'event', 'Users', 'Retraffic', 'user_#{profile._id}');")
+                      i.fa.fa-globe
+                      span.small #{__('Mój Blog')}
+                  //- li
+                    a(href='http://cloud.feedly.com/#subscription/feed/#{profile.getExternalLink()}', target='blank', rel='tooltip', data-placement='top', title='Dodaj RSS do Feedly')
+                      img(id='feedlyFollow', src='//s3.feedly.com/img/follows/feedly-follow-logo-black_2x.png', alt='follow us in feedly', width='16', height='16')
+                //- li
+                  a.notimp(href='')
+                    i.fa.fa-rss
+                - if (profile.links.twitter)
+                  li
+                    a(href='#{profile.links.twitter}', target='_blank')
+                      i.fa.fa-twitter
+                - if (profile.links.instagram)
+                  li
+                    a(href='#{profile.links.instagram}', target='_blank')
+                      i.fa.fa-instagram
+                - if (profile.links.facebook)
+                  li
+                    a(href='#{profile.links.facebook}', target='_blank')
+                      i.fa.fa-facebook
+                - if (profile.links.youtube)
+                  li
+                    a(href='#{profile.links.youtube}', target='_blank')
+                      i.fa.fa-youtube
+                //- - if (isOwner)
+                  li
+                    span.badge
+                      a(href='/notifications') 2 new notifications
+      .col-sm-12.align-center.mt10
+        //- class=title=='Create Account'?'active':undefined
+        ul.list-unstyled.list-inline.m0
+          if (!isOwner&&profile.isVerified)
+            li(class=(!isOwner&&!profile.isFollowing)?'':'hid', id='action-btn-follow-#{profile.id}')
+              a.btn.btn-danger.bind(href='', onclick='observable.trigger("userFollow", {followee_id:"#{profile.id}", follower_id:"#{user?user.id:""}"})')
+                i.fa.fa-plus
+                | #{__('Subscribe')}
+            li(class=(profile.isFollowing)?'':'hid', id='action-btn-unfollow-#{profile.id}')
+              a.btn.btn-primary.bind(href='', onclick='observable.trigger("userUnfollow", {followee_id:"#{profile.id}", follower_id:"#{user?user.id:""}"})')
+                i.fa.fa-check
+                | #{__('Subscribed')}
+          else
+            if user
+              if user.isVerified
+                li
+                  a(href='/add')
+                    i.fa.fa-plus
+                    | Dodaj produkt
+                li
+                  a(href='/widgets/blogger?eid=#{profile.id}')
+                    i.fa.fa-code
+                    | Pobierz widget
+              li
+                a(href='/invites')
+                  i.fa.fa-envelope
+                  | #{__('Invite friends')}
+              //- li
+                a(href='')
+                  i.fa.fa-share
+                  | #{__('Share')}
+              li
+                a(href='/settings')
+                  i.fa.fa-cog
+                  | #{__('Settings')}
+          //- - if (isOwner&&profile.meta.emailInvitesLeft)
+            li
+              a.btn.btn-default(href='/invites')
+                | Invite your friends to ShopByBlog
+          //- - if (isOwner)
+            li
+              a.btn.btn-default(href='/account')
+                | #{__('Settings')}
+            li
+              a.btn.btn-default(href='/notifications', rel='tooltip', data-toggle='tooltip', data-placement='bottom', title="No new notifications", style='padding-right:5px')
+                i.fa.fa-bell.notimp
+
+    //- if !user
+      .row.mt20.mb10
+        .col-sm-12
+          include ../subscribe
+
+
+    //- .row.mb10
+      .col-sm-12
+        h3.day.m0 COLLECTIONS
+
+    //- .row.mb20
+      .col-sm-12
+        include ../grid.collections.jade
+
+    //- .row.mb10
+      .col-sm-12
+        h3.day.m0 UPVOTED
+
+    //- .row.mb20
+      .col-sm-12
+        include ../grid
+
+  //- - if (isOwner)
+    .container.hidden-xs
+      .row
+        .col-xs-12
+          ul.nav.nav-tabs(role="tablist")
+            li.active(role="presentation")
+              a(href="/{{profile.permalink}}", role="tab") Voted
+            //- li(role="presentation")
+              a.imp(href="/notifications", role="tab") My Deals (1)
+            li(role="presentation")
+              a(href="/notifications", role="tab")
+                i.fa.fa-bell.color-red
+                | Notifications (2)
+            //- li(role="presentation")
+              a(href="/notifications", role="tab") Get Widget
+
+  //- sbb-people(title='#{__("FOLLOWERS")} (#{profile.meta.followers})', theme='default', variant='followers', permalink='#{profile.permalink}', follower='#{user?user._id:""}')
+
+
+  .container.container-grid.pb0.mb20.pt0
+    .col-sm-12
+      .row
+        .clearfix
+          #results-area
+
+block js
+
+  script.
+    $(document).ready(function() {
+      var SBB_PROFILE = !{JSON.stringify(profile)};
+
+      var page = 0;
+
+      window.getProducts = function(criteria) {
+        if(!criteria) criteria = {}
+
+        page++;
+        criteria.page = page;
+
+        SBBUser.getProducts(criteria, SBB_PROFILE.id, function(data) {
+
+          var source = $("#grid-item-product-only").html();
+          //- if(page>1) source = $("#grid-item-product-next").html();
+
+          var template = Handlebars.compile(source);
+
+          var context = {products: data.products};
+          var html    = template(context);
+
+          $('#results-area').append(html);
+          SBB.initResizeGrid();
+        });
+      }
+
+      if($('#results-area')) window.getProducts();
+    })

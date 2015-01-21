@@ -79,7 +79,7 @@ exports.list = function(req, res) {
     },
     getNotifications: function(done) {
       criteria.author = {$in: locales.followers}
-      console.log(criteria)
+      // console.log(criteria)
       // if(req.query.section) criteria.section = req.query.section;
       // if(req.query.tags) criteria.tags = {$in: _.map(req.query.tags.toString().split(','), function(tag) {return tag.trim()})}
 

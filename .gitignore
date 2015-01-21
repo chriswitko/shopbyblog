@@ -16,7 +16,6 @@ tmp
 npm-debug.log
 node_modules
 bower_components
-vendor_modules
 .idea
 *.iml
 .DS_Store

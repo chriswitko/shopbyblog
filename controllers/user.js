@@ -1,11 +1,13 @@
 "use strict";
 
+var env = process.env.NODE_ENV || 'development';
+
 var _ = require('lodash');
 var async = require('async');
 var crypto = require('crypto');
 var nodemailer = require('nodemailer');
 var passport = require('passport');
-var secrets = require('../config/secrets');
+var secrets = require('../config/secrets')[env];
 var moment = require('moment');
 
 var lwip = require('lwip');
@@ -57,6 +59,7 @@ exports.followers = function(req, res) {
 };
 
 exports.whotofollow = function(req, res) {
+  // console.log('whotofollow')
   var locales = {}
       locales.users_ids = [];
   var criteria = {}
@@ -85,7 +88,7 @@ exports.whotofollow = function(req, res) {
     },
     getRandomPageNumber: function(done) {
       criteria = {}
-      criteria['meta.upvotes'] = {$gte: 0};
+      criteria['meta.upvotes'] = {$gte: 1};
       criteria._id = {$nin: locales.users_ids};
 
       User.count(criteria, function(err, total) {
@@ -98,8 +101,13 @@ exports.whotofollow = function(req, res) {
       locales.users = [];
       criteria = {}
       criteria['meta.upvotes'] = {$gte: 0};
+      criteria.isVerified = true;
+      // criteria.isDemo = false;
+      // criteria.isRemoved = false;
       criteria._id = {$nin: locales.users_ids};
-      if(req.query.filter=='bloggers') criteria.isVerified = true;
+      // if(req.query.filter=='bloggers') criteria.isVerified = true;
+
+      // console.log(criteria);
 
       User.paginate(criteria, page, limit, function(err, pages, users, total) {
         locales.users = users||[];
@@ -142,7 +150,7 @@ exports.claim = function(req, res) {
   // insert the HTML you have generated into your template
   // res.render('template.html', { placeholderInHTML: cl } );
   res.render('claim', {
-    title: 'Join us!',
+    title: 'Dołącz do nas!',
     citiesInHTML: cl
   });
 };
@@ -180,7 +188,7 @@ exports.claim_post = function(req, res) {
       });
     }
   }, function() {
-    req.flash('success', { msg: 'Form has been sent. We will send you an email after verification process.' });
+    req.flash('success', { msg: 'Formularz został przesłany. Po weryfikacji, skontatujemy się z Tobą w celu uruchomienia profilu blogera.' });
     res.redirect('/for-bloggers');
   })
 };
@@ -188,7 +196,7 @@ exports.claim_post = function(req, res) {
 
 exports.blogs = function(req, res) {
   res.render('blogs', {
-    title: 'Blogs'
+    title: 'Blogi'
   });
 };
 
@@ -258,15 +266,25 @@ exports.allJsons = function(req, res) {
     });
   })
 };
+
 exports.profile = function(req, res) {
   var locales = {}
 
   async.series({
     getUserByPermalink: function(done) {
-      User.findOne({permalink: req.params.vanityUrl}, function(err, profile) {
-        if(!err&&profile) locales.profile = profile;
-        done();
-      })
+      if(req.params.vanityUrl) {
+        User.findOne({permalink: req.params.vanityUrl}, function(err, profile) {
+          if(!err&&profile) locales.profile = profile;
+          if(!locales.profile||!locales.profile.isVerified) return res.redirect('/');
+          done();
+        })
+      } else {
+        if(!req.user) return res.redirect('/');
+        User.findOne({_id: req.user._id}, function(err, profile) {
+          if(!err&&profile) locales.profile = profile;
+          done();
+        })
+      }
     },
     findFollowing: function(done) {
       if(req.user&&locales.profile) {
@@ -293,11 +311,18 @@ exports.profile = function(req, res) {
     if(!locales.profile) {
       res.redirect('/');
     } else {
-      res.render('account/index', {
-        title: locales.profile.username, //
-        profile: locales.profile,
-        isOwner: req.user&&req.user._id.toString()==locales.profile._id.toString()
-      });
+      if((req.user&&req.user._id.toString()==locales.profile._id.toString())||locales.profile.isVerified) {
+        if(locales.profile.isGhost) req.flash('errors', { msg: 'UWAGA! To jest profil testowy.' });
+        res.render('account/index', {
+          title: locales.profile.username, //
+          profile: locales.profile,
+          og: locales.profile.getOpenGraph(),
+          hideSubscriptionBox: true,
+          isOwner: req.user&&req.user._id.toString()==locales.profile._id.toString()
+        });
+      } else {
+        res.redirect('/');
+      }
     }
   })
 };
@@ -310,7 +335,7 @@ exports.profile = function(req, res) {
 exports.getLogin = function(req, res) {
   if (req.user) return res.redirect('/');
   res.render('account/login', {
-    title: 'Login',
+    title: 'Logowanie',
     hideNav: true,
     hideSubscriptionBox: true
   });
@@ -324,8 +349,8 @@ exports.getLogin = function(req, res) {
  */
 
 exports.postLogin = function(req, res, next) {
-  req.assert('email', 'Email is not valid').isEmail();
-  req.assert('password', 'Password cannot be blank').notEmpty();
+  req.assert('email', 'Email nie jest poprawny').isEmail();
+  req.assert('password', 'Hasło jest wymagane').notEmpty();
 
   var errors = req.validationErrors();
 
@@ -342,8 +367,8 @@ exports.postLogin = function(req, res, next) {
     }
     req.logIn(user, function(err) {
       if (err) return next(err);
-      res.cookie('sbblang', user.profile.locale||'en');
-      req.flash('success', { msg: 'Success! You are logged in.' });
+      // res.cookie('sbblang', user.profile.locale||'en');
+      // req.flash('success', { msg: 'Gratulacje! Jesteś zalogowany!' });
       res.redirect(req.session.returnTo || '/');
     });
   })(req, res, next);
@@ -367,7 +392,7 @@ exports.logout = function(req, res) {
 exports.getSignup = function(req, res) {
   if (req.user) return res.redirect('/');
   res.render('account/signup', {
-    title: 'Create Account',
+    title: 'Utwórz profil',
     bg: false,
     hideSubscriptionBox: true
   });
@@ -381,9 +406,9 @@ exports.getSignup = function(req, res) {
  */
 
 exports.postSignup = function(req, res, next) {
-  req.assert('email', 'Email is not valid').isEmail();
-  req.assert('password', 'Password must be at least 4 characters long').len(4);
-  req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+  req.assert('email', 'Email nie jest poprawny').isEmail();
+  req.assert('password', 'Hasło musi składać się z conajmniej 4 znaków').len(4);
+  req.assert('confirmPassword', 'Hasła nie pasują do siebie').equals(req.body.password);
 
   var errors = req.validationErrors();
 
@@ -413,7 +438,7 @@ exports.postSignup = function(req, res, next) {
     saveUser: function(done) {
       User.findOne({ email: req.body.email }, function(err, existingUser) {
         if (existingUser) {
-          req.flash('errors', { msg: 'Account with that email address already exists.' });
+          req.flash('errors', { msg: 'Profil z tym adresem email już istnieje.' });
           return res.redirect('/signup');
         }
         user.save(function(err) {
@@ -423,8 +448,7 @@ exports.postSignup = function(req, res, next) {
       });
     },
     sendWelcomeEmail: function(done) {
-      console.log('user', user.email);
-      lb.sendHtmlEmail({to: user.email, user: user, subject: 'Welcome to ShopByBlog', templateName: 'welcome-user'}, function(output) {
+      lb.sendHtmlEmail({to: user.email, user: user, subject: 'Witaj na ShopByBlog', templateName: 'welcome-user'}, function(output) {
         done();
       });
     }
@@ -442,9 +466,27 @@ exports.postSignup = function(req, res, next) {
  */
 
 exports.getAccount = function(req, res) {
-  res.render('account/profile', {
-    title: 'Settings'
-  });
+  var locales = {};
+
+  async.series({
+    getPaidCampaigns: function(done) {
+      // console.log({'price.isPaid': true, blogger: req.user._id})
+      Campaign.find({'price.isPaid': true, blogger: req.user._id})
+        .populate({
+          path: 'product',
+        })
+        .sort({isLive:-1, createdAt:-1})
+        .exec(function(err, ads) {
+          if(ads) locales.ads = _.map(ads, function(ad) {return {ad: ad}});
+          done();
+        });
+    }
+  }, function() {
+    res.render('account/profile', {
+      title: 'Ustawienia',
+      campaigns: locales.ads
+    });
+  })
 };
 
 /**
@@ -463,6 +505,7 @@ exports.postUpdateProfile = function(req, res, next) {
       });
     },
     processBackground: function(done) {
+      if(req.body.removeBackground) locales.user.backgroundFileName = '';
       if(!req.files.background) return done()
       lwip.open(req.files.background.path, function(err, image) {
         if (err) throw err;
@@ -478,6 +521,18 @@ exports.postUpdateProfile = function(req, res, next) {
           })
         })
       });
+    },
+    uploadBgToS3: function(done) {
+      if(!req.files.background) return done()
+      lb.uploadToS3('./public/uploads/o_'+locales.user.backgroundFileName, 'bgs', 'o_'+locales.user.backgroundFileName, function() {
+        done();
+      });
+    },
+    removeBg: function(done) {
+      if(!req.files.background) return done()
+      fs.unlink('./public/uploads/o_'+locales.user.backgroundFileName, function() {
+        done();
+      })
     },
     processImage: function(done) {
       if(!req.files.filename) return done()
@@ -548,6 +603,18 @@ exports.postUpdateProfile = function(req, res, next) {
         })
       })
     },
+    uploadAvatarToS3: function(done) {
+      if(!req.files.filename) return done()
+      lb.uploadToS3('./public/uploads/s_'+locales.filename, 'avatars', 's_'+locales.filename, function() {
+        done();
+      });
+    },
+    removeAvatar: function(done) {
+      if(!req.files.background) return done()
+      fs.unlink('./public/uploads/s_'+locales.filename, function() {
+        done();
+      })
+    },
     removeUpload: function(done) {
       if(!locales.path) return done();
       fs.unlink(locales.path, function() {
@@ -575,9 +642,14 @@ exports.postUpdateProfile = function(req, res, next) {
         // if (err) return next(err);
         done();
       });
-    }
+    },
+    updateMetasForProductAuthor: function(done) {
+      lb.updateCountersForUser(locales.user, function(total) {
+        done();
+      });
+    },
   }, function() {
-    req.flash('success', { msg: 'Profile information updated.' });
+    req.flash('success', { msg: 'Zmiany zostały zapisane.' });
     res.redirect('/settings');
   })
 };
@@ -589,8 +661,8 @@ exports.postUpdateProfile = function(req, res, next) {
  */
 
 exports.postUpdatePassword = function(req, res, next) {
-  req.assert('password', 'Password must be at least 4 characters long').len(4);
-  req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+  req.assert('password', 'Hasło musi składać się z conajmniej 4 znaków').len(4);
+  req.assert('confirmPassword', 'Hasła nie pasują do siebie').equals(req.body.password);
 
   var errors = req.validationErrors();
 
@@ -606,7 +678,7 @@ exports.postUpdatePassword = function(req, res, next) {
 
     user.save(function(err) {
       if (err) return next(err);
-      req.flash('success', { msg: 'Password has been changed.' });
+      req.flash('success', { msg: 'Hasło zostało zmienione.' });
       res.redirect('/settings');
     });
   });
@@ -621,7 +693,7 @@ exports.postDeleteAccount = function(req, res, next) {
   User.remove({ _id: req.user.id }, function(err) {
     if (err) return next(err);
     req.logout();
-    req.flash('info', { msg: 'Your account has been deleted.' });
+    req.flash('info', { msg: 'Profil został usunięty.' });
     res.redirect('/');
   });
 };
@@ -642,7 +714,7 @@ exports.getOauthUnlink = function(req, res, next) {
 
     user.save(function(err) {
       if (err) return next(err);
-      req.flash('info', { msg: provider + ' account has been unlinked.' });
+      req.flash('info', { msg: provider + ' profil został rozłączony.' });
       res.redirect('/settings');
     });
   });
@@ -662,11 +734,11 @@ exports.getReset = function(req, res) {
     .where('resetPasswordExpires').gt(Date.now())
     .exec(function(err, user) {
       if (!user) {
-        req.flash('errors', { msg: 'Password reset token is invalid or has expired.' });
+        req.flash('errors', { msg: 'Link stracił ważność. Zresetuj hasło ponownie.' });
         return res.redirect('/forgot');
       }
       res.render('account/reset', {
-        title: 'Password Reset',
+        title: 'Reset hasła',
         hideSubscriptionBox: true
       });
     });
@@ -679,8 +751,8 @@ exports.getReset = function(req, res) {
  */
 
 exports.postReset = function(req, res, next) {
-  req.assert('password', 'Password must be at least 4 characters long.').len(4);
-  req.assert('confirm', 'Passwords must match.').equals(req.body.password);
+  req.assert('password', 'Hasło musi składać się z conajmniej 4 znaków').len(4);
+  req.assert('confirm', 'Hasła do siebie nie pasują').equals(req.body.password);
 
   var errors = req.validationErrors();
 
@@ -696,7 +768,7 @@ exports.postReset = function(req, res, next) {
         .where('resetPasswordExpires').gt(Date.now())
         .exec(function(err, user) {
           if (!user) {
-            req.flash('errors', { msg: 'Password reset token is invalid or has expired.' });
+            req.flash('errors', { msg: 'Link stracił ważność. Zresetuj hasło ponownie.' });
             return res.redirect('back');
           }
 
@@ -722,13 +794,13 @@ exports.postReset = function(req, res, next) {
       });
       var mailOptions = {
         to: user.email,
-        from: 'hello@shopbyblog.com',
-        subject: 'Your Hackathon Starter password has been changed',
-        text: 'Hello,\n\n' +
-          'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+        from: secrets.gaEmail,
+        subject: 'Twoje hasło zostało zmienione.',
+        text: 'Witaj,\n\n' +
+          'To jest informacja potwierdzająca, że hasło dla konta ' + user.email + ' zostało zmienione.\n'
       };
       transporter.sendMail(mailOptions, function(err) {
-        req.flash('success', { msg: 'Success! Your password has been changed.' });
+        req.flash('success', { msg: 'Gratulacje! Hasło zostało zmienione.' });
         done(err);
       });
     }
@@ -748,7 +820,8 @@ exports.getForgot = function(req, res) {
     return res.redirect('/');
   }
   res.render('account/forgot', {
-    title: 'Forgot Password'
+    title: 'Przypominanie hasła',
+    hideSubscriptionBox: true
   });
 };
 
@@ -759,7 +832,7 @@ exports.getForgot = function(req, res) {
  */
 
 exports.postForgot = function(req, res, next) {
-  req.assert('email', 'Please enter a valid email address.').isEmail();
+  req.assert('email', 'Wprowadź poprawny adres e-mail').isEmail();
 
   var errors = req.validationErrors();
 
@@ -778,7 +851,7 @@ exports.postForgot = function(req, res, next) {
     function(token, done) {
       User.findOne({ email: req.body.email.toLowerCase() }, function(err, user) {
         if (!user) {
-          req.flash('errors', { msg: 'No account with that email address exists.' });
+          req.flash('errors', { msg: 'Nie ma profilu z takim adresem email.' });
           return res.redirect('/forgot');
         }
 
@@ -800,15 +873,15 @@ exports.postForgot = function(req, res, next) {
       });
       var mailOptions = {
         to: user.email,
-        from: 'hello@shopbyblog.com',
-        subject: 'Reset your password on Hackathon Starter',
-        text: 'You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n' +
-          'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+        from: secrets.gaEmail,
+        subject: 'Zresetuj hasło do ShopByBlog',
+        text: 'Otrzymujesz tego maila ponieważ Ty (lub ktoś inny) zgłosił prośbę o reset hasła do Twojego profilu.\n\n' +
+          'Proszę kliknąć na link lub przekleić go do przeglądarki internetowej w celu zmiany hasła:\n\n' +
           'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-          'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+          'Jeżli nie zgłaszałeś prośby o zmianę hasła, zignoruj tego maila, hasło nie zostanie zmienione.\n'
       };
       transporter.sendMail(mailOptions, function(err) {
-        req.flash('info', { msg: 'An e-mail has been sent to ' + user.email + ' with further instructions.' });
+        req.flash('info', { msg: 'Email z instrukcjami został wysłany na adres ' + user.email });
         done(err, 'done');
       });
     }
@@ -821,61 +894,69 @@ exports.postForgot = function(req, res, next) {
 
 exports.unverified = function(req, res) {
   res.render('account/unverified', {
-    title: 'Claim your site'
+    title: 'Dołącz do nas'
   });
 };
 
 exports.follow = function(req, res) {
   var locales = {}
 
-  async.series({
-    findFollowing: function(done) {
-      Following.findOne({followee: req.query.followee, follower: req.query.follower}, function(err, following) {
-        locales.following = following||new Following();
-        done();
-      });
-    },
-    updateFollowing: function(done) {
-      locales.following.followee =  req.query.followee;
-      locales.following.follower =  req.query.follower;
-      locales.following.end = undefined;
-
-      if(!locales.following.start) locales.following.start = new Date();
-      locales.following.last = new Date();
-
-      locales.following.save(function() {
-        done();
-      });
-    },
-    getFollowee: function(done) {
-      User.findOne({_id: req.query.followee}, function(err, followee) {
-        locales.followee = followee
-        done();
-      })
-    },
-    updateCountersForFollowee: function(done) {
-      lb.updateCountersForUser(locales.followee, function() {
-        done();
-      })
-    },
-    getFollower: function(done) {
-      User.findOne({_id: req.query.follower}, function(err, follower) {
-        locales.follower = follower
-        done();
-      })
-    },
-    updateCountersForFollower: function(done) {
-      lb.updateCountersForUser(locales.follower, function() {
-        done();
-      })
-    }
-  }, function() {
+  lb.followUser(req.query.followee, req.query.follower||req.user, function(output) {
     res.json({
       code: 200,
       status: 'success',
       following: true
     })
   })
+
+  // async.series({
+  //   findFollowing: function(done) {
+  //     Following.findOne({followee: req.query.followee, follower: req.query.follower}, function(err, following) {
+  //       locales.following = following||new Following();
+  //       done();
+  //     });
+  //   },
+  //   updateFollowing: function(done) {
+  //     locales.following.followee =  req.query.followee;
+  //     locales.following.follower =  req.query.follower;
+  //     locales.following.end = undefined;
+
+  //     if(!locales.following.start) locales.following.start = new Date();
+  //     locales.following.last = new Date();
+
+  //     locales.following.save(function() {
+  //       done();
+  //     });
+  //   },
+  //   getFollowee: function(done) {
+  //     User.findOne({_id: req.query.followee}, function(err, followee) {
+  //       locales.followee = followee
+  //       done();
+  //     })
+  //   },
+  //   updateCountersForFollowee: function(done) {
+  //     lb.updateCountersForUser(locales.followee, function() {
+  //       done();
+  //     })
+  //   },
+  //   getFollower: function(done) {
+  //     User.findOne({_id: req.query.follower}, function(err, follower) {
+  //       locales.follower = follower
+  //       done();
+  //     })
+  //   },
+  //   updateCountersForFollower: function(done) {
+  //     lb.updateCountersForUser(locales.follower, function() {
+  //       done();
+  //     })
+  //   }
+  // }, function() {
+  //   res.json({
+  //     code: 200,
+  //     status: 'success',
+  //     following: true
+  //   })
+  // })
 }
 
 exports.unfollow = function(req, res) {
@@ -954,17 +1035,18 @@ exports.products = function(req, res) {
         done();
       })
     },
-    getVotedProducts: function(done) {
-      Vote.find({follower: locales.user._id, end: null})
-        .sort({start: -1})
-        .exec(function(err, votes) {
-          if(votes) locales.products_ids = locales.products_ids.concat(_.map(votes, function(vote) {return vote.product}));
-          done();
-        })
-    },
+    // getVotedProducts: function(done) {
+    //   Vote.find({follower: locales.user._id, end: null})
+    //     .sort({start: -1})
+    //     .exec(function(err, votes) {
+    //       if(votes) locales.products_ids = locales.products_ids.concat(_.map(votes, function(vote) {return vote.product}));
+    //       done();
+    //     })
+    // },
     getAddedProducts: function(done) {
       if(!locales.user) return done();
       if(locales.user) criteria.author = locales.user._id;
+      criteria.isHidden = false;
       Product.find(criteria).sort({createdAt: -1}).exec(function(err, products) {
         if(products) locales.products_ids = locales.products_ids.concat(_.map(products, function(product) {return product._id}));
         done()
@@ -972,6 +1054,7 @@ exports.products = function(req, res) {
     },
     getProducts: function(done) {
       var criteria = {};
+      criteria.isHidden = false;
       criteria._id = {$in: locales.products_ids}
 
       Product.paginate(criteria, page, limit, function(err, pages, products, total) {
@@ -1062,7 +1145,7 @@ exports.business = function(req, res) {
         // },
         { $sort : { start : -1 } }
       ], function(err, output) {
-        console.log(err);
+        // console.log(err);
         // var bloggerEstimatedRevenue = _.map(output, function(row) {
           // row.total = parseFloat(row.total.toFixed(2));
           // return row;

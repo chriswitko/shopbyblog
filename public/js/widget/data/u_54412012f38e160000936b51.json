@@ -1,0 +1,76 @@
+{
+  "profile": {
+    "id": "54412012f38e160000936b51",
+    "permalink": "nice",
+    "username": "nice",
+    "followers": 3
+  },
+  "products": [
+    {
+      "product": {
+        "title": "Koszulka marynarska",
+        "imageFileName": "3098b6090c3ece332edd87738a33b11d.JPG",
+        "permalink": "koszulka-marynarska",
+        "id": "54a543062122920000974468",
+        "_id": "54a543062122920000974468",
+        "createdAt": "2015-01-01T12:52:22.153Z",
+        "isPromoted": true
+      }
+    },
+    {
+      "product": {
+        "title": "Koszula Delikatessen",
+        "imageFileName": "ff498bdacaf851b8679a94b125322d5c.jpg",
+        "permalink": "koszula-delikatessen",
+        "id": "54a4e2c525e32181c415461b",
+        "_id": "54a4e2c525e32181c415461b",
+        "createdAt": "2015-01-01T06:01:41.043Z",
+        "isPromoted": true
+      }
+    },
+    {
+      "product": {
+        "title": "Miska na poncz",
+        "imageFileName": "57bf2a42f078c56009f8d68a4de4f2ca.jpg",
+        "permalink": "miska-na-poncz",
+        "id": "54a4e1d025e32181c4154618",
+        "_id": "54a4e1d025e32181c4154618",
+        "createdAt": "2015-01-01T05:57:36.937Z",
+        "isPromoted": false
+      }
+    },
+    {
+      "product": {
+        "title": "Pledzik z kaszmiru",
+        "imageFileName": "20b57a4e2d948d89a131bae336fd08af.jpg",
+        "permalink": "pledzik-z-kaszmiru",
+        "id": "54a4e16f25e32181c4154616",
+        "_id": "54a4e16f25e32181c4154616",
+        "createdAt": "2015-01-01T05:55:59.730Z",
+        "isPromoted": false
+      }
+    },
+    {
+      "product": {
+        "title": "Kurtka Marvel",
+        "imageFileName": "15a3c836884409765b53287e4b4ab485.jpg",
+        "permalink": "kurtka-marvel",
+        "id": "54a4e12e25e32181c4154614",
+        "_id": "54a4e12e25e32181c4154614",
+        "createdAt": "2015-01-01T05:54:54.410Z",
+        "isPromoted": false
+      }
+    },
+    {
+      "product": {
+        "title": "Adidas R40",
+        "imageFileName": "be4033c073dd10915db4097ae779b222.jpg",
+        "permalink": "adidas-r40",
+        "id": "54a4e0b625e32181c4154612",
+        "_id": "54a4e0b625e32181c4154612",
+        "createdAt": "2015-01-01T05:52:54.331Z",
+        "isPromoted": false
+      }
+    }
+  ]
+}

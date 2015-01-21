@@ -61,9 +61,10 @@ block content
                       p.m0 #{product.body}
                       .clearfix
                         ul.list-unstyled.list-inline.m0.list-on-left
-                          li
-                            a(href='') For Him
-                          li <strong>2</strong> upvotes
+                          if product.sticky
+                            li
+                              span.badge.bg-pink Sticked
+                          li <strong>#{product.meta.upvotes}</strong> upvotes
                     td(width='150', align='right', nowrap)
                       ul.list-unstyled.list-inline.list-on-left.m0.list-on-right
                         li
@@ -74,5 +75,15 @@ block content
                             ul.dropdown-menu.pull-right(role='menu')
                               li
                                 a(href='/dashboard/products/action/#{product.id}/sendToS3') Send to S3
+                              if !product.sticky
+                                li
+                                  a(href='/dashboard/products/action/#{product.id}/sticked') Sticky
+                              else
+                                li
+                                  a(href='/dashboard/products/action/#{product.id}/unsticked') Unsticky
                               li
                                 a(href='/dashboard/products/action/#{product.id}/remove') Remove
+    .container-wide
+      .pagination.mt0.pt0
+        ul.pagination
+          != createPagination(pagination.pages, pagination.page)

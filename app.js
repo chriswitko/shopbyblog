@@ -4,6 +4,8 @@
  * Module dependencies.
  */
 
+var env = process.env.NODE_ENV || 'development';
+
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var compress = require('compression');
@@ -29,7 +31,7 @@ var moment = require('moment');
 var i18n = require("i18n");
 
 i18n.configure({
-  locales:['pl'],//, 'en'
+  locales:[ 'pl'],//, 'en'
   cookie: 'sbblang',
   directory: __dirname + '/locales'
 });
@@ -58,11 +60,13 @@ var insightController = require('./controllers/insights');
 var widgetController = require('./controllers/widget');
 var templateController = require('./controllers/template')
 
+console.log('NODE_ENV', env);
+
 /**
  * API keys and Passport configuration.
  */
 
-var secrets = require('./config/secrets');
+var secrets = require('./config/secrets')[env];
 var passportConf = require('./config/passport');
 
 /**
@@ -71,10 +75,12 @@ var passportConf = require('./config/passport');
 
 var app = express();
 
+
 /**
  * Connect to MongoDB.
  */
 
+// mongoose.set('debug', true);
 mongoose.connect(secrets.db);
 mongoose.connection.on('error', function() {
   console.error('MongoDB Connection Error. Make sure MongoDB is running.');
@@ -154,6 +160,29 @@ app.use(function(req, res, next) {
   csrf(req, res, next);
 });
 app.use(function(req, res, next) {
+
+  res.locals.createPagination = function (pages, page) {
+    var url = require('url')
+      , qs = require('querystring')
+      , params = qs.parse(url.parse(req.url).query)
+      , str = ''
+
+    params.page = 1
+    var clas = page == 1 ? "active" : "no"
+    // str += '<li class="'+clas+'"><a href="?'+qs.stringify(params)+'">First</a></li>'
+    for (var p = 1; p <= pages; p++) {
+      params.page = p
+      clas = page == p ? "active" : "no"
+      str += '<li class="'+clas+'"><a href="?'+qs.stringify(params)+'">'+ p +'</a></li>'
+    }
+    params.page = --p
+    clas = page == params.page ? "active" : "no"
+    // str += '<li class="'+clas+'"><a href="?'+qs.stringify(params)+'">Last</a></li>'
+
+    return str
+  }
+
+  res.locals.sbb = secrets.sbbConfig;
   res.locals.imagesUrl = secrets.s3ImagesHost;
   // Make user object available in templates.
   res.locals.user = req.user;
@@ -164,7 +193,7 @@ app.use(function(req, res, next) {
 app.use(function(req, res, next) {
   // Remember original destination before login.
   var path = req.path.split('/')[1];
-  if (/auth|login|logout|signup|fonts|css|img|uploads|api|resources|js|favicon/i.test(path)) {
+  if (/auth|login|logout|signup|ads|widget|fonts|css|img|uploads|api|resources|js|components|_storage|favicon/i.test(path)) {
     return next();
   }
   req.session.returnTo = req.path;
@@ -174,6 +203,7 @@ app.use(function(req, res, next) {
 app.use(i18n.init);
 
 app.use(function(req, res, next) {
+  res.cookie('sbblang', 'pl');
   // moment.locale('en-us');
   // Make user object available in templates.
   // res.locals.user = req.user;
@@ -205,8 +235,12 @@ app.get('/components/:template', templateController.index);
 
 app.get('/widgets/:variant', widgetController.customize);
 
+app.get('/api/testGoogleAnal', adsController.testGoogleAnal);
+app.get('/api/testGoogleAnal2', adsController.testGoogleAnal2);
+
 
 app.get('/click', insightController.click);
+app.get('/track/:campaign_id', insightController.click);
 
 app.get('/pl', homeController.langPolish);
 app.get('/en', homeController.langEnglish);
@@ -218,6 +252,8 @@ app.post('/claim', userController.claim_post);
 
 app.get('/for-bloggers', staticController.for_bloggers);
 app.get('/sell-products', staticController.sell_products);
+app.get('/privacy', staticController.privacy);
+app.get('/help', staticController.help);
 
 app.get('/widget-demo', staticController.widget_demo);
 
@@ -250,6 +286,8 @@ app.get('/for-him', sectionController.index);
 app.get('/for-her', sectionController.index);
 app.get('/home-and-design', sectionController.index);
 app.get('/deals', sectionController.deals);
+app.get('/subscriptions', passportConf.isAuthenticated, sectionController.subscriptions);
+app.get('/favs', passportConf.isAuthenticated, sectionController.favorites);
 app.get('/api/sections', sectionController.list);
 
 app.get('/p', productController.index);
@@ -257,8 +295,11 @@ app.get('/product/:permalink', productController.index);
 app.get('/product/:permalink/vote', productController.vote);
 app.get('/product/:permalink/unvote', productController.unvote);
 app.get('/product/:permalink/setScore', productController.setScore);
+app.get('/product/:permalink/remove', productController.remove);
 
 app.get('/search', sectionController.search);
+app.get('/search/update', productController.algoliaSearchUpdate);
+app.get('/search/beta', productController.algoliaSearch);
 
 app.get('/api/notifications', notificationController.list);
 
@@ -267,6 +308,8 @@ app.get('/api/products/search', productController.search);
 app.get('/api/products/search_beta', productController.search_beta);
 app.get('/api/collections', collectionController.list);
 app.get('/api/deals', productController.deals);
+app.get('/api/subscriptions', passportConf.isAuthenticated, productController.subscriptions);
+app.get('/api/favorites', passportConf.isAuthenticated, productController.favorites);
 
 app.get('/add', passportConf.isAuthenticated, passportConf.isVerified, productController.add);
 app.post('/add', passportConf.isAuthenticated, passportConf.isVerified, productController.post_add);
@@ -299,6 +342,7 @@ app.get('/api/blog/search', blogController.search);
 app.get('/notifications', notificationController.index);
 
 app.get('/invites', inviteController.index);
+app.post('/invites', inviteController.postIndex)
 
 app.get('/analytics', passportConf.isAuthenticated, passportConf.isVerified, analyticsController.index);
 
@@ -307,11 +351,14 @@ app.get('/api/calc/price', adsController.campaignPrice);
 
 app.get('/ads/create', passportConf.isAuthenticated, adsController.create);
 app.post('/ads/create', passportConf.isAuthenticated, adsController.update);
-app.get('/ads/payed', adsController.payed);
-app.post('/ads/payed', adsController.payed);
+app.get('/ads/report', passportConf.isAuthenticated, adsController.report);
+// app.get('/ads/payed', adsController.payed);
+// app.post('/ads/payed', adsController.payed);
 app.get('/payments/paypal/payed', adsController.paypalPayed);
 app.post('/payments/paypal/payed', adsController.paypalPayed);
 app.get('/payments/paypal/cancel', adsController.paypalCancel);
+app.get('/payments/error', adsController.paymentError);
+app.get('/payments/transferuj/payed', adsController.transferujPaid);
 
 app.get('/ads/edit', passportConf.isAuthenticated, adsController.update);
 app.post('/ads/edit', passportConf.isAuthenticated, adsController.update_edit);
@@ -336,6 +383,12 @@ app.get('/dashboard/users/edit/:profile_id', dashboardController.usersRead);
 app.post('/dashboard/users/edit/:profile_id', dashboardController.usersUpdate);
 
 app.get('/dashboard/products/action/:product_id/sendToS3', dashboardController.productsActionUploadToS3);
+app.get('/dashboard/products/action/:product_id/sticked', dashboardController.productsActionSticked);
+app.get('/dashboard/products/action/:product_id/unsticked', dashboardController.productsActionUnsticked);
+
+app.get('/dashboard/users/action/:user_id/welcomeEmail', dashboardController.usersActionWelcomeBlogger);
+
+app.get('/me', userController.profile);
 
 app.get('/:vanityUrl', userController.profile);
 app.get('/:vanityUrl/publicJson', userController.json);
@@ -349,28 +402,16 @@ app.get('/api/s3test', productController.simpleUploadToS3);
  */
 
 app.get('/api', apiController.getApi);
-app.get('/api/lastfm', apiController.getLastfm);
-app.get('/api/nyt', apiController.getNewYorkTimes);
-app.get('/api/aviary', apiController.getAviary);
-app.get('/api/steam', apiController.getSteam);
 app.get('/api/stripe', apiController.getStripe);
 app.post('/api/stripe', apiController.postStripe);
-app.get('/api/scraping', apiController.getScraping);
 app.get('/api/twilio', apiController.getTwilio);
 app.post('/api/twilio', apiController.postTwilio);
-app.get('/api/clockwork', apiController.getClockwork);
-app.post('/api/clockwork', apiController.postClockwork);
 app.get('/api/foursquare', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFoursquare);
 app.get('/api/tumblr', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getTumblr);
 app.get('/api/facebook', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFacebook);
-app.get('/api/github', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getGithub);
 app.get('/api/twitter', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getTwitter);
 app.post('/api/twitter', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.postTwitter);
-app.get('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getVenmo);
-app.post('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.postVenmo);
-app.get('/api/linkedin', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getLinkedin);
 app.get('/api/instagram', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getInstagram);
-app.get('/api/yahoo', apiController.getYahoo);
 
 /**
  * OAuth sign-in routes.
@@ -380,12 +421,8 @@ app.get('/auth/instagram', passport.authenticate('instagram'));
 app.get('/auth/instagram/callback', passport.authenticate('instagram', { failureRedirect: '/login' }), function(req, res) {
   res.redirect(req.session.returnTo || '/');
 });
-app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_location'] }));
+app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email'] }));
 app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), function(req, res) {
-  res.redirect(req.session.returnTo || '/');
-});
-app.get('/auth/github', passport.authenticate('github'));
-app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/login' }), function(req, res) {
   res.redirect(req.session.returnTo || '/');
 });
 app.get('/auth/google', passport.authenticate('google', { scope: 'profile email' }));
@@ -394,10 +431,6 @@ app.get('/auth/google/callback', passport.authenticate('google', { failureRedire
 });
 app.get('/auth/twitter', passport.authenticate('twitter'));
 app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/login' }), function(req, res) {
-  res.redirect(req.session.returnTo || '/');
-});
-app.get('/auth/linkedin', passport.authenticate('linkedin', { state: 'SOME STATE' }));
-app.get('/auth/linkedin/callback', passport.authenticate('linkedin', { failureRedirect: '/login' }), function(req, res) {
   res.redirect(req.session.returnTo || '/');
 });
 
@@ -412,10 +445,6 @@ app.get('/auth/foursquare/callback', passport.authorize('foursquare', { failureR
 app.get('/auth/tumblr', passport.authorize('tumblr'));
 app.get('/auth/tumblr/callback', passport.authorize('tumblr', { failureRedirect: '/api' }), function(req, res) {
   res.redirect('/api/tumblr');
-});
-app.get('/auth/venmo', passport.authorize('venmo', { scope: 'make_payments access_profile access_balance access_email access_phone' }));
-app.get('/auth/venmo/callback', passport.authorize('venmo', { failureRedirect: '/api' }), function(req, res) {
-  res.redirect('/api/venmo');
 });
 
 /**

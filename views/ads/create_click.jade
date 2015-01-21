@@ -1,6 +1,10 @@
 extends ../layout
 
 block content
+  script.
+    ga('sbb.send', 'event', 'Sale', 'Potential Advertisers', 'user_#{user._id}');
+    ga('sbb.send', 'event', 'Sale', 'Popular Placements', 'blogger_#{campaign.blogger._id}');
+    ga('sbb.send', 'event', 'Sale', 'Potential Products', 'product_#{campaign.product._id}');
   .container
     .clearfix.container-fix.container-fb.p15
       .page-header.m0
@@ -30,13 +34,15 @@ block content
                     ul.list-unstyled
                       li
                         i.fa.fa-check.color-red
-                        | This product will be marked as promoted on bloggers website: <strong>warszaskibiegacz.pl</strong>
+                        | Produkt zostanie oznaczony jako promowany na stronie: <strong>#{campaign.blogger.profile.website}</strong>
                       li
                         i.fa.fa-check.color-red
-                        | Your link will be placed next to this product by the time of campaign
+                        | Twój link będzie wyświetlany na stronie prouduktu na czas kampanii
                       li
                         i.fa.fa-check.color-red
-                        | We will send notification to our users who follow this blogger and upvote this product
+                        | Informacja o Twoim linku zostanie rozesłana w cotygodniowym newsletterze do osób obserwujących profil blogera
+                  //- p.m0 Średnia liczba wyświetleń bloga: <strong>#{sprintf('%.0f', campaign.blogger.blogger.last12mPageUniqueViews/12)} / miesiąc</strong>
+                  p Liczba unikalnych użytkowników: <strong>#{sprintf('%.0f', campaign.blogger.blogger.last12mPageUniqueUsers/12)} / miesiąc</strong>
                 .clearfix
                   p.imp #{__('Select your option')}:
                 .clearfix
@@ -102,7 +108,7 @@ block content
             .form-group.mb0.mt20
               .col-sm-offset-2.col-sm-8
                 .clearfix
-                  p.m0.imp.small #{__('Have a questions? Write us')} <a href="mailto:hello@shopbyblog.com">hello@shopbyblog.com</a>
+                  p.m0.imp.small #{__('Have a questions? Write us')} <a href="/contact">#{__('hello@shopbyblog.com')}</a>
 
 //-
   include faq.jade

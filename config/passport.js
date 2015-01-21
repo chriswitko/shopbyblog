@@ -1,5 +1,7 @@
 "use strict";
 
+var env = process.env.NODE_ENV || 'development';
+
 var _ = require('lodash');
 var passport = require('passport');
 var InstagramStrategy = require('passport-instagram').Strategy;
@@ -12,7 +14,9 @@ var LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
 var OAuthStrategy = require('passport-oauth').OAuthStrategy; // Tumblr
 var OAuth2Strategy = require('passport-oauth').OAuth2Strategy; // Venmo, Foursquare
 var User = require('../models/User');
-var secrets = require('./secrets');
+var secrets = require('./secrets')[env];
+
+var lb = require('../controllers/lb');
 
 passport.serializeUser(function(user, done) {
   done(null, user.id);
@@ -30,7 +34,7 @@ passport.use(new InstagramStrategy(secrets.instagram,function(req, accessToken, 
   if (req.user) {
     User.findOne({ instagram: profile.id }, function(err, existingUser) {
       if (existingUser) {
-        req.flash('errors', { msg: 'There is already an Instagram account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+        req.flash('errors', { msg: 'Jest już profil zarejestrowany na ten sam adres e-mail. Zaloguj się do profilu i połącz konto bezpośrednio w ustawieniach profilu.' });
         done(err);
       } else {
         User.findById(req.user.id, function(err, user) {
@@ -41,7 +45,7 @@ passport.use(new InstagramStrategy(secrets.instagram,function(req, accessToken, 
           user.profile.website = user.profile.website || profile._json.data.website;
           user.profile.locale = req.getLocale();
           user.save(function(err) {
-            req.flash('info', { msg: 'Instagram account has been linked.' });
+            req.flash('info', { msg: 'Konto z Instagram zostało połączone.' });
             done(err, user);
           });
         });
@@ -105,7 +109,7 @@ passport.use(new FacebookStrategy(secrets.facebook, function(req, accessToken, r
   if (req.user) {
     User.findOne({ facebook: profile.id }, function(err, existingUser) {
       if (existingUser) {
-        req.flash('errors', { msg: 'There is already a Facebook account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+        req.flash('errors', { msg: 'Jest już profil zarejestrowany na ten sam adres e-mail. Zaloguj się do profilu i połącz konto bezpośrednio w ustawieniach profilu.' });
         done(err);
       } else {
         User.findById(req.user.id, function(err, user) {
@@ -116,7 +120,7 @@ passport.use(new FacebookStrategy(secrets.facebook, function(req, accessToken, r
           user.profile.picture = user.profile.picture || 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
           user.profile.locale = req.getLocale();
           user.save(function(err) {
-            req.flash('info', { msg: 'Facebook account has been linked.' });
+            req.flash('info', { msg: 'Konto z Facebook zostało połączone.' });
             done(err, user);
           });
         });
@@ -127,7 +131,7 @@ passport.use(new FacebookStrategy(secrets.facebook, function(req, accessToken, r
       if (existingUser) return done(null, existingUser);
       User.findOne({ email: profile._json.email }, function(err, existingEmailUser) {
         if (existingEmailUser) {
-          req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with Facebook manually from Account Settings.' });
+          req.flash('errors', { msg: 'Jest już profil zarejestrowany na ten sam adres e-mail. Zaloguj się do profilu i połącz konto bezpośrednio w ustawieniach profilu.' });
           done(err);
         } else {
           var user = new User();
@@ -140,7 +144,9 @@ passport.use(new FacebookStrategy(secrets.facebook, function(req, accessToken, r
           user.profile.location = (profile._json.location) ? profile._json.location.name : '';
           user.profile.locale = req.getLocale();
           user.save(function(err) {
-            done(err, user);
+            lb.sendHtmlEmail({to: user.email, user: user, subject: 'Witaj na ShopByBlog', templateName: 'welcome-user'}, function(output) {
+              done(err, user);
+            });
           });
         }
       });
@@ -154,7 +160,7 @@ passport.use(new TwitterStrategy(secrets.twitter, function(req, accessToken, tok
   if (req.user) {
     User.findOne({ twitter: profile.id }, function(err, existingUser) {
       if (existingUser) {
-        req.flash('errors', { msg: 'There is already a Twitter account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+        req.flash('errors', { msg: 'Jest już profil zarejestrowany na ten sam adres e-mail. Zaloguj się do profilu i połącz konto bezpośrednio w ustawieniach profilu.' });
         done(err);
       } else {
         User.findById(req.user.id, function(err, user) {
@@ -165,7 +171,7 @@ passport.use(new TwitterStrategy(secrets.twitter, function(req, accessToken, tok
           user.profile.picture = user.profile.picture || profile._json.profile_image_url_https;
           user.profile.locale = req.getLocale();
           user.save(function(err) {
-            req.flash('info', { msg: 'Twitter account has been linked.' });
+            req.flash('info', { msg: 'Konto z Twitter zostało połączone.' });
             done(err, user);
           });
         });
@@ -199,7 +205,7 @@ passport.use(new GoogleStrategy(secrets.google, function(req, accessToken, refre
   if (req.user) {
     User.findOne({ google: profile.id }, function(err, existingUser) {
       if (existingUser) {
-        req.flash('errors', { msg: 'There is already a Google account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+        req.flash('errors', { msg: 'Jest już profil zarejestrowany na ten sam adres e-mail. Zaloguj się do profilu i połącz konto bezpośrednio w ustawieniach profilu.' });
         done(err);
       } else {
         User.findById(req.user.id, function(err, user) {
@@ -210,7 +216,7 @@ passport.use(new GoogleStrategy(secrets.google, function(req, accessToken, refre
           user.profile.picture = user.profile.picture || profile._json.picture;
           user.profile.locale = req.getLocale();
           user.save(function(err) {
-            req.flash('info', { msg: 'Google account has been linked.' });
+            req.flash('info', { msg: 'Konto z Google zostało połączone.' });
             done(err, user);
           });
         });
@@ -221,7 +227,7 @@ passport.use(new GoogleStrategy(secrets.google, function(req, accessToken, refre
       if (existingUser) return done(null, existingUser);
       User.findOne({ email: profile._json.email }, function(err, existingEmailUser) {
         if (existingEmailUser) {
-          req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with Google manually from Account Settings.' });
+          req.flash('errors', { msg: 'Jest już profil zarejestrowany na ten sam adres e-mail. Zaloguj się do profilu i połącz konto bezpośrednio w ustawieniach profilu.' });
           done(err);
         } else {
           var user = new User();
@@ -283,31 +289,11 @@ passport.use('foursquare', new OAuth2Strategy({
   }
 ));
 
-// Venmo API setup.
-
-passport.use('venmo', new OAuth2Strategy({
-    authorizationURL: 'https://api.venmo.com/v1/oauth/authorize',
-    tokenURL: 'https://api.venmo.com/v1/oauth/access_token',
-    clientID: secrets.venmo.clientId,
-    clientSecret: secrets.venmo.clientSecret,
-    callbackURL: secrets.venmo.redirectUrl,
-    passReqToCallback: true
-  },
-  function(req, accessToken, refreshToken, profile, done) {
-    User.findById(req.user._id, function(err, user) {
-      user.tokens.push({ kind: 'venmo', accessToken: accessToken });
-      user.save(function(err) {
-        done(err, user);
-      });
-    });
-  }
-));
-
 // Login Required middleware.
 
 exports.isAuthenticated = function(req, res, next) {
   if (req.isAuthenticated()) return next();
-  res.redirect('/login');
+  return res.redirect('/login');
 };
 
 exports.isAdmin = function(req, res, next) {

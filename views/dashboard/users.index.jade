@@ -1,10 +1,10 @@
 extends ../layout.dashboard.jade
 
 block content
-  .container
+  .container-wide
 
-    .page-header.mt20
-      h3 USERS
+    .page-header.mt0.pb0
+      h3.m0 USERS
 
     //- .row.mb10
       .col-sm-8.mb10
@@ -29,30 +29,51 @@ block content
             i.fa.fa-search.notimp
           input.form-control(type='search', placeholder='Search for users...', style='border-radius:20px;padding-left:25px;')
 
-    .row.mb20
-      .col-sm-12
-        table.table.m0
-          if pagination
-            thead
-              tr
-                th(width='100%', colspan='3')
-                  p.m0 Found <strong>#{pagination.total}</strong> users
-          tbody
-            each profile, i in users
-              tr
-                td.align-middle(width='40', nowrap)
-                  a(href='/u')
-                    img.img-circle(src='#{profile.gravatar()}', width='50')
-                td(width='100%', valign='top')
-                  p.m0.imp
-                    a(href='') #{profile.profile.name || profile.email || profile.id}
-                  p.m0 #{profile.getRole()}
-                  .clearfix
-                    ul.list-unstyled.list-inline.m0.list-on-left
-                      li <strong>2</strong> upvotes
-                td(align='right', nowrap)
-                  ul.list-unstyled.list-inline.list-on-left.m0.list-on-right
-                    li
-                      a.btn.btn-default(href='/dashboard/users/edit/#{profile.id}') Edit
-                    li
-                      a.btn.btn-default(href='') Remove
+    .container-wide.container-fix.container-fb.pb0.mb0.mt0.p15
+      .row.mb20
+        .col-sm-12
+          table.table.m0
+            if pagination
+              thead
+                tr
+                  th(width='100%', colspan='3')
+                    p.m0 Found <strong>#{pagination.total}</strong> users
+            tbody
+              each profile, i in users
+                tr
+                  td.align-middle(width='40', nowrap)
+                    a(href='/u')
+                      img.img-circle(src='#{profile.gravatar()}', width='50')
+                  td(width='100%', valign='top')
+                    p.m0.imp
+                      a(href='') #{profile.profile.name || profile.email || profile.id}
+                    .clearfix
+                      ul.list-unstyled.list-inline.m0.list-on-left
+                        li #{profile.getRole()}
+                        if profile.isPending
+                          li
+                            span.badge.bg-red Pending!!!
+                        if profile.isVerified
+                          li
+                            span.badge.bg-red Verfied
+                        li #{profile.meta.followers} followers
+                  //- td(align='right', nowrap)
+                    ul.list-unstyled.list-inline.list-on-left.m0.list-on-right
+                      li
+                        a.btn.btn-default(href='/dashboard/users/edit/#{profile.id}') Edit
+                      li
+                        a.btn.btn-default(href='') Remove
+                  td(width='150', align='right', nowrap)
+                    ul.list-unstyled.list-inline.list-on-left.m0.list-on-right
+                      li
+                        .btn-group
+                          a.btn.btn-default(href='/dashboard/users/edit/#{profile.id}') Edit
+                          button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
+                            span.caret
+                          ul.dropdown-menu.pull-right(role='menu')
+                            li
+                              a(href='/dashboard/users/action/#{profile.id}/welcomeEmail') Send Welcome Blogger
+    .container-wide
+      .pagination.mt0.pt0
+        ul.pagination
+          != createPagination(pagination.pages, pagination.page)

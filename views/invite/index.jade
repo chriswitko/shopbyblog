@@ -2,36 +2,37 @@ extends ../layout
 
 block content
   .container
-    .clearfix.container-fix.p20
+    .clearfix.container-fb2.container-fix
       .page-header.m0
-        h3.day.m0 INVITES
+        h3.day.m0 ZAPROŚ ZNAJOMYCH DO SHOPBYBLOG
           //- small Invite your friends to ShopByBlog
       .row.mt20
         .col-sm-12
           .clearfix.p10.bg-clouds.mb20
-            p.m0 You have <strong>#{user.meta.emailInvitesLeft}</strong> invites left.
+            p.m0 Pozostało <strong>#{user.meta.emailInvitesLeft}</strong> zaproszeń do wysłania.
 
           .clearfix
             form.form-horizontal(role='form', method='post')
               input(type='hidden', name='_csrf', value=_csrf)
               .form-group
-                label(class='col-sm-2 control-label', for='firstName') First Name
+                label(class='col-sm-2 control-label', for='email') E-mail
                 .col-sm-8
-                  input.form-control(type='text', name='firstName', id='firstName', placeholder='Enter first name', autofocus=true)
-              .form-group
-                label(class='col-sm-2 control-label', for='email') Invite E-mail
-                .col-sm-8
-                  input.form-control(type='text', name='email', id='email', placeholder='Enter e-mail address')
+                  input.form-control(type='text', name='email', id='email', placeholder='Wprowadź poprawny adres e-mail')
               .form-group
                 .col-sm-offset-2.col-sm-8
-                  button.btn.btn-primary(type='submit')
-                    | Send Invite
+                    ul.list-unstyled.list-inline.m0.list-on-left
+                      li.processBtns
+                        button.btn.btn-primary(type='submit', onclick='processForm()')
+                          | Wyślij zaproszenie
+                      li.hid.processInProgress
+                        button.btn.btn-default(type='button')
+                          i.fa.fa-circle-o-notch.fa-spin
+                          | #{__('Please wait...')}
 
-  .container.pb0.mb20.mt20
-    .row.with-floor2
-      .col-sm-12
-        span.imp WHO TO FOLLOW
-    .row
-      .col-sm-12
-        .clearfix.container-fix.pt20.pb0.pl20.pr20
-          include ../grid.blogs.jade
+  //- sbb-people(title='#{__("POLECANE BLOGI")}', theme='default', variant='whotofollow', permalink='#{user?user.permalink:""}', follower='#{user?user._id:""}')
+block js
+  script.
+    function processForm() {
+      $('.processBtns').addClass('hid');
+      $('.processInProgress').removeClass('hid');
+    }

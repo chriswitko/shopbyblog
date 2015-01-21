@@ -1,4 +1,4 @@
-.navbar.navbar-default.navbar-fixed-top.navbar-white
+.navbar.navbar-default.navbar-fixed-top2.navbar-white.mb20
   .container
     .navbar-header
       button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
@@ -6,61 +6,70 @@
         span.icon-bar
         span.icon-bar
         span.icon-bar
-      a.navbar-brand(href='/',  style='padding-top:3px')
-        img(src='/img/logo_vector_1.png', height='44')
+      a.navbar-brand(href='/', style='padding-top:0px;')
+        table
+          tr
+            td
+              //- <svg class="svg-icon" viewBox="0 0 20 20"><path fill="none" d="M18.037,18.517L16.787,4.646c-0.034-0.38-0.355-0.672-0.735-0.672h-2.1c-0.258-1.968-1.93-3.499-3.967-3.499c-2.039,0-3.71,1.531-3.967,3.499H3.921c-0.381,0-0.7,0.291-0.735,0.672L1.915,18.72c-0.02,0.206,0.049,0.411,0.19,0.564c0.138,0.152,0.338,0.241,0.545,0.241h14.67c0.012-0.002,0.02-0.002,0.03,0c0.408,0,0.738-0.331,0.738-0.738C18.088,18.692,18.07,18.601,18.037,18.517z M9.985,1.951c1.225,0,2.25,0.87,2.49,2.023h-4.98C7.735,2.821,8.76,1.951,9.985,1.951zM3.457,18.049l1.139-12.6h10.782l1.135,12.6H3.457z"></path></svg>
+              //- <svg class="svg-icon" viewBox="0 0 20 20"><path fill="none" d="M17.696,9.368H2.305c-0.189,0-0.367,0.092-0.478,0.245c-0.11,0.155-0.141,0.352-0.08,0.532l2.334,6.918c0.081,0.238,0.305,0.4,0.556,0.4h10.735c0.253,0,0.478-0.162,0.557-0.402l2.323-6.917c0.062-0.179,0.03-0.376-0.079-0.531C18.062,9.459,17.886,9.368,17.696,9.368z M14.95,16.287H5.062l-1.938-5.743h13.753L14.95,16.287z"></path><path fill="none" d="M6.345,7.369c0.325,0,0.588-0.263,0.588-0.588c0-1.691,1.376-3.067,3.067-3.067c1.691,0,3.067,1.376,3.067,3.067c0,0.325,0.264,0.588,0.588,0.588c0.326,0,0.589-0.263,0.589-0.588c0-2.34-1.904-4.243-4.244-4.243c-2.34,0-4.244,1.903-4.244,4.243C5.757,7.106,6.02,7.369,6.345,7.369z"></path></svg>
+              //- <svg class="svg-icon" viewBox="0 0 26 26"><path id="shapePath1" d="M19.5347,21.7376 L18.0979,5.79417 C18.0588,5.35739 17.6898,5.02177 17.2531,5.02177 L14.8393,5.02177 C14.5428,2.75974 12.621,1 10.2796,1 C7.936,1 6.01531,2.75974 5.71992,5.02177 L3.30961,5.02177 C2.87168,5.02177 2.50502,5.35625 2.46479,5.79417 L1.0039,21.9709 C0.98091,22.2077 1.06022,22.4433 1.22228,22.6192 C1.3809,22.7939 1.61078,22.8962 1.84871,22.8962 L18.7105,22.8962 C18.7243,22.8939 18.7335,22.8939 18.745,22.8962 C19.214,22.8962 19.5933,22.5157 19.5933,22.0479 C19.5933,21.9387 19.5726,21.8341 19.5347,21.7376 M10.2796,2.69652 C11.6876,2.69652 12.8658,3.6965 13.1416,5.02177 L7.4176,5.02177 C7.6934,3.6965 8.8716,2.69652 10.2796,2.69652 M2.77628,21.1996 L4.08546,6.71714 L16.4784,6.71714 L17.783,21.1996 L2.77628,21.1996 Z"></path><path id="shapePath2" d="M12.0304,10.6264 C11.4681,10.6264 10.7789,10.8148 10.2661,11.2171 C9.7994,10.8548 9.1726,10.6264 8.5619,10.6264 C7.2625,10.6264 6.20595,11.6839 6.20595,12.9833 C6.20595,13.1433 6.22194,13.3052 6.25492,13.4631 C6.65425,15.5632 9.6439,17.3574 9.9833,17.5553 C10.0797,17.6108 10.1882,17.6393 10.2966,17.6393 C10.3901,17.6393 10.4845,17.6188 10.5715,17.5758 C10.577,17.5728 11.2457,17.2315 12.0259,16.6437 C12.0364,16.6357 12.0474,16.6282 12.0563,16.6222 C12.0668,16.6142 12.0788,16.6057 12.0883,16.5957 C13.5937,15.4418 14.3873,14.1943 14.3873,12.9828 C14.3868,11.6839 13.3293,10.6264 12.0304,10.6264 M11.6925,16.115 C11.6905,16.1169 11.6835,16.1219 11.682,16.1239 C11.6805,16.1259 11.673,16.1299 11.6705,16.1319 C10.9593,16.6697 10.3341,16.9986 10.2966,17.017 C10.2966,17.017 7.225,15.2298 6.86515,13.3372 C6.84116,13.2222 6.82817,13.1043 6.82817,12.9833 C6.82817,12.0253 7.6048,11.2491 8.5619,11.2491 C9.2126,11.2491 9.9793,11.617 10.2766,12.1457 C10.565,11.5855 11.3567,11.2491 12.0304,11.2491 C12.9869,11.2491 13.7641,12.0253 13.7641,12.9833 C13.7636,14.2573 12.6571,15.3798 11.6925,16.115 Z"></path></svg>
+              <svg class="svg-icon" viewBox="0 0 26 26"><path id="shapePath1" d="M20.6201,22.952 L19.0992,6.07491 C19.0578,5.61255 18.6672,5.25727 18.2049,5.25727 L15.6497,5.25727 C15.3359,2.86277 13.3015,0.999969 10.823,0.999969 C8.34217,0.999969 6.309,2.86277 5.99631,5.25727 L3.44485,5.25727 C2.98127,5.25727 2.59314,5.61134 2.55055,6.07491 L1.00411,23.199 C0.97977,23.4497 1.06372,23.6991 1.23528,23.8853 C1.40318,24.0702 1.64653,24.1785 1.89839,24.1785 L19.7477,24.1785 C19.7623,24.1761 19.772,24.1761 19.7842,24.1785 C20.2806,24.1785 20.6822,23.7757 20.6822,23.2805 C20.6822,23.1649 20.6602,23.0542 20.6201,22.952 M10.823,2.79585 C12.3135,2.79585 13.5607,3.85439 13.8526,5.25727 L7.79341,5.25727 C8.08536,3.85439 9.33256,2.79585 10.823,2.79585 M2.88028,22.3825 L4.26613,7.05193 L17.3848,7.05193 L18.7658,22.3825 L2.88028,22.3825 Z" style="stroke:#323232;stroke-opacity:1;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:2;stroke-linecap:round;fill-rule:evenodd;fill:#000000;fill-opacity:1;"></path><path id="shapePath2" d="M8.13267,17.7405 C7.63281,17.7405 7.22777,18.1456 7.22867,18.6441 C7.22867,19.1426 7.63326,19.5476 8.13267,19.5467 C8.63073,19.5476 9.03577,19.143 9.03487,18.6441 C9.03577,18.1442 8.63073,17.7396 8.13267,17.7405 Z" style="stroke:#323232;stroke-opacity:1;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:2;stroke-linecap:round;fill-rule:evenodd;fill:#000000;fill-opacity:1;"></path><path id="shapePath3" d="M8.13177,12.3224 C7.63326,12.3224 7.22867,12.727 7.22867,13.2255 C7.22867,13.724 7.63326,14.1286 8.13177,14.1286 C10.6216,14.1286 12.6473,16.1542 12.6473,18.6441 C12.6473,19.1426 13.0518,19.5472 13.5504,19.5472 C14.0489,19.5472 14.4535,19.1426 14.4535,18.6441 C14.4535,15.1581 11.6177,12.3224 8.13177,12.3224 Z" style="stroke:#323232;stroke-opacity:1;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:2;stroke-linecap:round;fill-rule:evenodd;fill:#000000;fill-opacity:1;"></path><path id="shapePath4" d="M8.13177,15.0317 C7.63326,15.0317 7.22867,15.4363 7.22867,15.9348 C7.22867,16.4333 7.63326,16.8379 8.13177,16.8379 C9.12744,16.8379 9.93797,17.648 9.93797,18.6441 C9.93797,19.1426 10.3426,19.5472 10.8411,19.5472 C11.3396,19.5472 11.7442,19.1426 11.7442,18.6441 C11.7442,16.6523 10.1236,15.0317 8.13177,15.0317 Z" style="stroke:#323232;stroke-opacity:1;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:2;stroke-linecap:round;fill-rule:evenodd;fill:#000000;fill-opacity:1;"></path></svg>
+            td
+              span.lato.ml10(style='line-height:2.5em') ShopByBlog
+        //- img(src='/img/logo.png', height='46')
     .collapse.navbar-collapse
       ul.nav.navbar-nav
-        li(class=(section&&section.id=='1')?'active':undefined)
+        //- li(class=(section&&section.id=='1')?'active':undefined)
           a(href='/for-him') #{__('Inspirations')}
-        //- li(class=(section&&section.permalink=='deals')?'active':undefined)
+        li(class=(section&&section.section&&section.section.permalink=='deals')?'active':undefined)
           a(href='/deals')
-            | #{__("Following")}
+            | #{__("Today's Deals")}
+        li(class=(section&&section.section&&section.section.permalink=='subscriptions')?'active':undefined)
+          a(href='/subscriptions')
+            | #{__("My subscriptions")}
+        li(class=(section&&section.section&&section.section.permalink=='favorites')?'active':undefined)
+          a(href='/favs')
+            | #{__("Favorites")}
         //- li(class=(section&&section.id=='2')?'active':undefined)
-          a(href='/for-her') #{__('Bloggers')}
+          a(href='/blogs') #{__('Bloggers')}
         //- li(class=(section&&section.id=='1')?'active':undefined)
         //-   a(href='/for-him') #{__('For Him')}
         //- li(class=(section&&section.id=='2')?'active':undefined)
         //-   a(href='/for-her') #{__('For Her')}
         //- li(class=(section&&section.id=='3')?'active':undefined)
         //-   a(href='/home-and-design') #{__('Home & Design')}
-        li(class=(section&&section.permalink=='deals')?'active':undefined)
-          a(href='/deals')
-            | #{__("Today's Deals")}
       ul.nav.navbar-nav.navbar-right
         if !user
           li(class=(section&&section.permalink=='signin')?'active':undefined)
             a(href='/login') #{__('Login')}
           li(class=(section&&section.permalink=='signup')?'active':undefined)
-            a(href='/signup') #{__('Sign up')}
-        else
-          - if (user.role>=2||user.isVerified)
-            li.hidden-xs(class=(section&&section.permalink=='add')?'active':undefined)
-              a.pr0(href='/add', rel='tooltip', title='Add Product', data-placement='bottom')
-                i.fa.fa-plus.hidden-xs
-          li.hidden-xs(class=(section&&section.permalink=='invites')?'active':undefined)
-            a.pr0(href='/invites', rel='tooltip', title='Invite Friends', data-placement='bottom')
-              i.fa.fa-envelope
-          li.hidden-xs(class=(section&&section.permalink=='add')?'active':undefined)
+            a.imp.underline(href='/signup') #{__('Sign up')}
+          //- li.hidden-xs(class=(section&&section.permalink=='add')?'active':undefined)
             a.pr0(href='/search', rel='tooltip', title='Search...', data-placement='bottom')
               i.fa.fa-search
-          li.hidden-xs(class=title=='Account Management'?'active':undefined)
-            a.dropdown-toggle(href='#', style='padding-right:0', data-toggle='dropdown')
-              //- .user-badge-large(style='position:absolute;left:40px;top:0;z-index:10')
-              if user.profile.picture
-                img.img-circle(src='#{user.profile.picture}')
-              else
-                img.img-circle(src='#{user.gravatar(60)}')
+        else
+          li
+            a.dropdown-toggle(href='#', style='padding-right:0;', data-toggle='dropdown')
+              //- if user.profile.picture
+              img.img-rounded.hidden-xs(src='#{user.gravatar()}', style='margin-right:0px')
+              //- else
+                img.img-rounded.hidden-xs(src='#{user.gravatar(60)}', style='margin-right:0px')
+              span.hidden-lg.hidden-md.hidden-sm Więcej
+                i.caret
             ul.dropdown-menu
-              li
-                a(href='#{user.getPermalink()}')
-                  | #{__('My Profile')}
-              - if (user&&(user.isVerified||user.role>=2))
+              - if (user&&(user.isVerified))
+                li
+                  a(href=user&&user.isVerified?'/#{user.permalink}':'/me')
+                    | #{__('My Profile')}
+                li
+                  a.pr0(href='/add') Dodaj produkt
                 li
                   a(href='/widgets/blogger?eid=#{user.id}')
                     | #{__('Create Widget')}
                 li
                   a(href='/settings#insights')
                     | Rozliczenia
+                li.divider
               li
                 a(href='/invites')
                   | #{__('Invite Friends')}
@@ -79,41 +88,15 @@
               li
                 a(href='/logout')
                   | #{__('Logout')}
-          li.dropdown.hidden-lg.hidden-md.hidden-sm
-            a.dropdown-toggle(href='#', data-toggle='dropdown')
-              | #{__('More')}&nbsp;
-              i.caret
-            ul.dropdown-menu
-              li
-                a(href='#{user.getPermalink()}')
-                  | #{__('My Profile')}
-              - if (user&&(user.isVerified||user.role>=2))
-                li
-                  a(href='/widgets/blogger?eid=#{user.id}')
-                    | #{__('Create Widget')}
-                li
-                  a(href='/settings#insights')
-                    | #{__('Insights')}
-              li
-                a(href='/invites')
-                  | #{__('Invite Friends')}
-                  if (user.meta.emailInvitesLeft&&currentLang=='en')
-                    span.badge.badge-danger.pull-right #{user.meta.emailInvitesLeft}
-              li
-                a(href='/notifications')
-                  | #{__('Notifications')}
-              li
-                a(href='/settings')
-                  | #{__('Settings')}
-              - if (user.role>=2)
-                li.divider
-                li
-                  a(href='/dashboard')
-                    | #{__('Dashboard')}
-                li
-                  a(href='/collection/add')
-                    | #{__('Create Collection')}
-              li.divider
-              li
-                a(href='/logout')
-                  | #{__('Logout')}
+          if user.isVerified
+            li.hidden-xs
+              div.mt10.ml10
+                a.btn.btn-danger(href='/add')
+                  i.fa.fa-plus
+                  | Dodaj produkt
+          else
+            li.hidden-xs
+              div.mt10.ml10
+                a.btn.btn-danger(href='/invites')
+                  i.fa.fa-envelope
+                  | #{__('Invite friends')} (#{user.meta.emailInvitesLeft})

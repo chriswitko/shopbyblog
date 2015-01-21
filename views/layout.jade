@@ -3,29 +3,46 @@ html
   head(prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#")
     include partials/head
 
+    script.
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      //- ga('create', 'UA-58428197-1', 'shopbyblog.com', 'auto', {'name': 'sbb'});//shopbyblog.com
+      ga('create', 'UA-58428197-1', {'cookieDomain': 'none', 'name': 'sbb'});//shopbyblog.com
+      ga('sbb.require', 'displayfeatures');
+      ga('sbb.send', 'pageview');
+
     block jshead
-  body(class=bg?'with-static-bg':'')
+  body(class=bg?'with-static-bg':'', style='background-color:white;')
     if !hideNav
       include partials/navbar
 
     #close-discussion-panel.close-discussion-body.close-discussion.hid(onclick='$("#close-discussion-panel").addClass("hid");$("#sidebar-offcanvas").stop().animate({right: -$("#sidebar-offcanvas").width()});')
     #sidebar-offcanvas.hid(style='background:white;position:fixed;right:0;top:0px;height:100%;z-index:9999;border-left: 1px solid rgba(0,0,0,0.1);box-shadow: 0 0 20px rgba(0,0,0,0.25);overflow-y:scroll')
 
-    if (user && showSearchBox)
+    if (showSearchBox)
       form(action='/search', method='get')
-        .container-wide.mb0.mt0.p20(style='background:white')
+        .container-wide.mb0.mt20
           .container
             .row
-              .col-sm-12
-                input.form-control.input-lg.p0.lato100(style='border:0;box-shadow:none;font-size:50px;letter-spacing:-1px;line-height:normal;height:60px;', autocomplete='off', type='text', placeholder='Search for people or products...', name='q', value='#{q||""}', autofocus=true)
+              .col-sm-push-2.col-sm-8
+                .input-group
+                  input.form-control.lato100(autocomplete='off', type='search', placeholder='Wpisz nazwę produktu lub nazwę bloga...', name='q', value='#{q||""}', style='border:1px solid #999999')
+                  span.input-group-btn
+                    button.btn.btn-primary.btn-icon(type='submit', style='border:1px solid #999999;')
+                      i.fa.fa-search
 
-    .container
-      include partials/flash
+    if (messages.errors||messages.info||messages.success)
+      .container.mb0
+        include partials/flash
 
     if !user&&!hideSubscriptionBox
         include subscribe
 
-    block content
+    .clearfix
+      block content
 
     if !hideFooter
       include partials/footer

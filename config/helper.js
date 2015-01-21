@@ -45,6 +45,13 @@ var _sbb_sections_pl = [];
     _sbb_sections_pl.push({id: 2, name: 'Kobieta', description: 'Curated products for girls, based on the best bloggers all around the world.', permalink: 'for-her', coverImg: 'http://deafpigeon.co.uk/wp-content/uploads/2014/06/modernica-hundreds.jpg', sortIdx: 1});
     _sbb_sections_pl.push({id: 3, name: 'Home & Design', description: 'Curated Home & Design products, based on the best bloggers all around the world.', permalink: 'home-and-design', coverImg: 'http://daily-movement.com/wp-content/uploads/2014/09/Agata-Jenczelewska-daily-sugar-2.jpg', sortIdx: 2});
 
+var _help_links = [];
+    _help_links['pl'] = [];
+    _help_links['pl']['general'] = 'https://docs.google.com/document/d/1bL9RCNi-YMDBfL_C8of1nmmjWzWBpxv25Bxl8tcf3Go/pub?embedded=true';
+    _help_links['pl']['for_bloggers'] = 'https://docs.google.com/document/d/1FWzzuvzMnxYaJAH6xKrdx8Tp6BDcNmgGui7mMxGrK2c/pub?embedded=true';
+    _help_links['pl']['for_sellers'] = 'https://docs.google.com/document/d/17kVqJPEs2Fd9kuiT0jYhD4--kJjx-zGe4uI-os6tXBw/pub?embedded=true';
+    _help_links['pl']['terms'] = 'https://docs.google.com/document/d/1A3vjVVFKi_JUM2MHFQuiWV5rcUpnosMSS96ZxlhU1Ww/pub?embedded=true';
+    _help_links['pl']['privacy'] = 'https://docs.google.com/document/d/1jW_VlfOKGJqhXsui9e2e-eBOap3xWmT44JwGjF8OSfU/pub?embedded=true';
 
 exports.sections = function(options) {
   if(options.locale == 'pl') return _sbb_sections_pl;
@@ -70,3 +77,4 @@ exports.campaign_variant = _campaign_variant;
 exports.campaign_status = _campaign_status;
 exports.currency_rate = _currency_rate;
 exports.currency_code = _currency_code;
+exports.help_links = _help_links;

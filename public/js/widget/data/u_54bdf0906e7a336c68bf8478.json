@@ -1,0 +1,32 @@
+{
+  "profile": {
+    "id": "54bdf0906e7a336c68bf8478",
+    "permalink": "chris",
+    "username": "chris.witko2",
+    "followers": 1
+  },
+  "products": [
+    {
+      "product": {
+        "title": "Plecak Silver Protect",
+        "imageFileName": "5a1d3b95e6f75bfa623d86e6f5795327.JPG",
+        "permalink": "plecak-silver-protect",
+        "id": "54bf3fdad44a6f0000f1224d",
+        "_id": "54bf3fdad44a6f0000f1224d",
+        "createdAt": "2015-01-21T05:57:46.281Z",
+        "isPromoted": false
+      }
+    },
+    {
+      "product": {
+        "title": "Ramka drewniana z motylkiem",
+        "imageFileName": "c151734f4a6b20efd8b5f7c43ce5452f.jpg",
+        "permalink": "ramka-drewniana-z-motylkiem",
+        "id": "54bdffd9e74d2d7371a1aa3a",
+        "_id": "54bdffd9e74d2d7371a1aa3a",
+        "createdAt": "2015-01-20T07:12:25.902Z",
+        "isPromoted": true
+      }
+    }
+  ]
+}

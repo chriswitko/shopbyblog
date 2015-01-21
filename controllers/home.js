@@ -14,12 +14,13 @@ var User = require('../models/User');
  */
 
 exports.index = function(req, res) {
+  // res.cookie('sbblang', 'pl');
   if(req.user) {
     res.render('home', {
       title: '',
       bg: false,
       hideSubscriptionBox: true,
-      showSearchBox: false
+      showSearchBox: true
     });
   } else {
     // if(!req.cookies.sbblang) {
@@ -43,15 +44,16 @@ exports.index = function(req, res) {
         title: '',
         bg: false,
         hideSubscriptionBox: true,
-        showSearchBox: false
+        showSearchBox: true
       });
     // }
   }
 };
 
 exports.about = function(req, res) {
-  res.render('about', {
-    title: 'About'
+  res.render('static/about', {
+    title: 'O ShopByBlog',
+    hideSubscriptionBox: true
   });
 };
 

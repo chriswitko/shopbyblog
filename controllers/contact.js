@@ -1,6 +1,8 @@
 "use strict";
 
-var secrets = require('../config/secrets');
+var env = process.env.NODE_ENV || 'development';
+
+var secrets = require('../config/secrets')[env];
 var nodemailer = require("nodemailer");
 var transporter = nodemailer.createTransport({
   service: 'SendGrid',
@@ -17,7 +19,8 @@ var transporter = nodemailer.createTransport({
 
 exports.getContact = function(req, res) {
   res.render('contact', {
-    title: 'Contact'
+    title: 'Kontakt',
+    hideSubscriptionBox: true
   });
 };
 
@@ -30,9 +33,9 @@ exports.getContact = function(req, res) {
  */
 
 exports.postContact = function(req, res) {
-  req.assert('name', 'Name cannot be blank').notEmpty();
-  req.assert('email', 'Email is not valid').isEmail();
-  req.assert('message', 'Message cannot be blank').notEmpty();
+  req.assert('name', 'Imię nie może być puste').notEmpty();
+  req.assert('email', 'Email nie jest prawidłowy').isEmail();
+  req.assert('message', 'Wpisz wiadomość').notEmpty();
 
   var errors = req.validationErrors();
 
@@ -44,7 +47,7 @@ exports.postContact = function(req, res) {
   var from = req.body.email;
   var name = req.body.name;
   var body = req.body.message;
-  var to = 'hello@shopbyblog.com';
+  var to = secrets.gaEmail;
   var subject = req.cookies.sbblang + ' | Contact Form | ShopByBlog';
 
   var mailOptions = {
@@ -59,7 +62,7 @@ exports.postContact = function(req, res) {
       req.flash('errors', { msg: err.message });
       return res.redirect('/contact');
     }
-    req.flash('success', { msg: 'Email has been sent successfully!' });
+    req.flash('success', { msg: 'Email został wysłany!' });
     res.redirect('/contact');
   });
 };

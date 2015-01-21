@@ -10,7 +10,7 @@ polymer-element(name='sbb-people', attributes='theme variant title permalink fol
     .container.pb0(bind, hidden?="{{ !items.length }}")
       .row
         .col-sm-12
-          .clearfix.container-fix.container-fb.pt20.pb0.pl20.pr20
+          .clearfix.container-fix.container-fb2.pt202.pb0.pl202.pr202.mb0
             .row.mb10
               .col-sm-6
                 small.imp {{title}}
@@ -40,7 +40,7 @@ polymer-element(name='sbb-people', attributes='theme variant title permalink fol
                           .clearfix.notimp
                             i.fa.fa-star
                             | {{meta.upvotes||meta.followers}}
-                        .table-cell.prt.pt8
+                        //- .table-cell.prt.pt8
                           ul.list-unstyled.list-inline.m0
                             li(id='action-btn-follow-{{id}}', bind, hidden?='{{followed}}')
                               a.btn.btn-default.btn-icon(on-tap='{{clickAction}}', eid='{{id}}')
@@ -62,10 +62,11 @@ polymer-element(name='sbb-people', attributes='theme variant title permalink fol
       followee: '',
 
       ready: function() {
-        console.log('ready', this.theme);
-        if(this.variant=='whotofollow'&&this.permalink) this.url = '/api/user/' + this.permalink + '/whotofollow';
-        if(this.variant=='whotofollow'&&!this.permalink) this.url = '/api/whotofollow';
-        if(this.variant=='followers'&&this.permalink) this.url = '/api/user/' + this.permalink + '/followers';
+        //- console.log('ready', this.theme);
+        //- if(this.variant=='whotofollow'&&this.permalink) this.url = '/api/user/' + this.permalink + '/whotofollow';
+        //- if(this.variant=='whotofollow'&&!this.permalink) this.url = '/api/whotofollow';
+        //- if(this.variant=='followers'&&this.permalink) this.url = '/api/user/' + this.permalink + '/followers';
+        this.url = '/api/whotofollow';
       },
 
       activeChanged: function() {

@@ -1,11 +1,13 @@
 "use strict";
 
+var env = process.env.NODE_ENV || 'development';
+
 var _ = require('lodash');
 var async = require('async');
 var crypto = require('crypto');
 var nodemailer = require('nodemailer');
 var passport = require('passport');
-var secrets = require('../config/secrets');
+var secrets = require('../config/secrets')[env];
 
 var moment = require('moment');
 

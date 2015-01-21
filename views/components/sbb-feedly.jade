@@ -1,0 +1,99 @@
+<link rel="import" href="/js/components/polymer/polymer.html">
+<link rel="import" href="/js/components/core-ajax/core-ajax.html">
+
+polymer-element(name='sbb-feedly', attributes='theme variant title permalink follower')
+  template
+    link(href='//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css', rel='stylesheet')
+    core-ajax#ajax(auto, url='/api/blog/search', params='{"q":"moda męska"}', handleas='json', on-core-response='{{loaded}}')
+    != css('styles')
+    .container.pb0(bind, hidden?="{{ !items.length }}")
+      .row
+        .col-sm-12
+          .clearfix.container-fix.container-fb2.pt202.pb0.pl202.pr202.mb0
+            .row.mb10
+              .col-sm-4
+                small.imp {{title}}
+              .col-sm-8.align-right
+                ul.list-unstyled.list-inline.small.m0.list-on-right
+                  li(bind, hidden?="{{!permalink.length}}")
+                    a.notimp(href='/invites')
+                      i.fa.fa-angle-right
+                      | #{__("Invite your Friends")}
+                  li(bind, hidden?="{{ theme!='default' }}")
+                    a.notimp(href='/for-bloggers')
+                      i.fa.fa-angle-right
+                      | #{__("Have a blog? Start earning money!")}
+
+            .clearfix
+              .row.grid-sections
+                template(repeat="{{items}}")
+                  .col-sm-4.mb20
+                    .table-div
+                      .table-row
+                        .table-cell.pull-left.avatar-midd
+                          a(href='{{website}}', target='_blank')
+                            img.img-responsive.img-rounded(src='{{visualUrl}}', width='50')
+                        .table-cell.pr10.pull-left.overflow.w60.pt10
+                          a(href='{{website}}', target='_blank')
+                            h5.m0.ellipsis-txt {{title}}
+                            p.m0.small {{description}}
+                          .clearfix.notimp
+                            a(href='{{website}}', target='_blank')
+                              i.fa.fa-star
+                              | {{subscribers}} #{__("followers")}
+                        //- .table-cell.prt.pt8
+                          ul.list-unstyled.list-inline.m0
+                            li(id='action-btn-follow-{{id}}', bind, hidden?='{{followed}}')
+                              a.btn.btn-default.btn-icon(on-tap='{{clickAction}}', eid='{{id}}')
+                                i.fa.fa-plus
+                            li(id='action-btn-unfollow-{{id}}', bind, hidden?='{{!followed}}')
+                              a.btn.btn-default.btn-icon(href='/{{permalink}}')
+                                i.fa.fa-check
+
+  script.
+
+    Polymer('sbb-feedly', {
+
+      theme: '',
+      variant: 'grid',
+      title: '',
+      url: '',
+      items: [],
+      follower: '',
+      followee: '',
+
+      ready: function() {
+        //- console.log('ready', this.theme);
+        //- if(this.variant=='whotofollow'&&this.permalink) this.url = '/api/user/' + this.permalink + '/whotofollow';
+        //- if(this.variant=='whotofollow'&&!this.permalink) this.url = '/api/whotofollow';
+        //- if(this.variant=='followers'&&this.permalink) this.url = '/api/user/' + this.permalink + '/followers';
+        //- this.url = '/api/whotofollow';
+      },
+
+      activeChanged: function() {
+        //- this.classList.toggle('selected', this.active);
+      },
+
+      clickAction: function(e, detail, sender) {
+        if(this.follower) {
+          this.followee = sender.templateInstance.model.id;
+          sender.templateInstance.model.followed = true;
+          var ajax_send = document.querySelector("core-ajax-send");
+          this.$.ajax_send.go();
+        } else {
+          location = '/login';
+        }
+      },
+
+      loaded: function(e, data) {
+        //- console.log('data', data);
+        this.items = data.response.results;
+      },
+
+      followed: function(e, data) {
+        //- console.log('data', data);
+      }
+
+    });
+
+

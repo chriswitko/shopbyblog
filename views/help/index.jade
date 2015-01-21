@@ -1,0 +1,51 @@
+extends ../layout
+
+block content
+  .container.p0
+    .col-sm-3
+      .clearfix.mt0.mb20.slicer
+        ul.list-unstyled.list-vertical(role="tablist")
+          li.active(role="presentation")
+            a(href="#home", role="tab", data-toggle="tab") Ogólne
+          li(role="presentation")
+            a(href="#bloggers", role="tab", data-toggle="tab") Dla Blogerów
+          li(role="presentation")
+            a(href="#advertisers", role="tab", data-toggle="tab") Dla reklamodawców
+          li(role="presentation")
+            a(href="#terms", role="tab", data-toggle="tab") Regulamin
+          li(role="presentation")
+            a(href="#privacy", role="tab", data-toggle="tab") Polityka prywatności
+      .clearfix.mt20
+        small Masz pytania? Napisz do nas: <a href="/contact">#{__('hello@shopbyblog.com')}</a>
+
+    .col-sm-9
+      .container-fix2.container-fb2.bg-clouds2.tab-content.mt0.p10(style='border-left:1px solid #f7f7f7')
+        .tab-pane(role="tabpanel", id="privacy")
+          .clearfix.mb5
+            h4.m0.pt5.pb5 Polityka prywatności
+          .clearfix
+            iframe(style='display:block', src="#{links.privacy}", width='100%', height='600', frameborder='0')
+
+        .tab-pane(role="tabpanel", id="terms")
+          .clearfix.mb5
+            h4.m0.pt5.pb5 Regulamin
+          .clearfix
+            iframe(style='display:block', src="#{links.terms}", width='100%', height='600', frameborder='0')
+
+        .tab-pane(role="tabpanel", id="advertisers")
+          .clearfix.mb5
+            h4.m0.pt5.pb5 Dla reklamodawców
+          .clearfix
+            iframe(style='display:block', src="#{links.for_sellers}", width='100%', height='600', frameborder='0')
+
+        .tab-pane(role="tabpanel", id="bloggers")
+          .clearfix.mb5
+            h4.m0.pt5.pb5 Dla blogerów
+          .clearfix
+            iframe(style='display:block', src="#{links.for_bloggers}", width='100%', height='600', frameborder='0')
+
+        .tab-pane.active(role="tabpanel", id="home")
+          .clearfix.mb5
+            h4.m0.pt5.pb5 Ogólne
+          .clearfix
+            iframe(style='display:block', src="#{links.general}", width='100%', height='600', frameborder='0')

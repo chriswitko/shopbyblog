@@ -1,0 +1,28 @@
+{
+  "profile": {
+    "id": "54b4155e3728400000264e27",
+    "permalink": "starter3",
+    "username": "starter3",
+    "followers": 0
+  },
+  "products": [
+    {
+      "product": {
+        "title": "Bluze blue",
+        "imageFileName": "d5d57e4d660972e7a92b431f0425524e.jpg",
+        "permalink": "bluze-blue",
+        "id": "54b42881fd811400002079e9",
+        "createdAt": "2015-01-12T20:03:13.471Z"
+      }
+    },
+    {
+      "product": {
+        "title": "Silver sweater",
+        "imageFileName": "451bf0010f87eaad8ce68a91de302cf4.jpg",
+        "permalink": "silver-sweater",
+        "id": "54b41c4ec890af000078aaab",
+        "createdAt": "2015-01-12T19:11:10.628Z"
+      }
+    }
+  ]
+}

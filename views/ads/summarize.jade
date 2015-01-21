@@ -122,8 +122,8 @@ block content
                 input(type='hidden', name='amount', value='#{campaign.price.euro.totalBrutto}')
               else if campaign.invoice.invoiceCurrencyCode=='PLN'
                 input(type='hidden', name='amount', value='#{campaign.price.totalPrice}')
-              input(type='hidden', name='return', value='http://localhost:3005/payments/paypal/payed')
-              input(type='hidden', name='cancel_return', value='http://localhost:3005/ads/payment?cid=#{campaign._id}&ret=1')
+              input(type='hidden', name='return', value='#{sbb.website}/payments/paypal/payed')
+              input(type='hidden', name='cancel_return', value='#{sbb.website}/ads/payment?cid=#{campaign._id}&ret=1')
               input(type='hidden', name='rm', value='2')
 
             form.hid(id='providerTransferuj', action='https://secure.transferuj.pl', method='post', name='payment', accept-charset="utf-8")
@@ -132,8 +132,8 @@ block content
               input(name='opis', value='ShopByBlog Ad ADSL#{campaign.price.days}', type='hidden')
               input(name='crc', value='#{campaign._id}', type='hidden')
               input(name='md5sum', value='#{md5sum}', type='hidden')
-              //- input(type='hidden', name='pow_url', value='http://localhost:3005/payments/paypal/payed?cid=#{campaign._id}')
-              //- input(type='hidden', name='pow_url_blad', value='http://localhost:3005/ads/payment?cid=#{campaign._id}&ret=1')
+              input(type='hidden', name='pow_url', value='#{sbb.website}/payments/transferuj/payed?cid=#{campaign._id}')
+              input(type='hidden', name='pow_url_blad', value='#{sbb.website}/payments/error?cid=#{campaign._id}&ret=1')
 
             form.form-horizontal
               .form-group.p15.bg-clouds(class=payNow?'':'hide')
@@ -155,7 +155,7 @@ block content
               .form-group.mb0.mt20
                 .col-sm-offset-2.col-sm-8
                   .clearfix
-                    p.m0.imp.small #{__('Have a questions? Write us')} <a href="mailto:hello@shopbyblog.com">hello@shopbyblog.com</a>
+                    p.m0.imp.small #{__('Have a questions? Write us')} <a href="/contact">#{__('hello@shopbyblog.com')}</a>
 
 
 //-

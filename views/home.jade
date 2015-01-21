@@ -4,6 +4,9 @@ block content
   include templates/products.grid.jade
   include templates/sections.grid.jade
 
+  if !user
+    .container-wide.mt20(style='position:absolute;width:100%;height:350px;background:black no-repeat 50% top;background-size:cover;')
+      .container-floor(style='height:100%;')
 
   if !user
     #cookie-policy.container.mb0.mt20.pb0.hid
@@ -11,19 +14,41 @@ block content
         .col-sm-12
           .panel.panel-default.mb0
             .panel-body
-              p.m0 #{__("Cookies help us deliver our services. By using our services, you agree to our use of cookies.")}
+              p.m0 #{__("Pliki cookie pozwalają nam dostarczać nasze usługi. Korzystając z naszej strony, akceptujesz naszą politykę prywatności.")}
               .clearfix.mt10
                 a.btn.btn-danger.bind(href='', onclick='$.cookie("cookie-policy-box", 1);$("#cookie-policy").hide()') Ok
-                a.btn.btn-link.notimp(href='/privacy') Learn more
+                a.btn.btn-link.notimp(href='/privacy') Dowiedz się więcej...
 
   if !user
-    .container.container-clean.pb0.with-floor2.mb0
-      .row
-        include partials/home.headline.jade
+    .clearfix(class=!user?'with-floor mt20':'')
+      .container.container-clean.pb0.mb0
+        .row
+          include partials/home.headline.jade
 
-    include static/for-bloggers-signup
+    .clearfix(class=!user?'with-floor':'')
+      include static/for-bloggers-signup
 
-  sbb-people(title='#{__("RECOMMENDED BLOGS")}', theme='default', variant='whotofollow', permalink='#{user?user.permalink:""}', follower='#{user?user._id:""}')
+    //- .container
+      .container-fix.p20
+        .row
+          .col-sm-push-1.col-sm-10
+            img.img-responsive(src='/img/mbair_stores.jpg')
+
+  //- .clearfix.hidden-xs
+    //- sbb-people(title='#{__("RECOMMENDED BLOGS")}', theme='default', variant='whotofollow', permalink='#{user?user.permalink:""}', follower='#{user?user._id:""}')
+    //- sbb-feedly(title='POPULARNE BLOGI', theme='default', variant='whotofollow', permalink='#{user?user.permalink:""}', follower='#{user?user._id:""}')
+
+  #deals-area-container.container.container-grid.pb0.mb20.pt0.hid
+    .row
+      .col-sm-12
+        .row
+          .col-sm-6
+            h3.day.mt0 Oferty dnia
+          .col-sm-6.align-right
+            a.notimp(href='/deals') Zobacz wszystkie &raquo;
+        .row
+          .col-xs-12
+            #deals-area
 
   .container.container-grid.pb0.mb20.pt0
     .col-sm-12
@@ -31,10 +56,13 @@ block content
         .clearfix
           #results-area
 
-    .row.mb15.mt20
+    #more.row.mb15.mt20.hid
       .col-sm-12.align-center
         a.btn.btn-primary.btn-lg.btn-block.bind(href='', onclick='getProducts()') #{__('load more...')}
 
+  #empty.container.container-clean.pb0.mt20.hid
+    .clearfix.mt0.mb15
+      h4.m0.align-center Koniec.
 
 block js
 
@@ -46,7 +74,7 @@ block js
 
       $(".grid-element").fitText();
 
-      window.getProducts = function(criteria) {
+      window.getProducts = function(criteria, cb) {
         if(!criteria) criteria = {}
 
         page++;
@@ -63,9 +91,45 @@ block js
           var html    = template(context);
 
           $('#results-area').append(html);
-          SBB.initResizeGrid();
+          if(page==1&&data.products.length) $('#more').removeClass('hid');
+          if(!data.products.length) {
+            $('#more').addClass('hid');
+            $('#empty').removeClass('hid');
+          };
+          cb();
         });
       }
 
-      if($('#results-area')) window.getProducts();
+      window.getDeals = function(criteria, cb) {
+        if(!criteria) criteria = {}
+
+        criteria.page = 1;
+        criteria.limit = 3;
+
+        SBBProduct.getDeals(criteria, function(data) {
+
+          var source = $("#grid-item-product-only").html();
+
+          var template = Handlebars.compile(source);
+
+          var context = {products: data.products};
+          var html    = template(context);
+
+          $('#deals-area').html(html);
+          if(data.products.length) {
+            $('#deals-area-container').removeClass('hid');
+          }
+          cb();
+        });
+      }
+
+      if($('#results-area')) {
+        window.getProducts({}, function() {
+          if($('#deals-area')) {
+            window.getDeals({}, function() {
+              SBB.initResizeGrid('feed');
+            });
+          } else SBB.initResizeGrid('deals');
+        });
+      }
     })

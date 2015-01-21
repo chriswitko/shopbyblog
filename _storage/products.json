@@ -1,0 +1,28 @@
+[
+  {
+    "_id": "54bdffd9e74d2d7371a1aa3a",
+    "body": "Wysokiej jakości ramka drewniana, sam posiadam więc polecam",
+    "imageFileName": "c151734f4a6b20efd8b5f7c43ce5452f.jpg",
+    "permalink": "ramka-drewniana-z-motylkiem",
+    "publisher": {
+      "_id": "54bdf0906e7a336c68bf8478",
+      "profile": {
+        "name": "Chris Witko"
+      },
+      "isHidden": false,
+      "isVerified": true,
+      "photo": "https://gravatar.com/avatar/?s=200&d=retro",
+      "id": "54bdf0906e7a336c68bf8478"
+    },
+    "title": "Ramka drewniana z motylkiem",
+    "sticky": true,
+    "isHidden": false,
+    "meta": {
+      "clicks": 0,
+      "comments": 1,
+      "upvotes": 1,
+      "views": 0
+    },
+    "objectID": "54bdffd9e74d2d7371a1aa3a"
+  }
+]

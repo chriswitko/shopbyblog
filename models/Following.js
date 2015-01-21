@@ -15,12 +15,12 @@ A document with no “end” field means that the “follower” is still follow
  */
 
 var followingSchema = new mongoose.Schema({
-  followee: {type : Schema.ObjectId, ref : 'User'},
-  follower: {type : Schema.ObjectId, ref : 'User'},
+  followee: {type : Schema.ObjectId, ref : 'User', index: true},
+  follower: {type : Schema.ObjectId, ref : 'User', index: true},
 
-  start: Date,
+  start: {type: Date, index: true},
   last: Date,
-  end: Date
+  end: {type: Date, index: true}
 });
 
 followingSchema.pre('save', function(next) {

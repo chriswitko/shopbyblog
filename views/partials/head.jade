@@ -2,9 +2,9 @@ meta(charset='utf-8')
 meta(http-equiv='X-UA-Compatible', content='IE=edge')
 meta(name='viewport', content='width=device-width, initial-scale=1.0, user-scalable=no')
 meta(name='HandheldFriendly', content='true')
-meta(name='description', content='')
+meta(name='description', content='Najlepsze produkty polecane przez blogerów')
 meta(name='csrf-token', content=_csrf)
-meta(name='author', content='')
+meta(name='author', content='Chris Witko')
 
 if og&&og.url
   meta(property="fb:app_id", content="302184056577324")
@@ -19,7 +19,7 @@ if og&&og.url
   meta(name="twitter:site", content="@shopbyblog")
   meta(name="twitter:creator", content="@shopbyblog")
 
-link(rel='shortcut icon', href='/favicon.ico?1', type='image/x-icon')
+link(rel='shortcut icon', href='/favicon.ico?3', type='image/x-icon')
 link(rel='apple-touch-icon', href='/img/logos/apple-touch-icon.png?1')
 link(rel='apple-touch-icon', sizes='57x57', href='/img/logos/apple-touch-icon-57x57.png?1')
 link(rel='apple-touch-icon', sizes='72x72', href='/img/logos/apple-touch-icon-72x72.png?1')
@@ -30,13 +30,15 @@ link(rel='apple-touch-icon', sizes='120x120', href='/img/logos/apple-touch-icon-
 link(rel='apple-touch-icon', sizes='76x76', href='/img/logos/apple-touch-icon-76x76.png?1')
 link(rel='apple-touch-icon', sizes='152x152', href='/img/logos/apple-touch-icon-152x152.png?1')
 
-title #{title?title+' | ':''}ShopByBlog - Najlepsze produkty polecane przez blogerów
+title #{title?title+' | ':''}ShopByBlog | #{__("Go shopping with your favorite bloggers")}
 
 script(src='/js/components/platform/platform.js')
 //- link(rel='import', href='/js/components/core-icon-button/core-icon-button.html')
 //- link(rel='import', href='/js/components/sbb-vote/sbb-vote.html')
 link(rel='import', href='/components/sbb-product-tb')
 link(rel='import', href='/components/sbb-people')
+link(rel='import', href='/components/sbb-feedly')
+link(rel='import', href='/components/sbb-deals')
 
 link(href='/css/lib/pickdate/default.css', rel='stylesheet')
 link(href='/css/lib/pickdate/default.date.css', rel='stylesheet')

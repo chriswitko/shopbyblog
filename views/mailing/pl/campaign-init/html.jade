@@ -1,0 +1,14 @@
+extends ../../layout/default
+
+block content
+  p(style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:19px;color:#666;font-weight:normal;margin:4px 15px 4px 0") Szanowni Państwo,
+  br
+  p(style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:19px;color:#666;font-weight:normal;margin:4px 15px 4px 0") informujemy o utworzeniu kampanii reklamowej w serwisie Szopuje. Pod adresem #{sbb.website}/ads/report?cid=:cid mogą Państwo dokonać płatności oraz sprawdzić status swojej kampanii.
+  br
+  p(style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:19px;color:#666;font-weight:normal;margin:4px 15px 4px 0") - Adres do raportu kampanii: #{sbb.website}/ads/report?cid=#{campaign._id}
+  p(style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:19px;color:#666;font-weight:normal;margin:4px 15px 4px 0") - Blog: #{campaign.blogger.getName()} (#{campaign.blogger.getExternalLink()})
+  p(style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:19px;color:#666;font-weight:normal;margin:4px 15px 4px 0") - Produkt: #{campaign.product.title} (#{sbb.website}/product/#{campaign.product.permalink})
+  p(style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:19px;color:#666;font-weight:normal;margin:4px 15px 4px 0") - Termin emisji: #{moment(campaign.start).format('DD/MM/YYYY HH:mm')} - #{moment(campaign.end).format('DD/MM/YYYY HH:mm')}
+  p(style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:19px;color:#666;font-weight:normal;margin:4px 15px 4px 0") - Do zapłaty: #{campaign.price.totalPriceFormatted}
+  br
+  p(style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:19px;color:#666;font-weight:normal;margin:4px 15px 4px 0") Kampania zostanie uruchomiona po otrzymaniu przez ShopByBlog Państwa wpłaty - w przypadku pytań prosimy o kontakt.

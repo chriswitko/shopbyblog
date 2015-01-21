@@ -13,7 +13,8 @@ block content
             .form-group
               label(class='col-sm-2 control-label', for='permalink') Permalink
               .col-sm-8
-                p.form-control-static
+                input.form-control(type='text', name='permalink', id='permalink', value=profile.permalink, autocomplete='off')
+                //- p.form-control-static
                   a(href='/#{profile.permalink}', target='_blank') #{profile.permalink}
             .form-group
               label(class='col-sm-2 control-label', for='email') E-mail
@@ -94,6 +95,10 @@ block content
                       input(type='checkbox', name='isRemoved', value='1', checked=profile.isRemoved)
                       div.pt2 Removed
             .form-group
+              label(class='col-sm-2 control-label', for='platform') Platform
+              .col-sm-8
+                input.form-control(type='text', name='blogger[platform]', id='platform', value=profile.blogger.platform, autocomplete='off')
+            .form-group
               label(class='col-sm-2 control-label', for='feedlyId') FeedlyID
               .col-sm-8
                 input.form-control(type='text', name='blogger[feedlyId]', id='feedlyId', value=profile.blogger.feedlyId, autocomplete='off')
@@ -129,9 +134,30 @@ block content
               .col-sm-offset-2.col-sm-8
                 button.btn.btn-primary(type='submit')
                   | Update
-            .form-group.mb0
-              .col-sm-2 &nbsp;
-              .col-sm-10
-                ul.list-unstyled.list-inline.m0.list-on-left
-                  li
-                    a(href='/dashboard/autorespond/verified?uid=#{profile._id}') Send Verified email
+
+            .container-fb
+              .form-group
+                label(class='col-sm-2 control-label', for='email') Website
+                .col-sm-8
+                  p.form-control-static
+                    a(href='#{profile.profile.website}', target='_blank') #{profile.profile.website}
+            .form-group
+              label(class='col-sm-2 control-label', for='email') Twitter
+              .col-sm-8
+                p.form-control-static
+                  a(href='#{profile.links.twitter}', target='_blank') #{profile.links.twitter}
+            .form-group
+              label(class='col-sm-2 control-label', for='email') Facebook
+              .col-sm-8
+                p.form-control-static
+                  a(href='#{profile.links.facebook}', target='_blank') #{profile.links.facebook}
+            .form-group
+              label(class='col-sm-2 control-label', for='email') Instagram
+              .col-sm-8
+                p.form-control-static
+                  a(href='#{profile.links.instagram}', target='_blank') #{profile.links.instagram}
+            .form-group
+              label(class='col-sm-2 control-label', for='email') YouTube
+              .col-sm-8
+                p.form-control-static
+                  a(href='#{profile.links.youtube}', target='_blank') #{profile.links.youtube}
