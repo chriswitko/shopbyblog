@@ -1,0 +1,27 @@
+{
+  "assets": {
+    "styles.css": "styles-b413fd34169477cc3e6cb83b15eab620.css",
+    "application.js": "application-dfa7faf82ae0d9a9b2a1a2d78361a6d4.js",
+    "main.js": "main-f7fa2a11ef46420292e424b210990641.js"
+  },
+  "files": {
+    "styles-b413fd34169477cc3e6cb83b15eab620.css": {
+      "logical_path": "styles.css",
+      "mtime": "2015-01-20T06:55:26.000Z",
+      "size": 200655,
+      "digest": "b413fd34169477cc3e6cb83b15eab620"
+    },
+    "application-dfa7faf82ae0d9a9b2a1a2d78361a6d4.js": {
+      "logical_path": "application.js",
+      "mtime": "2015-01-20T05:55:41.000Z",
+      "size": 364532,
+      "digest": "dfa7faf82ae0d9a9b2a1a2d78361a6d4"
+    },
+    "main-f7fa2a11ef46420292e424b210990641.js": {
+      "logical_path": "main.js",
+      "mtime": "2014-11-10T16:02:08.000Z",
+      "size": 880,
+      "digest": "f7fa2a11ef46420292e424b210990641"
+    }
+  }
+}

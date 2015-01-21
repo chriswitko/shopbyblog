@@ -133,7 +133,8 @@ app.set('json spaces', 2);
 app.use(compress());
 app.use(connectAssets({
   paths: [path.join(__dirname, 'public/css'), path.join(__dirname, 'public/js')],
-  helperContext: app.locals
+  helperContext: app.locals,
+  // build: true
 }));
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -463,7 +464,7 @@ if (process.env.NODE_ENV === 'development') {
  * Start Express server.
  */
 
-app.listen(app.get('port'), function() {
+app.listen(PORT, function() {
   console.log('Express server listening on port %d in %s mode', PORT, app.get('env'));
 });
 
