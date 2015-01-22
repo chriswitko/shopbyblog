@@ -314,7 +314,7 @@ exports.profile = function(req, res) {
       if((req.user&&req.user._id.toString()==locales.profile._id.toString())||locales.profile.isVerified) {
         if(locales.profile.isGhost) req.flash('errors', { msg: 'UWAGA! To jest profil testowy.' });
         res.render('account/index', {
-          title: locales.profile.username, //
+          title: locales.profile.getName(), //
           profile: locales.profile,
           og: locales.profile.getOpenGraph(),
           hideSubscriptionBox: true,

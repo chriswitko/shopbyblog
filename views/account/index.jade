@@ -42,8 +42,8 @@ block content
                 - if (profile.profile.website)
                   li
                     a.btn.btn-sm.btn-default(href='#{profile.getExternalLink()}', target='_blank', onclick="ga('sbb.send', 'event', 'Users', 'Retraffic', 'user_#{profile._id}');")
-                      i.fa.fa-globe
-                      span.small #{__('Mój Blog')}
+                      i.fa.fa-rss
+                      span.small #{__('Blog')}
                 - if (profile.links.twitter)
                   li
                     a.btn.btn-sm.btn-default.btn-icon(href='#{profile.links.twitter}', target='_blank')

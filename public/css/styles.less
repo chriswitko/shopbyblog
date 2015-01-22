@@ -607,6 +607,12 @@ ul.list-on-right li:last-child {
   padding-right: 0px;
 }
 
+ul.navbar-right li:last-child {
+  a:not(.btn) {
+    padding-right: 0px;
+  }
+}
+
 .align-top {
   vertical-align: top;
 }
@@ -765,7 +771,7 @@ a.color-g-blue {
   background: @color-red;
 }
 
-.color-red {
+.color-red, a.color-red {
   color: @color-red;
 }
 

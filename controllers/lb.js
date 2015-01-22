@@ -247,7 +247,7 @@ var sendHtmlEmail = function(options, cb) {
         } else {
           var mailOptions = {
             to: options.to,
-            from: options.from||secrets.gaEmail,
+            from: secrets.sendgrid.fromname + '<' + options.from||secrets.gaEmail + '>',
             subject: options.subject,
             generateTextFromHTML: true,
             html: html,

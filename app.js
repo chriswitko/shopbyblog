@@ -253,8 +253,8 @@ app.get('/en', homeController.langEnglish);
 
 app.get('/about', homeController.about);
 
-app.get('/claim', userController.claim);
-app.post('/claim', userController.claim_post);
+app.get('/claim', passportConf.isAuthenticated, userController.claim);
+app.post('/claim', passportConf.isAuthenticated, userController.claim_post);
 
 app.get('/for-bloggers', staticController.for_bloggers);
 app.get('/sell-products', staticController.sell_products);

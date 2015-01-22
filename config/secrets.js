@@ -49,7 +49,8 @@ module.exports = {
 
     sendgrid: {
       user: process.env.SENDGRID_USER || 'shopbyblog',
-      password: process.env.SENDGRID_PASSWORD || 'Centauri1125$'
+      password: process.env.SENDGRID_PASSWORD || 'Centauri1125$',
+      fromname: 'ShopByBlog.com'
     },
 
     facebook: {
@@ -132,7 +133,8 @@ module.exports = {
 
     sendgrid: {
       user: process.env.SENDGRID_USER || 'shopbyblog',
-      password: process.env.SENDGRID_PASSWORD || 'Centauri1125$'
+      password: process.env.SENDGRID_PASSWORD || 'Centauri1125$',
+      fromname: 'ShopByBlog.com'
     },
 
     facebook: {

@@ -24,7 +24,7 @@ block content
               include partials/home.headline.jade
 
         .clearfix(class=!user?'with-floor':'')
-          include static/for-bloggers-signup
+          include static/for-bloggers-signup-nav
 
     //- .container
       .container-fix.p20
@@ -59,7 +59,7 @@ block content
         a.btn.btn-primary.btn-lg.btn-block.bind(href='', onclick='getProducts()') #{__('load more...')}
 
   #empty.container.container-clean.pb0.mt20.hid
-    .clearfix.mt0.mb15
+    //- .clearfix.mt0.mb15
       h4.m0.align-center Koniec.
 
 block js
