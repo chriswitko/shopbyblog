@@ -7,7 +7,7 @@ block content
   .container.container-clean.pb0.mb20(style='position:relative;')
     .row
       .col-sm-push-1.col-sm-10.align-center
-        h1.mt0.mb10.lato.lato100(style='font-size:60px;line-height:60px;') Zarabiaj z ShopByBlog!
+        h1.mt0.mb10.lato.lato400(style='font-size:60px;line-height:60px;') Zarabiaj z ShopByBlog!
         h3.lato.lato400.mt20 Dołącz do sieci reklamowej dedykowanej blogerom i zarabiaj na polecaniu produktów swoim czytelnikom.
 
   .container
@@ -40,27 +40,27 @@ block content
 
   if (!user)
     include for-bloggers-signup
-  else if (user&&!user.isVerified&&!user.isPending)
-    .container.container-clean.pb0(style='position:relative;')
-      .row.mb20
-        .col-sm-push-1.col-sm-10.align-center
-          h1.mt0.mb10.lato.lato900 Sprawdź ile zarobisz z ShopByBlog!
-      .row.mb15
-        .col-sm-12.align-center
-          form.form-inline
-            .input-control
-              label Miesięczna liczba unikalnych użytkowników bloga: &nbsp;
-              input.form-control(type='text', id='uu', value='30000', placeholder='Wprowadź liczbę')
-              | &nbsp;&nbsp;
-              button.btn.btn-primary(type='button', onclick='calcMyRevenue()') Przelicz
-      #calc.row.mb15.hid
-        .col-sm-8.col-sm-push-2.align-center
-          .container-fb.bg-clouds
-            h5.lato100 Twoje miesięczne zarobki powinny wynosić od <strong id="min"></strong> do <strong id="max"></strong> zł przy 10 miejscach reklamowych.
   else if (user&&!user.isVerified&&user.isPending)
     //- include for-bloggers-approval
   else
     include for-bloggers-ready
+
+  .container.container-clean.pb0(style='position:relative;')
+    .row.mb20
+      .col-sm-push-1.col-sm-10.align-center
+        h1.mt0.mb10.lato.lato900 Sprawdź ile zarobisz z ShopByBlog!
+    .row.mb15
+      .col-sm-12.align-center
+        form.form-inline
+          .input-control
+            label Miesięczna liczba unikalnych użytkowników bloga: &nbsp;
+            input.form-control(type='text', id='uu', value='30000', placeholder='Wprowadź liczbę')
+            | &nbsp;&nbsp;
+            button.btn.btn-primary(type='button', onclick='calcMyRevenue()') Przelicz
+    #calc.row.mb15.hid
+      .col-sm-8.col-sm-push-2.align-center
+        .container-fb.bg-clouds
+          h5.lato100 Twoje miesięczne zarobki powinny wynosić od <strong id="min"></strong> do <strong id="max"></strong> zł przy 10 miejscach reklamowych.
 
   //- sbb-people(title='#{__("DOŁĄCZYLI DO NAS")}', theme='default', variant='whotofollow', permalink='#{user?user.permalink:""}', follower='#{user?user._id:""}')
 
@@ -76,24 +76,24 @@ block content
         .col-sm-6
           h5.lato700
             i.fa.fa-circle
-            | Zarejestruj się
+            | Zarejestruj się na ShopByBlog
           p.m0 Zarejestruj się teraz i dodawaj produkty, które chcesz polecić swoim czytelnikom.
         .col-sm-6
           h5.lato700
             i.fa.fa-circle
             | Dodaj polecane produkty
-          p.m0 Aktualizuj swój profil regularnie o nowe produkty i zwiększ szansę na nowe kampanie i większe zarobki.
+          p.m0 Aktualizuj regularnie swój profil o polecane przez Ciebie produkty i zarabiaj na linkach sponsorowanych zamieszczanych przez reklamodawców na ShopByBlog.
       .row
         .col-sm-6
           h5.lato700
             i.fa.fa-circle
             | Zgłoś swojego bloga
-          p.m0 Wypełnij <a href="/claim"><u>formularz zgłoszenia</u></a> bloga, a my szybko rozpatrzymy Twoje zgłoszenie.
+          p.m0 Wypełnij <a href="/claim"><u>formularz zgłoszenia</u></a> swojego bloga. Jako bloger możesz zacząć zarabiać na polecanych przez siebie produktach.
         .col-sm-6
           h5.lato700
             i.fa.fa-circle
             | Umieść nasz widget na swojej stronie
-          p.m0 Widget jest narzędziem do promowania polecanych przez Ciebie produktów na Twoim blogu. W prosty i szybki sposób możesz go umieścić na swojej stronie.
+          p.m0 Widget jest narzędziem do prezentowania w jednym miejscu polecanych przez Ciebie produktów. W prosty i szybki sposób możesz go umieścić na swojej stronie.
       .row.mt20
         .col-sm-6
           p.m0.imp.color-red

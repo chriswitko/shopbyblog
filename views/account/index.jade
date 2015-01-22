@@ -84,6 +84,16 @@ block content
         .clearfix
           #results-area
 
+  #empty.container.container-clean.pb0.mt100.hid
+    .clearfix.mt0.mb15
+      if !user
+        h4.m0.align-center Brak produktów
+      else
+        h4.m0.align-center
+          a(href='/add')
+            i.fa.fa-plus
+            | Dodaj pierwszy produkt...
+
   if !user
     include ../subscribe
 
@@ -112,6 +122,7 @@ block js
           var html    = template(context);
 
           $('#results-area').append(html);
+          if(!data.products.length) $('#empty').removeClass('hid');
           SBB.initResizeGrid();
         });
       }

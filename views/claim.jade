@@ -18,9 +18,13 @@ block content
           #next.form-group
             .col-sm-offset-2.col-sm-8
               ul.list-unstyled.list-inline.m0.list-on-left
-                li
+                li.processBtns
                   button.btn.btn-primary.btn-lg(type='button', onclick='searchBlog()')
                     | #{__('Next')}
+                li.hid.processInProgress
+                  button.btn.btn-default.btn-lg(type='button')
+                    i.fa.fa-circle-o-notch.fa-spin
+                    | #{__('Please wait...')}
           #blogger.clearfix.hid
             .form-group
               label.col-sm-2.control-label(for='name') #{__('Name')}
@@ -142,6 +146,9 @@ block js
     })(jQuery);
 
     function searchBlog() {
+      $('.processBtns').addClass('hid');
+      $('.processInProgress').removeClass('hid');
+
       var api = new $.RestClient('/api/blog/');
 
       api.add('search');
