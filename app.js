@@ -186,6 +186,7 @@ app.use(function(req, res, next) {
     return str
   }
 
+  res.locals.env = env;
   res.locals.sbb = secrets.sbbConfig;
   res.locals.imagesUrl = secrets.s3ImagesHost;
   // Make user object available in templates.
@@ -208,6 +209,7 @@ app.use(i18n.init);
 
 app.use(function(req, res, next) {
   res.cookie('sbblang', 'pl');
+  req.setLocale('pl');
   // moment.locale('en-us');
   // Make user object available in templates.
   // res.locals.user = req.user;

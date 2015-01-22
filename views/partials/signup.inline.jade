@@ -1,4 +1,4 @@
-form.form-inline(action='/signup', role='form', method='post')
+form.form-inline.hidden-xs(action='/signup', role='form', method='post')
   input(type='hidden', name='_csrf', value=_csrf)
   .form-group
     .input-group.pr10
@@ -11,4 +11,8 @@ form.form-inline(action='/signup', role='form', method='post')
       input.form-control.input-lg(type='password', name='confirmPassword', id='confirmPassword', placeholder='#{__("Confirm Password")}', autocomplete='off')
   .form-group
     .input-group
+      button.btn.btn-danger.btn-lg(type='submit') #{__("Get started")}
+form.form-inline.hidden-lg.hidden-md.hidden-sm(action='/signup', role='form', method='get')
+  .form-group
+    .input-group(style='width:100%')
       button.btn.btn-danger.btn-lg(type='submit') #{__("Get started")}

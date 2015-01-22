@@ -5,10 +5,6 @@ block content
   include templates/sections.grid.jade
 
   if !user
-    .container-wide.mt20(style='position:absolute;width:100%;height:350px;background:black no-repeat 50% top;background-size:cover;')
-      .container-floor(style='height:100%;')
-
-  if !user
     #cookie-policy.container.mb0.mt20.pb0.hid
       .row
         .col-sm-12
@@ -17,16 +13,18 @@ block content
               p.m0 #{__("Pliki cookie pozwalają nam dostarczać nasze usługi. Korzystając z naszej strony, akceptujesz naszą politykę prywatności.")}
               .clearfix.mt10
                 a.btn.btn-danger.bind(href='', onclick='$.cookie("cookie-policy-box", 1);$("#cookie-policy").hide()') Ok
-                a.btn.btn-link.notimp(href='/privacy') Dowiedz się więcej...
+                a.btn.btn-link.notimp(href='/help#privacy') Dowiedz się więcej...
 
   if !user
-    .clearfix(class=!user?'with-floor mt20':'')
-      .container.container-clean.pb0.mb0
-        .row
-          include partials/home.headline.jade
+    .container-wide.mt20(style='height:auto;display:block;background:black no-repeat 50% top;background-size:cover;')
+      .container-floor(style='height:100%;')
+        .clearfix(class=!user?'with-floor mt20':'')
+          .container.container-clean.pb0.mb0
+            .row
+              include partials/home.headline.jade
 
-    .clearfix(class=!user?'with-floor':'')
-      include static/for-bloggers-signup
+        .clearfix(class=!user?'with-floor':'')
+          include static/for-bloggers-signup
 
     //- .container
       .container-fix.p20

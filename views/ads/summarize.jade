@@ -118,17 +118,23 @@ block content
               input(type='hidden', name='item_name', value='ShopByBlog Ad')
               input(type='hidden', name='item_number', value='ADSL#{campaign.price.days}')
               input(type='hidden', name='custom', value='#{campaign._id}')
-              if campaign.invoice.invoiceCurrencyCode=='EUR'
-                input(type='hidden', name='amount', value='#{campaign.price.euro.totalBrutto}')
-              else if campaign.invoice.invoiceCurrencyCode=='PLN'
-                input(type='hidden', name='amount', value='#{campaign.price.totalPrice}')
+              if demo
+                input(type='hidden', name='amount', value='1.5')
+              else
+                if campaign.invoice.invoiceCurrencyCode=='EUR'
+                  input(type='hidden', name='amount', value='#{campaign.price.euro.totalBrutto}')
+                else if campaign.invoice.invoiceCurrencyCode=='PLN'
+                  input(type='hidden', name='amount', value='#{campaign.price.totalPrice}')
               input(type='hidden', name='return', value='#{sbb.website}/payments/paypal/payed')
               input(type='hidden', name='cancel_return', value='#{sbb.website}/ads/payment?cid=#{campaign._id}&ret=1')
               input(type='hidden', name='rm', value='2')
 
             form.hid(id='providerTransferuj', action='https://secure.transferuj.pl', method='post', name='payment', accept-charset="utf-8")
               input(name='id', value='17460', type='hidden')
-              input(name='kwota', value='#{campaign.price.totalPrice}', type='hidden')
+              if demo
+                input(name='kwota', value='1.5', type='hidden')
+              else
+                input(name='kwota', value='#{campaign.price.totalPrice}', type='hidden')
               input(name='opis', value='ShopByBlog Ad ADSL#{campaign.price.days}', type='hidden')
               input(name='crc', value='#{campaign._id}', type='hidden')
               input(name='md5sum', value='#{md5sum}', type='hidden')

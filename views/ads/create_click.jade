@@ -15,6 +15,7 @@ block content
           form.form-horizontal(id='orderForm', role='form', method='post', enctype='multipart/form-data')
             input(type='hidden', name='_csrf', value=_csrf)
             input(type='hidden', name='invoiceCurrencyCode', value='#{currentLang=="pl"?"PLN":"EUR"}')
+            input(type='hidden', name='demo', value='#{demo?"1":"0"}')
             .form-group
               label(class='col-sm-2 control-label', for='url')
               .col-sm-8

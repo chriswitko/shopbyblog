@@ -9,8 +9,8 @@ html
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-      //- ga('create', 'UA-58428197-1', 'shopbyblog.com', 'auto', {'name': 'sbb'});//shopbyblog.com
-      ga('create', 'UA-58428197-1', {'cookieDomain': 'none', 'name': 'sbb'});//shopbyblog.com
+      ga('create', 'UA-58428197-1', 'shopbyblog.com', 'auto', {'name': 'sbb'});//shopbyblog.com
+      //- ga('create', 'UA-58428197-1', {'cookieDomain': 'none', 'name': 'sbb'});//shopbyblog.com
       ga('sbb.require', 'displayfeatures');
       ga('sbb.send', 'pageview');
 
@@ -19,8 +19,8 @@ html
     if !hideNav
       include partials/navbar
 
-    #close-discussion-panel.close-discussion-body.close-discussion.hid(onclick='$("#close-discussion-panel").addClass("hid");$("#sidebar-offcanvas").stop().animate({right: -$("#sidebar-offcanvas").width()});')
-    #sidebar-offcanvas.hid(style='background:white;position:fixed;right:0;top:0px;height:100%;z-index:9999;border-left: 1px solid rgba(0,0,0,0.1);box-shadow: 0 0 20px rgba(0,0,0,0.25);overflow-y:scroll')
+    //- #close-discussion-panel.close-discussion-body.close-discussion.hid(onclick='$("#close-discussion-panel").addClass("hid");$("#sidebar-offcanvas").stop().animate({right: -$("#sidebar-offcanvas").width()});')
+    //- #sidebar-offcanvas.hid(style='background:white;position:fixed;right:0;top:0px;height:100%;z-index:9999;border-left: 1px solid rgba(0,0,0,0.1);box-shadow: 0 0 20px rgba(0,0,0,0.25);overflow-y:scroll')
 
     if (showSearchBox)
       form(action='/search', method='get')

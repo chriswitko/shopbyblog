@@ -229,6 +229,7 @@ exports.payment = function(req, res) {
       product: locales.product,
       pricing: locales.pricing,
       payNow: 1,
+      demo: req.query.demo?true:false,
       md5sum: md5('17460' + locales.campaign.price.totalPrice.toString() + locales.campaign._id + 'U6lRv4cAiw96GsRi')
     });
   })
@@ -325,6 +326,7 @@ exports.update = function(req, res) {
       showSearchBox: false,
       title: 'Reklama',
       campaign: locales.campaign,
+      demo: req.body.demo?true:false,
       pricing: locales.pricing
     });
   })
@@ -570,6 +572,7 @@ exports.update_edit = function(req, res) {
       campaign: locales.campaign,
       payNow: req.query.pay?true:false,
       product: locales.product,
+      demo: req.body.demo?true:false,
       md5sum: md5('17460' + locales.campaign.price.totalPrice.toString() + locales.campaign._id + 'U6lRv4cAiw96GsRi')
     });
   })
