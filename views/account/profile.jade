@@ -171,7 +171,7 @@ block content
 
         .clearfix.mt20
           p.m0 Możesz usunąć swój profil, pamiętaj, że usunięcie spowoduje utratę wszystkich zgromadzonych informacji. <strong>Wyślij do nas e-mail na adres #{__('hello@shopbyblog.com')} z prośbą o usunięcie profilu.</strong>
-          //- form(action='/settings/delete', method='POST')
+          form(action='/settings/delete', method='POST')
             input(type='hidden', name='_csrf', value=_csrf)
             button.btn.btn-danger(type='submit')
               span.ion-trash-b

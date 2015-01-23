@@ -28,6 +28,7 @@ var client = new Algolia('DY6CRRRG54', 'aa405ae3231c428007b1b6d2cbdf5280');
 var lb = require('../../controllers/lb.js');
 
 var Product = require('../../models/Product');
+var User = require('../../models/User');
 
 console.log('Connecting to DB: ' + secrets.db);
 mongoose.connect(secrets.db, function() {})
@@ -40,8 +41,15 @@ var progress = 0;
 var locales = {};
 
 async.series({
+  getVerifiedUsersOnly: function(done) {
+    locales.blogger_ids = [];
+    User.find({isVerified: true, isHidden: {$ne: true}}, function(err, bloggers) {
+      locales.blogger_ids = _.map(bloggers, function(blogger) {return blogger._id});
+      done();
+    })
+  },
   generateJsonFileWithProducts: function(done) {
-    Product.find({})
+    Product.find({publisher: {$in:locales.blogger_ids}, isHidden: false})
     .populate({
       path: 'publisher',
       select: 'profile.name isHidden isVerified'
