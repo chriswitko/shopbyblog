@@ -44,7 +44,8 @@ exports.index = function(req, res) {
         title: '',
         bg: false,
         hideSubscriptionBox: true,
-        showSearchBox: true
+        showSearchBox: true,
+        bg_id: Math.floor(Math.random() * 8) + 1,
       });
     // }
   }

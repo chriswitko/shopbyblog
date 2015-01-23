@@ -16,7 +16,7 @@ block content
                 a.btn.btn-link.notimp(href='/help#privacy') Dowiedz się więcej...
 
   if !user
-    .container-wide.mb20(style='height:auto;display:block;background:black no-repeat 50% top;background-size:cover;')
+    .container-wide.mb20(style='height:auto;display:block;background:black url(/img/bg-#{bg_id}.jpg) no-repeat 50% top;background-size:cover;')
       .container-floor(style='height:100%;')
         .clearfix(class=!user?'with-floor':'')
           .container.container-clean.pb0.mb0

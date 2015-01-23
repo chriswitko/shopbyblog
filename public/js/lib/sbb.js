@@ -141,7 +141,7 @@ var SBB = $.inherit(/** @lends A.prototype */{
     initBootstrap: function() {
       $('[rel="tooltip"]').tooltip();
       $('[rel="popover"]').popover({html: true});
-      $('.nav-tabs').stickyTabs();
+      $('.switch-tabs').stickyTabs();
       $('body').on('click', function (e) {
         $('[rel="popover"]').each(function () {
           if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {

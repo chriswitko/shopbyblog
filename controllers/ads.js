@@ -117,6 +117,12 @@ exports.testGoogleAnal = function(req, res) {
   });
 }
 
+exports.campaignPriceOld = function(req, res) {
+  lb.campaignPrice({lang: req.query.lang, basePrice: req.query.basePrice, last12mPageUniqueUsers: req.query.uu, followers: req.query.followers, numberOfActiveAds: req.query.naa, days: req.query.days}, function(output) {
+    res.json(output)
+  });
+}
+
 exports.campaignPrice = function(req, res) {
   lb.campaignPrice({lang: req.query.lang, basePrice: req.query.basePrice, last12mPageUniqueUsers: req.query.uu, followers: req.query.followers, numberOfActiveAds: req.query.naa, days: req.query.days}, function(output) {
     res.json(output)

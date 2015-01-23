@@ -302,6 +302,91 @@ var campaignPrice = function(params, cb) {
         params.days = day
         locales.days = params.days;
 
+        if(params.last12mPageUniqueUsers<=30000&&params.last12mPageUniqueUsers>1000) locales.basePrice = 1.5 // 25 zł
+        else if(params.last12mPageUniqueUsers>30000&&params.last12mPageUniqueUsers<=60000) locales.basePrice = 3.5
+        else if(params.last12mPageUniqueUsers>60000) locales.basePrice = 5.5
+        else locales.basePrice = 0
+
+        // locales.basePrice = locales.basePrice  // min. 3 links per product
+
+        locales.totalNetto = parseFloat(locales.basePrice) * params.days
+        // price per ordered days
+        // locales.totalNetto = locales.totalNetto * (parseFloat(params.days) / 5)
+        // brutto, to pay + 23% VAT
+        locales.totalBrutto = parseFloat((locales.totalNetto * 1.23).toFixed(2))
+        // per day
+        locales.totalPerDay = parseFloat((locales.totalBrutto/params.days).toFixed(2))
+        // formatted
+        locales.totalBruttoFormatted = accounting.formatMoney(locales.totalBrutto, "zł", 2, ".", ",", "%v %s")
+        locales.totalPerDayFormatted = accounting.formatMoney(locales.totalPerDay, "zł", 2, ".", ",", "%v %s")
+
+
+        var euroRate = (fx(1).from('PLN').to('EUR')).toFixed(2);
+        var euroTotalNetto = (fx(locales.totalNetto).from('PLN').to('EUR')).toFixed(2);
+        var euroTotalBrutto = (fx(locales.totalBrutto).from('PLN').to('EUR')).toFixed(2);
+        var euroTotalPerDay = (fx(locales.totalPerDay).from('PLN').to('EUR')).toFixed(2);
+
+        locales.euro = {
+          rate: euroRate,
+          totalNetto: parseFloat(euroTotalNetto),
+          totalBrutto: parseFloat(euroTotalBrutto),
+          totalPerDay: parseFloat(euroTotalPerDay),
+          totalBruttoFormatted: accounting.formatMoney(euroTotalBrutto, "EUR", 2, ".", ",", "%v %s"),
+          totalPerDayFormatted: accounting.formatMoney(euroTotalPerDay, "EUR", 2, ".", ",", "%v %s")
+        }
+
+        var usdRate = (fx(1).from('PLN').to('USD')).toFixed(2);
+        var usdTotalNetto = (fx(locales.totalNetto).from('PLN').to('USD')).toFixed(2);
+        var usdTotalBrutto = (fx(locales.totalBrutto).from('PLN').to('USD')).toFixed(2);
+        var usdTotalPerDay = (fx(locales.totalPerDay).from('PLN').to('USD')).toFixed(2);
+
+        locales.usd = {
+          rate: usdRate,
+          totalNetto: parseFloat(usdTotalNetto),
+          totalBrutto: parseFloat(usdTotalBrutto),
+          totalPerDay: parseFloat(usdTotalPerDay),
+          totalBruttoFormatted: accounting.formatMoney(usdTotalBrutto, {symbol: '$'}),
+          totalPerDayFormatted: accounting.formatMoney(usdTotalPerDay, {symbol: '$'})
+        }
+
+        // console.log(locales);
+        results.push(locales);
+        callback();
+
+      }, function() {
+        done();
+      })
+
+    },
+  }, function() {
+    cb(results);
+  })
+}
+
+var campaignPriceOld2 = function(params, cb) {
+  var results = []
+  var locales = {}
+
+  var days = [5, 10, 15, 20, 25, 30];
+
+  async.series({
+    getCurrencyRate: function(done) {
+      oxr.latest(function() {
+        // Apply exchange rates and base rate to `fx` library object:
+        fx.rates = oxr.rates;
+        fx.base = oxr.base;
+        done();
+      })
+    },
+    basePrice: function(done) {
+      async.forEachSeries(days, function(day, callback) {
+        locales = {}
+        locales.pricePerFollower = 0.01;
+        locales.pricePerUU = 0.003;
+        locales.uniqeUsersPer5days = parseFloat((params.last12mPageUniqueUsers / 12 / 6).toFixed(0));
+        params.days = day
+        locales.days = params.days;
+
         if(params.last12mPageUniqueUsers<=30000) locales.basePrice = 1.5 // 25 zł
         else if(params.last12mPageUniqueUsers>30000&&params.last12mPageUniqueUsers<=60000) locales.basePrice = 3.5
         else locales.basePrice = 5.5
