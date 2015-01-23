@@ -27,6 +27,8 @@ module.exports = {
       s3ImagesHost: 'https://s3.amazonaws.com/shopbyblog.images',
     },
 
+    rootUser: 'hello@shopbyblog.com',
+
     gaEmail: 'hello@shopbyblog.com',
     gaPassword: 'centauri',
 
@@ -110,6 +112,8 @@ module.exports = {
       s3Host: 'https://s3.amazonaws.com/shopbyblog',
       s3ImagesHost: 'https://s3.amazonaws.com/shopbyblog.images',
     },
+
+    rootUser: 'hello@shopbyblog.com',
 
     gaEmail: 'hello@shopbyblog.com',
     gaPassword: 'centauri',

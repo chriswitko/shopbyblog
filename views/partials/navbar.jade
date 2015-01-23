@@ -76,7 +76,7 @@
               li
                 a(href='/settings')
                   | #{__('Settings')}
-              - if (user.role>=2)
+              - if (user.role>=2||user.email==sbb.rootUser)
                 li.divider
                 li
                   a(href='/dashboard')
