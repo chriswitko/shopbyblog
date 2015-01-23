@@ -22,9 +22,9 @@ html
     //- #close-discussion-panel.close-discussion-body.close-discussion.hid(onclick='$("#close-discussion-panel").addClass("hid");$("#sidebar-offcanvas").stop().animate({right: -$("#sidebar-offcanvas").width()});')
     //- #sidebar-offcanvas.hid(style='background:white;position:fixed;right:0;top:0px;height:100%;z-index:9999;border-left: 1px solid rgba(0,0,0,0.1);box-shadow: 0 0 20px rgba(0,0,0,0.25);overflow-y:scroll')
 
-    //- if (showSearchBox)
+    if (showSearchBox)
       form(action='/search', method='get')
-        .container-wide.mb0.mt20
+        .container-wide.mt20.mb20
           .container
             .row
               .col-sm-push-2.col-sm-8
