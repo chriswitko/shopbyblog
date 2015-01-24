@@ -149,28 +149,28 @@ block js
       $('.processBtns').addClass('hid');
       $('.processInProgress').removeClass('hid');
 
-      var api = new $.RestClient('/api/blog/');
+      //- var api = new $.RestClient('/api/blog/');
 
-      api.add('search');
+      //- api.add('search');
 
-      var request = api.search.read({q: $('#website').val()});
-      request.done(function (data) {
-        if(data.results&&data.results.length==1) {
+      //- var request = api.search.read({q: $('#website').val()});
+      //- request.done(function (data) {
+        //- if(data.results&&data.results.length==1) {
 
-          $("select#locale option").filter(function() {
-            return $(this).val() == data.results[0].language;
-          }).prop('selected', true);
+        //-   $("select#locale option").filter(function() {
+        //-     return $(this).val() == data.results[0].language;
+        //-   }).prop('selected', true);
 
-          $('#name').val($('#name').val()?$('#name').val():data.results[0].title);
-          $('#twitter').val($('#twitter').val()?$('#twitter').val():'https://twitter.com/' + data.results[0].twitterScreenName);
-          $('#facebook').val($('#facebook').val()?$('#facebook').val():'https://facebook.com/' + data.results[0].facebookUsername);
+        //-   $('#name').val($('#name').val()?$('#name').val():data.results[0].title);
+        //-   $('#twitter').val($('#twitter').val()?$('#twitter').val():'https://twitter.com/' + data.results[0].twitterScreenName);
+        //-   $('#facebook').val($('#facebook').val()?$('#facebook').val():'https://facebook.com/' + data.results[0].facebookUsername);
 
-          // hidden
-          $('#feedlyId').val($('#feedlyId').val()?$('#feedlyId').val():data.results[0].feedId);
-        }
+        //-   // hidden
+        //-   $('#feedlyId').val($('#feedlyId').val()?$('#feedlyId').val():data.results[0].feedId);
+        //- }
         $('#next').hide();
         $('#blogger').removeClass('hid');
-      });
+      //- });
 
     }
 

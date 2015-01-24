@@ -40,9 +40,11 @@ block content
 
   if (!user)
     include for-bloggers-signup
+  else if user&&!user.isVerified&&!user.isPending
+    include for-bloggers-new
   else if (user&&!user.isVerified&&user.isPending)
     //- include for-bloggers-approval
-  else
+  else if (user&&user.isVerified&&!user.isPending)
     include for-bloggers-ready
 
   .container.container-clean.pb0(style='position:relative;')
@@ -60,7 +62,7 @@ block content
     #calc.row.mb15.hid
       .col-sm-8.col-sm-push-2.align-center
         .container-fb.bg-clouds.pl10.pr10
-          h5.lato100 Link sponsorowany na Twoim blogu będzie kosztować <strong id="min"></strong> brutto przy 30 dniach emisji kampanii.
+          h5.lato100 Każdy link sponsorowany na Twoim blogu będzie kosztować <strong id="min"></strong> brutto przy 30 dniach emisji kampanii.
 
   //- sbb-people(title='#{__("DOŁĄCZYLI DO NAS")}', theme='default', variant='whotofollow', permalink='#{user?user.permalink:""}', follower='#{user?user._id:""}')
 
@@ -105,14 +107,14 @@ block content
 
   if (!user)
     include for-bloggers-signup
-  else if (user&&!user.isVerified&&!user.isPending)
+  else if user&&!user.isVerified&&!user.isPending
     include for-bloggers-new
   else if (user&&!user.isVerified&&user.isPending)
     //- include for-bloggers-approval
-  else
+  else if (user&&user.isVerified&&!user.isPending)
     include for-bloggers-ready
 
-  .container-wide.bg-clouds.p20
+  .container-wide.bg-clouds.p20.mt20
     .container
       .clearfix
         .row
