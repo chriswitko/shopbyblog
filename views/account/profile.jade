@@ -210,7 +210,13 @@ block content
               .form-group
                 label.col-sm-2.control-label(for='email') Adres profilu
                 .col-sm-4
-                  p.form-control-static #{sbb.website}/#{user.permalink}
+                  p.form-control-static
+                    a(href='#{sbb.website}/#{user.permalink}', target='_blank') #{sbb.website}/#{user.permalink}
+                  .clearfix
+                    .pull-left.mr10
+                      .fb-like(data-href="https://facebook.com/ShopByBlog", data-layout="button", data-action="recommend", data-show-faces="true", data-share="false")
+                    .pull-left
+                      a.twitter-share-button(href="https://twitter.com/share", data-url="https://twitter.com/ShopByBlog", data-via="shopbyblog", data-count="none")
             //- .form-group
               label.col-sm-2.control-label(for='email') Permalink
               .col-sm-4

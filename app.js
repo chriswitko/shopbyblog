@@ -384,15 +384,15 @@ app.get('/dashboard/sections', passportConf.isAuthenticated, passportConf.isAdmi
 app.get('/dashboard/products', passportConf.isAuthenticated, passportConf.isAdmin, dashboardController.productsIndex);
 app.get('/dashboard/campaigns', passportConf.isAuthenticated, passportConf.isAdmin, dashboardController.campaignsIndex);
 
-app.get('/dashboard/users', dashboardController.usersIndex);
-app.get('/dashboard/users/edit/:profile_id', dashboardController.usersRead);
-app.post('/dashboard/users/edit/:profile_id', dashboardController.usersUpdate);
+app.get('/dashboard/users', passportConf.isAuthenticated, passportConf.isAdmin, dashboardController.usersIndex);
+app.get('/dashboard/users/edit/:profile_id', passportConf.isAuthenticated, passportConf.isAdmin, dashboardController.usersRead);
+app.post('/dashboard/users/edit/:profile_id', passportConf.isAuthenticated, passportConf.isAdmin, dashboardController.usersUpdate);
 
-app.get('/dashboard/products/action/:product_id/sendToS3', dashboardController.productsActionUploadToS3);
-app.get('/dashboard/products/action/:product_id/sticked', dashboardController.productsActionSticked);
-app.get('/dashboard/products/action/:product_id/unsticked', dashboardController.productsActionUnsticked);
+app.get('/dashboard/products/action/:product_id/sendToS3', passportConf.isAuthenticated, passportConf.isAdmin, dashboardController.productsActionUploadToS3);
+app.get('/dashboard/products/action/:product_id/sticked', passportConf.isAuthenticated, passportConf.isAdmin, dashboardController.productsActionSticked);
+app.get('/dashboard/products/action/:product_id/unsticked', passportConf.isAuthenticated, passportConf.isAdmin, dashboardController.productsActionUnsticked);
 
-app.get('/dashboard/users/action/:user_id/welcomeEmail', dashboardController.usersActionWelcomeBlogger);
+app.get('/dashboard/users/action/:user_id/welcomeEmail', passportConf.isAuthenticated, passportConf.isAdmin, dashboardController.usersActionWelcomeBlogger);
 
 app.get('/me', userController.profile);
 
