@@ -22,7 +22,7 @@ polymer-element(name='sbb-product-tb', attributes='product counter active permal
           span.bind(on-tap='{{clickAction}}')
             i.fa.fa-star
             | #{__("Favourite")} ({{counter}})
-        li
+        //- li
           a(href='{{postUrl}}', target='_blank')
             i.fa.fa-rss
             | Przeczytaj na blogu
