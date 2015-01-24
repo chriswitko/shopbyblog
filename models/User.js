@@ -45,7 +45,7 @@ var userSchema = new mongoose.Schema({
 
   business: {
     baseCurrency: {type: String, default: 'PLN'},
-    baseShare: {type: Number, default: 0.70},
+    baseShare: {type: Number, default: 0.60},
     totalEstimatedRevenue: {type: Number, default: 0.00},
     totalRevenue: {type: Number, default: 0.00},
     totalPaid: {type: Number, default: 0.00},
