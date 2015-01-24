@@ -109,17 +109,20 @@ block content
                     img.img-rounded(src='#{vote.user.gravatar()}', width='30')
 
   if !user
-    .container.pb0.hidden-xs
-      .clearfix.container-fix2.container-fb2.p20
-        .row
-          .col-sm-12
-            .clearfix.align-center
-              .row.mb20
-                include partials/product.headline.jade
+    .container-wide.mb20(style='height:auto;display:block;background:black url(/img/bg-#{bg_id}.jpg) no-repeat 50% top;background-size:cover;')
+      .container-floor(style='height:100%;')
+        .clearfix(class=!user?'with-floor':'')
+          .container.pb0.hidden-xs
+            .clearfix.container-fix2.container-fb2.p20
               .row
                 .col-sm-12
-                  include partials/signup.inline.jade
-                  include partials/signup.helpnav.jade
+                  .clearfix.align-center
+                    .row.mb20
+                      include partials/product.headline.jade
+                    .row
+                      .col-sm-12
+                        include partials/signup.inline.jade
+                        include partials/signup.helpnav.jade
 
 
 

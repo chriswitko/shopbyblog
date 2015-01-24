@@ -213,6 +213,7 @@ app.use(function(req, res, next) {
   // moment.locale('en-us');
   // Make user object available in templates.
   // res.locals.user = req.user;
+  res.locals.bg_id = Math.floor(Math.random() * 8) + 1,
   res.locals.currentLang = req.getLocale();
   res.locals.moment = moment;
   res.locals.sprintf = require('sprintf').sprintf;
