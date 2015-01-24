@@ -70,6 +70,10 @@
                   a(href='/settings#insights')
                     | Rozliczenia
                 li.divider
+              if (user&&!user.isVerified)
+                li
+                  a(href='/for-bloggers')
+                    | Dodaj swojego bloga
               li
                 a(href='/invites')
                   | #{__('Invite Friends')}
