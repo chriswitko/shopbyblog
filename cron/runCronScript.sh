@@ -3,4 +3,4 @@
 # export NODE_ENV=production
 # updateCampaignFinished.js
 # cd "/Users/chriswitko/shopbyblog"
-/usr/local/bin/node /Users/chriswitko/shopbyblog/cron/scripts/$1
+/usr/local/bin/node /opt/www/shopbyblog.com/cron/scripts/$1
