@@ -432,6 +432,13 @@ exports.favorites = function(req, res) {
         done();
       })
     },
+    getVerifiedUsersOnly: function(done) {
+      locales.blogger_ids = [];
+      User.find({isVerified: true, isHidden: {$ne: true}}, function(err, bloggers) {
+        locales.blogger_ids = _.map(bloggers, function(blogger) {return blogger._id});
+        done();
+      })
+    },
     getVotes: function(done) {
       if(!locales.user||!req.user) return done();
       Vote.find({follower: req.user._id, end: null}, function(err, votes) {
@@ -451,6 +458,7 @@ exports.favorites = function(req, res) {
       var criteria = {};
       criteria.isHidden = false;
       criteria._id = {$in: locales.products_ids}
+      criteria.publisher = {$in: locales.blogger_ids}
 
       Product.paginate(criteria, page, limit, function(err, pages, products, total) {
         locales.pagination = {page: page, limit: limit, pages: pages, total: total}
