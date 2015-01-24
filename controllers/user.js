@@ -166,7 +166,7 @@ exports.claim_post = function(req, res) {
       });
     },
     saveUser: function(done) {
-      locales.user.profile.website = lb.repairUrl(req.body.website || '');
+      if(req.body.website) locales.user.profile.website = lb.repairUrl(req.body.website || '');
       locales.user.profile.name = req.body.name || '';
       locales.user.profile.country = req.body.country || '';
 
@@ -630,7 +630,7 @@ exports.postUpdateProfile = function(req, res, next) {
       locales.user.profile.gender = req.body.gender || '';
       locales.user.profile.location = req.body.location || '';
       locales.user.profile.country = req.body.country || '';
-      locales.user.profile.website = lb.repairUrl(req.body.website || '');
+      if(req.body.website) locales.user.profile.website = lb.repairUrl(req.body.website || '');
       locales.user.profile.about = req.body.about || '';
 
       if(req.body.links&&req.body.links.twitter) locales.user.links.twitter = lb.repairUrl(req.body.links.twitter || '');

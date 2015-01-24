@@ -33,6 +33,22 @@ html
                   span.input-group-btn
                     button.btn.btn-primary.btn-icon(type='submit', style='border:1px solid #999999;')
                       i.fa.fa-search
+            .row
+              .col-sm-push-2.col-sm-8
+                ul.list-unstyled.list-inline.mb0.mt5.small.list-on-left.ml0
+                  if user
+                    if !user.isVerified
+                      li
+                        a.small.notimp(href='/for-bloggers') Dodaj swojego bloga
+                    li
+                      a.small.notimp(href='/sell-products') Masz sklep? Dodaj link sponsorowany
+                  else
+                    li
+                      i.fa.fa-angle-right.notimp
+                      a.small.notimp(href='/for-bloggers') Oferta dla blogerów
+                    li
+                      i.fa.fa-angle-right.notimp
+                      a.small.notimp(href='/sell-products') Oferta dla reklamodawców
 
     if (messages.errors||messages.info||messages.success)
       .container.mb0

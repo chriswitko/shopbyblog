@@ -10,6 +10,15 @@ block content
         h1.mt0.mb10.lato.lato400(style='font-size:60px;line-height:60px;') Zarabiaj z ShopByBlog!
         h3.lato.lato400.mt20 Dołącz do sieci reklamowej dedykowanej blogerom i zarabiaj na polecaniu produktów swoim czytelnikom.
 
+  if (!user)
+    include for-bloggers-signup
+  else if user&&!user.isVerified&&!user.isPending
+    include for-bloggers-new
+  else if (user&&!user.isVerified&&user.isPending)
+    //- include for-bloggers-approval
+  else if (user&&user.isVerified&&!user.isPending)
+    include for-bloggers-ready
+
   .container
     .container-fix.p20
       .row
