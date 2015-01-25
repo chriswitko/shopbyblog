@@ -95,7 +95,7 @@ block js
 
   script.
     //- var x = '//' + (location.hostname=='localhost'?location.hostname+':3005':location.hostname); // set s3 bucket
-    var x = '//s3.amazonaws.com/shopbyblog/public'; // set s3 bucket
+    var x = '#{env=="development"?"":"//s3.amazonaws.com/shopbyblog/public"}'; // set s3 bucket
 
     var wVariant = 'blogger';
     var wTheme = 'default';
