@@ -146,15 +146,22 @@ app.use(expressValidator());
 app.use(methodOverride());
 app.use(cookieParser());
 
+// app.use(session({
+//   resave: true,
+//   saveUninitialized: true,
+//   secret: secrets.sessionSecret,
+//   store: new MongoStore({
+//     url: secrets.db,
+//     auto_reconnect: true
+//   })
+// }));
+//
 app.use(session({
-  resave: true,
-  saveUninitialized: true,
-  secret: secrets.sessionSecret,
-  store: new MongoStore({
-    url: secrets.db,
-    auto_reconnect: true
-  })
+  secret: 'ShopByBlog2015LovesYou',
+  resave: false,
+  saveUninitialized: true
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
