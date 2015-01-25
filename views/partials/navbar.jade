@@ -24,12 +24,18 @@
         li(class=(section&&section.section&&section.section.permalink=='deals')?'active':undefined)
           a(href='/deals')
             | #{__("Today's Deals")}
-        li(class=(section&&section.section&&section.section.permalink=='subscriptions')?'active':undefined)
-          a(href='/subscriptions')
-            | #{__("My subscriptions")}
-        li(class=(section&&section.section&&section.section.permalink=='favorites')?'active':undefined)
-          a(href='/favs')
-            | #{__("Favorites")}
+        if user
+          li(class=(section&&section.section&&section.section.permalink=='subscriptions')?'active':undefined)
+            a(href='/subscriptions')
+              | #{__("My subscriptions")}
+          li(class=(section&&section.section&&section.section.permalink=='favorites')?'active':undefined)
+            a(href='/favs')
+              | #{__("Favorites")}
+        else
+          li
+            a(href='/for-bloggers') Oferta dla blogerów
+          li
+            a(href='/sell-products') Oferta dla reklamodawców
         //- li(class=(section&&section.id=='2')?'active':undefined)
           a(href='/blogs') #{__('Bloggers')}
         //- li(class=(section&&section.id=='1')?'active':undefined)
