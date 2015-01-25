@@ -135,7 +135,7 @@ block content
                 input(name='kwota', value='1.5', type='hidden')
               else
                 input(name='kwota', value='#{campaign.price.totalPrice}', type='hidden')
-              input(name='opis', value='ShopByBlog Ad ADSL#{campaign.price.days}', type='hidden')
+              input(name='opis', value='ShopByBlog Ad ID#{campaign._id}', type='hidden')
               input(name='crc', value='#{campaign._id}', type='hidden')
               input(name='md5sum', value='#{md5sum}', type='hidden')
               input(type='hidden', name='pow_url', value='#{sbb.website}/payments/transferuj/payed?cid=#{campaign._id}')

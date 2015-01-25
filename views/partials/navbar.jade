@@ -47,6 +47,12 @@
           //- li.hidden-xs(class=(section&&section.permalink=='add')?'active':undefined)
             a.pr0(href='/search', rel='tooltip', title='Search...', data-placement='bottom')
               i.fa.fa-search
+          li.visible-xs
+            a(href='/about') #{__('About')}
+          li.visible-xs
+            a(href='/for-bloggers') #{__('For Bloggers')}
+          li.visible-xs
+            a(href='/sell-products') Dla reklamodawców
         else
           li
             a.dropdown-toggle(href='#', style='padding-right:0;', data-toggle='dropdown')
