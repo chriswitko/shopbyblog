@@ -111,9 +111,9 @@ block content
                         | #{__('Cancel')}
 
           .clearfix
-            form.hid(id='providerPayPal', name='_xclick', action='https://www.sandbox.paypal.com/cgi-bin/webscr', method='post')
+            form.hid(id='providerPayPal', name='_xclick', action='https://www.paypal.com/cgi-bin/webscr', method='post')
               input(type='hidden', name='cmd', value='_xclick')
-              input(type='hidden', name='business', value='chris.witko-facilitator@gmail.com')
+              input(type='hidden', name='business', value='hello@shopbyblog.com')
               input(type='hidden', name='currency_code', value='#{campaign.invoice.invoiceCurrencyCode}')
               input(type='hidden', name='item_name', value='ShopByBlog Ad')
               input(type='hidden', name='item_number', value='ADSL#{campaign.price.days}')
@@ -135,7 +135,7 @@ block content
                 input(name='kwota', value='1.5', type='hidden')
               else
                 input(name='kwota', value='#{campaign.price.totalPrice}', type='hidden')
-              input(name='opis', value='ShopByBlog Ad ID#{campaign._id}', type='hidden')
+              input(name='opis', value='ShopByBlog Ad', type='hidden')
               input(name='crc', value='#{campaign._id}', type='hidden')
               input(name='md5sum', value='#{md5sum}', type='hidden')
               input(type='hidden', name='pow_url', value='#{sbb.website}/payments/transferuj/payed?cid=#{campaign._id}')
