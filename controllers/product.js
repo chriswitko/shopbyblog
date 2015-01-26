@@ -511,7 +511,7 @@ exports.search_beta = function(req, res) {
 }
 
 exports.search = function(req, res) {
-  if(!req.query.q) return {products: {}};
+  if(!req.query.q) return res.json({products: {}});
 
   var locales = {}
       locales.products = [];
@@ -571,7 +571,7 @@ exports.search = function(req, res) {
 };
 
 exports.business = function(req, res) {
-  if(!req.query.q) return {products: {}};
+  if(!req.query.q) return res.json({products: {}});
 
   var locales = {}
       locales.products = [];
