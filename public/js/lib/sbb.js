@@ -314,7 +314,7 @@ var SBBProduct = $.inherit(SBB, {
       var api = new $.RestClient('/api/products/');
           api.add('business');
 
-      var request = api.search.read(options);
+      var request = api.business.read(options);
       request.done(function (data) {
         cb(data);
       })
