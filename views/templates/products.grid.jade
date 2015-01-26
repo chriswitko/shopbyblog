@@ -213,8 +213,8 @@ script(id='grid-item-product-business', type='text/x-handlebars-template').
           </div>
           <div class="clearfix overflow">
             <ul class="list-unstyled">
-              <li>0 użytkowników / miesiąc</li>
-              <li>45 zł / 30 dni</li>
+              <li>{{product.publisher.blogger.last12mPageUniqueUsers}} użytkowników / miesiąc</li>
+              <li>{{product.pricing.totalBruttoFormatted}} / 30 dni</li>
             </ul>
           </div>
         </div>
