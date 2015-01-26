@@ -511,7 +511,7 @@ exports.search_beta = function(req, res) {
 }
 
 exports.search = function(req, res) {
-  if(!req.query.q) return res.json({products: {}});
+  if(!req.query.q) return res.json({products: []});
 
   var locales = {}
       locales.products = [];
@@ -528,7 +528,7 @@ exports.search = function(req, res) {
         done();
       })
     },
-    getSeaarch: function(done) {
+    getSearch: function(done) {
       if(!req.query.q) return done();
       var Algolia = require('algolia-search');
       var client = new Algolia('DY6CRRRG54', '89b8c88f987fc2b1299bc88f529e5f2e');
@@ -571,7 +571,7 @@ exports.search = function(req, res) {
 };
 
 exports.business = function(req, res) {
-  if(!req.query.q) return res.json({products: {}});
+  if(!req.query.q) return res.json({products: []});
 
   var locales = {}
       locales.products = [];
@@ -588,7 +588,7 @@ exports.business = function(req, res) {
         done();
       })
     },
-    getSeaarch: function(done) {
+    getSearch: function(done) {
       if(!req.query.q) return done();
       var Algolia = require('algolia-search');
       var client = new Algolia('DY6CRRRG54', '89b8c88f987fc2b1299bc88f529e5f2e');
@@ -607,6 +607,10 @@ exports.business = function(req, res) {
           path: 'author',
           select: '_id username permalink profile email'
         })
+        .populate({
+          path: 'publisher',
+          select: '_id username permalink profile email blogger'
+        })
         .sort({createdAt: -1})
         .exec(function(err, products) {
           if(products) locales.products = _.map(products, function(product) {
@@ -616,7 +620,10 @@ exports.business = function(req, res) {
             else product.isVoted = false;
             if(day!=locales.lastDay) product.isNewDay = true
             locales.lastDay = day
-            return {product: product}
+            lb.campaignPrice({lang: 'pl', last12mPageUniqueUsers: product.publisher.blogger.last12mPageUniqueUsers, followers: 0, numberOfActiveAds: 0}, function(output) {
+              product.pricing = output
+              return {product: product}
+            });
           })
           done()
         })
