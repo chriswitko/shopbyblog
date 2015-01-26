@@ -74,6 +74,16 @@ exports.search = function(req, res) {
   });
 };
 
+exports.search_business = function(req, res) {
+  res.render('search.business.jade', {
+    q: req.query.q||'',
+    title: (req.query.q?'Wynik szukania: ' + req.query.q:'Szukaj produktów i blogerów...'),
+    section: {section: {name: 'search'}},
+    showSearchBox: true,
+    hideSubscriptionBox: true
+  });
+};
+
 exports.list = function(req, res) {
   var locales = {}
 

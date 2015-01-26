@@ -140,6 +140,7 @@ script(id='grid-item-product-next', type='text/x-handlebars-template').
     {{/if}}
 
   {{/each}}
+
 script(id='grid-item-product-only', type='text/x-handlebars-template').
   {{#each products}}
 
@@ -169,6 +170,52 @@ script(id='grid-item-product-only', type='text/x-handlebars-template').
           </div>
           <div class="clearfix overflow">
             <sbb-product-tb variant='grid' product="{{product._id}}" active='{{product.isVoted}}' permalink='{{product.permalink}}' counter='{{product.meta.upvotes}}'></sbb-product-tb>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    {{#if @last}}
+      </div>
+        </div>
+          </div>
+    {{/if}}
+
+  {{/each}}
+
+script(id='grid-item-product-business', type='text/x-handlebars-template').
+  {{#each products}}
+
+    {{#if @first}}
+      <div class="row results-area">
+        <div class="col-sm-12">
+          <div class="row grid-sections">
+    {{/if}}
+
+    <div class="col-sm-4">
+      <div style="position:relative;" class="grid-element container-fb">
+        <div class="clearfix">
+          <a href="/product/{{product.permalink}}"><div style="background:#f8f8f8 url(#{imagesUrl}/images/s_{{product.imageFileName}}) no-repeat 50% 50%;background-size:cover" class="img-thumbnail grid-image clearfix"></div></a>
+        </div>
+        <div style="position:absolute;top:20px;right:20px;" class="grid-avatar">
+          {{#if product.ads.length}}
+          <span class="badge">
+            <i class="fa fa-star color-red"/><span class="color-black">#{__("Today's Deal")}</span>
+          </span>
+          {{else}}
+          <a href="/{{product.author.permalink}}"><img src="{{product.author.photo}}" width="30" class="img-rounded"/></a>
+          {{/if}}
+        </div>
+        <div class="grid-body clearfix mt10">
+          <div class="clearfix overflow">
+            <p class="m0 imp lato overflow"><a class="overflow" href="/product/{{product.permalink}}">{{product.title}}</a></p>
+          </div>
+          <div class="clearfix overflow">
+            <ul class="list-unstyled">
+              <li>0 użytkowników / miesiąc</li>
+              <li>45 zł / 30 dni</li>
+            </ul>
           </div>
         </div>
       </div>

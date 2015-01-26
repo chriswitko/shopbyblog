@@ -1,0 +1,40 @@
+extends layout
+
+block content
+  script.
+    ga('sbb.send', 'event', 'Search', 'BusinessQueries', '#{q}');
+  include templates/products.grid.jade
+  include templates/sections.grid.jade
+  include templates/collections.grid.jade
+
+  .container.container-grid.pb0.mb20.pt0
+    .col-sm-12
+      .row
+        .clearfix
+          #results-area
+          #empty.clearfix.hid
+            p.align-center Nie znaleziono produktów.
+
+  //- sbb-people(title='#{__("OBSERWUJ BLOGI")}', theme='default', variant='whotofollow', permalink='#{user?user.permalink:""}', follower='#{user?user._id:""}')
+
+block js
+
+  script.
+    $(document).ready(function() {
+      var SBB_Q = SBB.getUrlVar('q');
+
+      if($('#results-area')) {
+        SBBProduct.searchBusiness({q: SBB_Q}, function(data) {
+          var source = $("#grid-item-product-business").html();
+
+          var template = Handlebars.compile(source);
+
+          var context = {products: data.products};
+          var html    = template(context);
+
+          $('#results-area').html(html);
+          if(!data.products.length) $('#empty').removeClass('hid');
+          SBB.initResizeGrid('search');
+        });
+      }
+    })

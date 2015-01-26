@@ -313,6 +313,7 @@ app.get('/product/:permalink/setScore', productController.setScore);
 app.get('/product/:permalink/remove', productController.remove);
 
 app.get('/search', sectionController.search);
+app.get('/search/business', sectionController.search_business);
 app.get('/search/update', productController.algoliaSearchUpdate);
 app.get('/search/beta', productController.algoliaSearch);
 
@@ -321,6 +322,7 @@ app.get('/api/notifications', notificationController.list);
 app.get('/api/products', productController.list);
 app.get('/api/products/search', productController.search);
 app.get('/api/products/search_beta', productController.search_beta);
+app.get('/api/products/business', productController.business);
 app.get('/api/collections', collectionController.list);
 app.get('/api/deals', productController.deals);
 app.get('/api/subscriptions', passportConf.isAuthenticated, productController.subscriptions);

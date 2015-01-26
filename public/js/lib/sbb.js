@@ -295,7 +295,7 @@ var SBBProduct = $.inherit(SBB, {
       })
     },
 
-    search : function(options, cb) {
+    search: function(options, cb) {
       if(!options) options = {};
       var api = new $.RestClient('/api/products/');
           api.add('search');
@@ -307,8 +307,21 @@ var SBBProduct = $.inherit(SBB, {
     },
 
     init: function() {
-    }
+    },
 
+    searchBusiness: function(options, cb) {
+      if(!options) options = {};
+      var api = new $.RestClient('/api/products/');
+          api.add('business');
+
+      var request = api.search.read(options);
+      request.done(function (data) {
+        cb(data);
+      })
+    },
+
+    init: function() {
+    }
 });
 
 var SBBSection = $.inherit(SBB, {

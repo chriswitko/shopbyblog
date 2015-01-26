@@ -511,6 +511,8 @@ exports.search_beta = function(req, res) {
 }
 
 exports.search = function(req, res) {
+  if(!req.query.q) return {products: {}};
+
   var locales = {}
       locales.products = [];
 
@@ -567,6 +569,67 @@ exports.search = function(req, res) {
     });
   })
 };
+
+exports.business = function(req, res) {
+  if(!req.query.q) return {products: {}};
+
+  var locales = {}
+      locales.products = [];
+
+  var criteria = {}
+  var page = req.query.page || 1
+  var limit = req.query.limit || 12
+
+  async.series({
+    getVotes: function(done) {
+      if(!req.user) return done();
+      Vote.find({follower: req.user._id, end: null}, function(err, votes) {
+        locales.votes = _.map(votes, function(vote) {return vote.product.toString()});
+        done();
+      })
+    },
+    getSeaarch: function(done) {
+      if(!req.query.q) return done();
+      var Algolia = require('algolia-search');
+      var client = new Algolia('DY6CRRRG54', '89b8c88f987fc2b1299bc88f529e5f2e');
+
+      var index = client.initIndex('products');
+      index.search(req.query.q, function(error, content) {
+        locales.products = _.map(content.hits, function(product) {return product._id});
+        done();
+      });
+    },
+    getProducts: function(done) {
+      if(!locales.products) return done();
+
+      Product.find({_id: {$in: locales.products}})
+        .populate({
+          path: 'author',
+          select: '_id username permalink profile email'
+        })
+        .sort({createdAt: -1})
+        .exec(function(err, products) {
+          if(products) locales.products = _.map(products, function(product) {
+            var day =  moment(new Date(product.createdAt)).format('YYYYMMDD');
+            product = product.toJSON();
+            if(req.user) product.isVoted = locales.votes.indexOf(product._id.toString())>-1?true:false;
+            else product.isVoted = false;
+            if(day!=locales.lastDay) product.isNewDay = true
+            locales.lastDay = day
+            return {product: product}
+          })
+          done()
+        })
+    }
+  }, function() {
+    res.json({
+      code: 200,
+      status: 'success',
+      products: locales.products
+    });
+  })
+};
+
 
 exports.add = function(req, res) {
   res.render('product/edit', {
