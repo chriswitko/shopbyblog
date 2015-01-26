@@ -620,19 +620,28 @@ exports.business = function(req, res) {
             else product.isVoted = false;
             if(day!=locales.lastDay) product.isNewDay = true
             locales.lastDay = day
-            lb.campaignPrice({lang: 'pl', last12mPageUniqueUsers: product.publisher.blogger.last12mPageUniqueUsers, followers: 0, numberOfActiveAds: 0}, function(output) {
-              product.pricing = output
-              return {product: product}
-            });
+            return {product: product}
           })
           done()
         })
+    },
+    addPricing: function(done) {
+      locales.output = [];
+      async.forEachSeries(locales.products, function(product, cb) {
+        lb.campaignPrice({lang: 'pl', last12mPageUniqueUsers: product.product.publisher.blogger.last12mPageUniqueUsers, followers: 0, numberOfActiveAds: 0}, function(output) {
+          product.product.pricing = output[4]
+          locales.output.push({product: product.product});
+          cb();
+        });
+      }, function() {
+        done();
+      })
     }
   }, function() {
     res.json({
       code: 200,
       status: 'success',
-      products: locales.products
+      products: locales.output
     });
   })
 };
