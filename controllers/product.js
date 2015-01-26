@@ -598,12 +598,9 @@ exports.business = function(req, res) {
       }, {'hitsPerPage': 24});
     },
     getProducts: function(done) {
-      if(!locales.products) return done();
+      // if(!locales.products) return done();
 
-      var c = {_id: {$in: locales.products}};
-      if(!req.query.q) c = {};
-
-      Product.find(c)
+      Product.find({_id: {$in: locales.products}})
         .populate({
           path: 'author',
           select: '_id username permalink profile email'
