@@ -214,8 +214,10 @@ script(id='grid-item-product-business', type='text/x-handlebars-template').
           <div class="clearfix overflow">
             <ul class="list-unstyled">
               <li>{{product.publisher.blogger.last12mPageUniqueUsers}} użytkowników / miesiąc</li>
-              <li>{{product.pricing.totalBruttoFormatted}} / 30 dni</li>
             </ul>
+            <div class="clearfix">
+              <a href="/ads/create?pid={{product._id}}" class="btn btn-default btn-block">Dodaj link za {{product.pricing.totalBruttoFormatted}} / 30 dni</a>
+            </div>
           </div>
         </div>
       </div>

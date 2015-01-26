@@ -571,8 +571,6 @@ exports.search = function(req, res) {
 };
 
 exports.business = function(req, res) {
-  if(!req.query.q) return res.json({products: []});
-
   var locales = {}
       locales.products = [];
 
@@ -602,7 +600,10 @@ exports.business = function(req, res) {
     getProducts: function(done) {
       if(!locales.products) return done();
 
-      Product.find({_id: {$in: locales.products}})
+      var c = {_id: {$in: locales.products}};
+      if(!req.query.q) c = {};
+
+      Product.find(c)
         .populate({
           path: 'author',
           select: '_id username permalink profile email'
