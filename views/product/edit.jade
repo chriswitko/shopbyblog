@@ -22,6 +22,9 @@ block content
           .form-group
             label(class='col-sm-2 control-label', for='image_source') Zdjęcie
             .col-sm-8
+              if product.imageFileName
+                .clearfix
+                  img.img-thumbnail(src='#{imagesUrl}/images/l_#{product.imageFileName}', width='200', height='200')
               ul.list-unstyled(id='image_source')
                 li(id='image_source_upload_area')
                   //- label(class='checkbox')
@@ -35,10 +38,31 @@ block content
                     span &nbsp; Download image from a different URL
                   .clearfix.mt10.hide
                     input.form-control(type='text', name='image_url', id='image_url', placeholder='Enter image URL', autocomplete='off')
+              .clearfix
+                p.imp.mt5 Jakie zdjęcie dodać?
+                ul.list-unstyled.small
+                  li
+                    i.fa.fa-check
+                    | <u>Zdjęcie w formacie kwadratu, tak jak np. na Instagram</u>. Jeżeli będzie w innym formacie to automatycznie zostanie dopasowane do wymaganych wymiarów.
+                  li
+                    i.fa.fa-check
+                    | <u>Zdjęcie pokazujące konkretny produkt</u>. Ważne, aby Twoi czytelnicy mogli klikać w produkt, który ich interesuje.
           .form-group
-            label(class='col-sm-2 control-label', for='postUrl') Adres strony
+            label(class='col-sm-2 control-label', for='postUrl') Adres do bloga/postu
             .col-sm-8
               input.form-control(type='text', name='postUrl', id='postUrl', placeholder='Wprowadź adres strony do wpisu na blogu', value=product.postUrl||user.profile.website, autocomplete='off', autofocus=true)
+              .clearfix.mt5
+                p.imp Jakie link wpisać?
+                ul.list-unstyled.small
+                  li
+                    i.fa.fa-check
+                    | Jeżeli dodawany produkt opisywany był na Twoim blogu, wpisz tu dokładny link do tego posta. Dzięki temu czytelnicy łatwiej znajdą więcej informacji/opinii o interesującym ich produkcie.
+                  li
+                    i.fa.fa-check
+                    | Jeżeli dodawany produkt chcesz polecić a nie był on opisywany na stronach Twojego bloga, wystarczy jak wpiszesz link do swojego bloga.
+                  li
+                    i.fa.fa-check
+                    | <u>Pamiętaj! Nie wpisuj tutaj linku do konkretnego sklepu, ponieważ to sklepy wykupią przy Twoim produkcie linki sponsorowane.</u>
           //- .form-group
             label(class='col-sm-2 control-label', for='section') Category
             .col-sm-8
@@ -59,6 +83,11 @@ block content
             label(class='col-sm-2 control-label', for='body') Krótki opis
             .col-sm-8
               input.form-control(type='text', name='body', id='body', placeholder='Wprowadź krótki opis / opinię', value=product.body, autocomplete='off')
+              .clearfix.mt5
+                ul.list-unstyled.small
+                  li
+                    i.fa.fa-check
+                    | Wpisz którki opis, swoją opinię o tym produkcie, która dodatkowo zachęci Twoich czytelników.
           //- .form-group
             label(class='col-sm-2 control-label', for='url') Product URL
             .col-sm-8
