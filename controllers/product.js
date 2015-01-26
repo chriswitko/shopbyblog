@@ -587,12 +587,12 @@ exports.business = function(req, res) {
       })
     },
     getSearch: function(done) {
-      if(!req.query.q) return done();
+      // if(!req.query.q) return done();
       var Algolia = require('algolia-search');
       var client = new Algolia('DY6CRRRG54', '89b8c88f987fc2b1299bc88f529e5f2e');
 
       var index = client.initIndex('products');
-      index.search(req.query.q, function(error, content) {
+      index.search(req.query.q||'', function(error, content) {
         locales.products = _.map(content.hits, function(product) {return product._id});
         done();
       });
