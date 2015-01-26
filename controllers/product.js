@@ -595,7 +595,7 @@ exports.business = function(req, res) {
       index.search(req.query.q||'', function(error, content) {
         locales.products = _.map(content.hits, function(product) {return product._id});
         done();
-      });
+      }, {'hitsPerPage': 24});
     },
     getProducts: function(done) {
       if(!locales.products) return done();
