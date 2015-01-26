@@ -629,7 +629,7 @@ exports.business = function(req, res) {
       locales.output = [];
       async.forEachSeries(locales.products, function(product, cb) {
         lb.campaignPrice({lang: 'pl', last12mPageUniqueUsers: product.product.publisher.blogger.last12mPageUniqueUsers, followers: 0, numberOfActiveAds: 0}, function(output) {
-          product.product.pricing = output[4]
+          product.product.pricing = output[5]
           locales.output.push({product: product.product});
           cb();
         });
