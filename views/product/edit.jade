@@ -39,30 +39,34 @@ block content
                   .clearfix.mt10.hide
                     input.form-control(type='text', name='image_url', id='image_url', placeholder='Enter image URL', autocomplete='off')
               .clearfix
-                p.imp.mt5 Jakie zdjęcie dodać?
-                ul.list-unstyled.small
-                  li
-                    i.fa.fa-check
-                    | <u>Zdjęcie o rozmiarach kwadratu, tak jak np. na Instagram</u>. Jeżeli będzie w innym formacie to automatycznie zostanie dopasowane do wymaganych wymiarów.
-                  li
-                    i.fa.fa-check
-                    | <u>Zdjęcie pokazujące konkretny produkt</u>. Ważne, aby Twoi czytelnicy mogli klikać w produkt, który ich interesuje.
+                p.imp.mt5
+                  a.bind(data-toggle="collapse", href="#collapsePhoto", aria-expanded="false", aria-controls="collapsePhoto") Jakie zdjęcie dodać?
+                #collapsePhoto.collapse
+                  ul.list-unstyled.small
+                    li
+                      i.fa.fa-check
+                      | <u>Zdjęcie o rozmiarach kwadratu, tak jak np. na Instagram</u>. Jeżeli będzie w innym formacie to automatycznie zostanie dopasowane do wymaganych wymiarów.
+                    li
+                      i.fa.fa-check
+                      | <u>Zdjęcie pokazujące konkretny produkt</u>. Ważne, aby Twoi czytelnicy mogli klikać w produkt, który ich interesuje.
           .form-group
             label(class='col-sm-2 control-label', for='postUrl') Adres do bloga/postu
             .col-sm-8
               input.form-control(type='text', name='postUrl', id='postUrl', placeholder='Wprowadź adres strony do wpisu na blogu', value=product.postUrl||user.profile.website, autocomplete='off', autofocus=true)
               .clearfix.mt5
-                p.imp Jaki link wpisać?
-                ul.list-unstyled.small
-                  li
-                    i.fa.fa-check
-                    | Jeżeli dodawany produkt opisywany był na Twoim blogu, wpisz tu dokładny link do tego posta. Dzięki temu czytelnicy łatwiej znajdą więcej informacji/opinii o interesującym ich produkcie.
-                  li
-                    i.fa.fa-check
-                    | Jeżeli dodawany produkt chcesz polecić a nie był on opisywany na stronach Twojego bloga, wystarczy jak wpiszesz link do swojego bloga.
-                  li
-                    i.fa.fa-check
-                    | <u>Pamiętaj! Nie wpisuj tutaj linku do konkretnego sklepu, ponieważ to sklepy wykupią przy Twoim produkcie linki sponsorowane.</u>
+                p.imp
+                  a.bind(data-toggle="collapse", href="#collapseLink", aria-expanded="false", aria-controls="collapseLink") Jaki link wpisać?
+                #collapseLink.collapse
+                  ul.list-unstyled.small
+                    li
+                      i.fa.fa-check
+                      | Jeżeli dodawany produkt opisywany był na Twoim blogu, wpisz tu dokładny link do tego posta. Dzięki temu czytelnicy łatwiej znajdą więcej informacji/opinii o interesującym ich produkcie.
+                    li
+                      i.fa.fa-check
+                      | Jeżeli dodawany produkt chcesz polecić a nie był on opisywany na stronach Twojego bloga, wystarczy jak wpiszesz link do swojego bloga.
+                    li
+                      i.fa.fa-check
+                      | <u>Pamiętaj! Nie wpisuj tutaj linku do konkretnego sklepu, ponieważ to sklepy wykupią przy Twoim produkcie linki sponsorowane.</u>
           //- .form-group
             label(class='col-sm-2 control-label', for='section') Category
             .col-sm-8
