@@ -242,6 +242,10 @@ userSchema.methods.getExternalLink = function() {
   else return this.getPermalink();
 };
 
+userSchema.methods.getCleanLink = function() {
+  if(this.profile.website) return this.profile.website.replace(/^(https?|ftp):\/\//, '');
+};
+
 // userSchema.plugin(monguurl({source: 'username', target: 'permalink'}));
 userSchema.plugin(timestamps, { created: 'createdAt', lastUpdated: 'updatedAt' })
 userSchema.plugin(mongoosePaginate)
