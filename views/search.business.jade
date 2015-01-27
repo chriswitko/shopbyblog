@@ -12,6 +12,8 @@ block content
       .row
         .clearfix
           #results-area
+          #loading.clearfix.hid
+            p.align-center Trwa pobieranie danych. Proszę czekać...
           #empty.clearfix.hid
             p.align-center Nie znaleziono produktów.
 
@@ -25,6 +27,7 @@ block js
 
       if($('#results-area')) {
         SBBProduct.searchBusiness({q: SBB_Q}, function(data) {
+          $('#loading').removeClass('hid');
           var source = $("#grid-item-product-business").html();
 
           var template = Handlebars.compile(source);
@@ -33,6 +36,7 @@ block js
           var html    = template(context);
 
           $('#results-area').html(html);
+          $('#loading').addClass('hid');
           if(!data.products.length) $('#empty').removeClass('hid');
           SBB.initResizeGrid('search');
         });

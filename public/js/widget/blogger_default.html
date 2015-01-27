@@ -96,7 +96,7 @@
           <ul class="list-unstyled">
             <li class="small"><a class="btn btn-default btn-block bindFollowMe btnMore" target="_blank" href="http://shopbyblog.com">Subskrybuj i zobacz więcej</a></li>
           </ul>
-          <p class="small notimp mb0" style="font-size:11px;"><a target="_blank" href="http://shopbyblog.com/sell-products">Dodaj swój link...</a> | Więcej na <a target="_blank" class="small notimp" href="http://shopbyblog.com" style="font-size:11px;">ShopByBlog</a></p>
+          <p class="small notimp mb0" style="font-size:11px;"><a target="_blank" class="bindBusiness" href="http://shopbyblog.com/sell-products">Dodaj swój link...</a> | Więcej na <a target="_blank" class="small notimp" href="http://shopbyblog.com" style="font-size:11px;">ShopByBlog</a></p>
         </div>
       </div>
     </div>
@@ -178,6 +178,8 @@
 
           profile = data.profile;
           $('.bindFollowMe').attr('href', 'http://shopbyblog.com/' + profile.permalink);
+          $('.bindBusiness').attr('href', 'http://shopbyblog.com/search/business?q=' + profile.permalink);
+
 
           $('#results-area').append(html);
 
