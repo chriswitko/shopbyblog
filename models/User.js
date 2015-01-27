@@ -244,6 +244,7 @@ userSchema.methods.getExternalLink = function() {
 
 userSchema.methods.getCleanLink = function() {
   if(this.profile.website) return this.profile.website.replace(/^(https?|ftp):\/\//, '');
+  else return '';
 };
 
 // userSchema.plugin(monguurl({source: 'username', target: 'permalink'}));
