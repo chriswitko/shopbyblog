@@ -53,6 +53,12 @@ var SBB = $.inherit(/** @lends A.prototype */{
     },
 
     initHandlebars: function() {
+      Handlebars.registerHelper('dotdotdot', function(str) {
+        if (str.length > 10)
+          return str.substring(0,10) + '...';
+        return str;
+      });
+
       Handlebars.registerHelper ("isFullfield", function (block) {
         // console.log('isFullfield', window.isFullfield)
         if(window.isFullfield) return block.fn(this)

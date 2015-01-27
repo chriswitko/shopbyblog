@@ -50,11 +50,15 @@
           <div class="clearfix">
             <a href="http://shopbyblog.com/product/{{product.permalink}}" target="_blank" onclick="ga('sbbwidget.send', 'event', 'Products', 'Click', 'product_{{product.id}}');"><img src="https://s3.amazonaws.com/shopbyblog.images/images/s_{{product.imageFileName}}" class="img-responsive img-product"/></a>
           </div>
+          {{#if product.isPromoted}}
           <div style="position:absolute;bottom:0px;left:0;width:100%;background:#FA023C;opacity:0.8;border-left:1px solid white;border-right:1px solid white;" class="grid-avatar align-center">
-            {{#if product.isPromoted}}
-              <span class="color-white" style="font-size:12px;">&#9733; NOWE</span>
-            {{/if}}
+              <span class="color-white" style="font-size:12px;">{{dotdotdot product.title}}</span>
           </div>
+          {{else}}
+          <div style="position:absolute;bottom:0px;left:0;width:100%;background:black;opacity:0.8;border-left:1px solid white;border-right:1px solid white;" class="grid-avatar align-center">
+            <span class="color-white" style="font-size:12px;">{{dotdotdot product.title}}</span>
+          </div>
+          {{/if}}
         </div>
       </div>
 
@@ -131,6 +135,12 @@
     }
 
     $(document).ready(function() {
+      Handlebars.registerHelper('dotdotdot', function(str) {
+        if (str.length > 14)
+          return str.substring(0,14) + '...';
+        return str;
+      });
+
       $.getScript( './locales/'+getUrlVar('locale')+'.js', function( data, textStatus, jqxhr ) {
         $('#wTitle').html(__CTA[getUrlVar('cta')]);
         var limit = 10;
