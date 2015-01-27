@@ -26,8 +26,8 @@ block js
       var SBB_Q = SBB.getUrlVar('q');
 
       if($('#results-area')) {
+        $('#loading').removeClass('hid');
         SBBProduct.searchBusiness({q: SBB_Q}, function(data) {
-          $('#loading').removeClass('hid');
           var source = $("#grid-item-product-business").html();
 
           var template = Handlebars.compile(source);
