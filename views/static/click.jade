@@ -4,6 +4,9 @@ block jshead
   meta(content='5;url=#{redirect_url}', http-equiv='refresh')
 
 block content
+  if intent
+    script.
+      ga('sbb.send', 'event', 'Campaign', 'View', 'campaign_#{campaign._id}');
   script.
     ga('sbb.send', 'event', 'Products', 'Click', 'product_#{campaign.product}');
     ga('sbb.send', 'event', 'Campaign', 'Click', 'campaign_#{campaign._id}');

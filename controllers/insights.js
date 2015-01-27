@@ -23,6 +23,43 @@ var Campaign = require('../models/Campaign');
 var Notification = require('../models/Notification');
 var Insights = require('../models/Insights');
 
+exports.go = function(req, res) {
+  var locales = {}
+      locales.url = '/';
+  async.series({
+    getProduct: function(done) {
+      Product.findOne({_id: req.params.product_id})
+        .populate({
+          path: 'author',
+          select: '_id username permalink profile email blogger meta picture imageFileName'
+        })
+        .exec(function(err, product) {
+          if(product) {
+            locales.product = product
+            locales.url = '/product/' + locales.product.permalink;
+          }
+          done()
+        })
+    },
+    getAds: function(done) {
+      locales.ad = []
+      if(locales.product) {
+        lb.getActiveAdsByProduct(locales.product, function(ads) {
+          if(!ads) return done();
+          locales.ad = _.shuffle(ads).splice(0, 1)
+          done();
+        })
+      } else {
+        done();
+      }
+    },
+  }, function() {
+    if(locales.ad.length) res.redirect('/track/' + locales.ad[0].ad._id + '?intent=true');
+    else res.redirect(locales.url);
+  })
+}
+
+
 var clickCampaign = function(params, cb) {
   var locales = {}
   async.series({
@@ -73,7 +110,8 @@ exports.click = function(req, res) {
       hideNav: true,
       hideFooter: true,
       campaign: output.campaign,
-      redirect_url: output.redirect_url
+      redirect_url: output.redirect_url,
+      intent: req.query.intent?true:false
     });
   })
 }

@@ -256,6 +256,7 @@ app.get('/api/testGoogleAnal2', adsController.testGoogleAnal2);
 
 app.get('/click', insightController.click);
 app.get('/track/:campaign_id', insightController.click);
+app.get('/go/:product_id', insightController.go);
 
 app.get('/pl', homeController.langPolish);
 app.get('/en', homeController.langEnglish);
