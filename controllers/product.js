@@ -259,7 +259,7 @@ exports.list = function(req, res) {
       // if(req.query.section) criteria.section = req.query.section;
       // if(req.query.tags) criteria.tags = {$in: _.map(req.query.tags.toString().split(','), function(tag) {return tag.trim()})}
 
-      Product.paginate({publisher: {$in:locales.blogger_ids}, isHidden: false, $or: [{'meta.upvotes': {$gte: 2}}, {sticky: true}]}, page, limit, function(err, pages, products, total) {
+      Product.paginate({$or: [{publisher: {$in:locales.blogger_ids}, isHidden: false, $or: [{'meta.upvotes': {$gte: 2}}, {sticky: true}]}, {sticky:true}]}, page, limit, function(err, pages, products, total) {
         locales.products = [];
         if(!products) return done();
         async.forEachSeries(products, function(product, cb) {
