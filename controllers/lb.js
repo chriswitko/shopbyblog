@@ -286,12 +286,12 @@ var campaignPrice = function(params, cb) {
 
   async.series({
     getCurrencyRate: function(done) {
-      oxr.latest(function() {
+      // oxr.latest(function() {
         // Apply exchange rates and base rate to `fx` library object:
-        fx.rates = oxr.rates;
-        fx.base = oxr.base;
+        // fx.rates = oxr.rates;
+        // fx.base = oxr.base;
         done();
-      })
+      // })
     },
     basePrice: function(done) {
       async.forEachSeries(days, function(day, callback) {
@@ -321,33 +321,33 @@ var campaignPrice = function(params, cb) {
         locales.totalPerDayFormatted = accounting.formatMoney(locales.totalPerDay, "zł", 2, ".", ",", "%v %s")
 
 
-        var euroRate = (fx(1).from('PLN').to('EUR')).toFixed(2);
-        var euroTotalNetto = (fx(locales.totalNetto).from('PLN').to('EUR')).toFixed(2);
-        var euroTotalBrutto = (fx(locales.totalBrutto).from('PLN').to('EUR')).toFixed(2);
-        var euroTotalPerDay = (fx(locales.totalPerDay).from('PLN').to('EUR')).toFixed(2);
+        // var euroRate = 1;//(fx(1).from('PLN').to('EUR')).toFixed(2);
+        // var euroTotalNetto = (fx(locales.totalNetto).from('PLN').to('EUR')).toFixed(2);
+        // var euroTotalBrutto = (fx(locales.totalBrutto).from('PLN').to('EUR')).toFixed(2);
+        // var euroTotalPerDay = (fx(locales.totalPerDay).from('PLN').to('EUR')).toFixed(2);
 
-        locales.euro = {
-          rate: euroRate,
-          totalNetto: parseFloat(euroTotalNetto),
-          totalBrutto: parseFloat(euroTotalBrutto),
-          totalPerDay: parseFloat(euroTotalPerDay),
-          totalBruttoFormatted: accounting.formatMoney(euroTotalBrutto, "EUR", 2, ".", ",", "%v %s"),
-          totalPerDayFormatted: accounting.formatMoney(euroTotalPerDay, "EUR", 2, ".", ",", "%v %s")
-        }
+        // locales.euro = {
+        //   rate: euroRate,
+        //   totalNetto: parseFloat(euroTotalNetto),
+        //   totalBrutto: parseFloat(euroTotalBrutto),
+        //   totalPerDay: parseFloat(euroTotalPerDay),
+        //   totalBruttoFormatted: accounting.formatMoney(euroTotalBrutto, "EUR", 2, ".", ",", "%v %s"),
+        //   totalPerDayFormatted: accounting.formatMoney(euroTotalPerDay, "EUR", 2, ".", ",", "%v %s")
+        // }
 
-        var usdRate = (fx(1).from('PLN').to('USD')).toFixed(2);
-        var usdTotalNetto = (fx(locales.totalNetto).from('PLN').to('USD')).toFixed(2);
-        var usdTotalBrutto = (fx(locales.totalBrutto).from('PLN').to('USD')).toFixed(2);
-        var usdTotalPerDay = (fx(locales.totalPerDay).from('PLN').to('USD')).toFixed(2);
+        // var usdRate = 1;//(fx(1).from('PLN').to('USD')).toFixed(2);
+        // var usdTotalNetto = (fx(locales.totalNetto).from('PLN').to('USD')).toFixed(2);
+        // var usdTotalBrutto = (fx(locales.totalBrutto).from('PLN').to('USD')).toFixed(2);
+        // var usdTotalPerDay = (fx(locales.totalPerDay).from('PLN').to('USD')).toFixed(2);
 
-        locales.usd = {
-          rate: usdRate,
-          totalNetto: parseFloat(usdTotalNetto),
-          totalBrutto: parseFloat(usdTotalBrutto),
-          totalPerDay: parseFloat(usdTotalPerDay),
-          totalBruttoFormatted: accounting.formatMoney(usdTotalBrutto, {symbol: '$'}),
-          totalPerDayFormatted: accounting.formatMoney(usdTotalPerDay, {symbol: '$'})
-        }
+        // locales.usd = {
+        //   rate: usdRate,
+        //   totalNetto: parseFloat(usdTotalNetto),
+        //   totalBrutto: parseFloat(usdTotalBrutto),
+        //   totalPerDay: parseFloat(usdTotalPerDay),
+        //   totalBruttoFormatted: accounting.formatMoney(usdTotalBrutto, {symbol: '$'}),
+        //   totalPerDayFormatted: accounting.formatMoney(usdTotalPerDay, {symbol: '$'})
+        // }
 
         // console.log(locales);
         results.push(locales);
