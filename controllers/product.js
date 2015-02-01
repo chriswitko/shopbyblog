@@ -23,6 +23,7 @@ var Vote = require('../models/Vote');
 var User = require('../models/User');
 var Campaign = require('../models/Campaign');
 var Following = require('../models/Following');
+var ProductSubscription = require('../models/ProductSubscription');
 
 exports.algoliaSearchUpdate = function(req, res) {
   var Algolia = require('algolia-search');
@@ -150,6 +151,10 @@ exports.index = function(req, res) {
           path: 'author',
           select: '_id username permalink profile email blogger meta picture imageFileName'
         })
+        .populate({
+          path: 'publisher',
+          select: '_id username permalink profile email blogger meta picture imageFileName'
+        })
         .exec(function(err, product) {
           if(product) locales.product = product
           done()
@@ -181,6 +186,13 @@ exports.index = function(req, res) {
       } else {
         done();
       }
+    },
+    getAdsToRedirect: function(done) {
+      locales.ad = []
+      if(!locales.ads) return done();
+      locales.ad = _.shuffle(locales.ads).splice(0, 1)
+      if(locales.ad.length) return res.redirect('/track/' + locales.ad[0].ad._id + '?intent=true');
+      done();
     },
     findFollowing: function(done) {
       if(req.user&&locales.product&&locales.product.author) {
@@ -224,6 +236,9 @@ exports.index = function(req, res) {
       og: locales.product.getOpenGraph(),
       pricing: locales.pricing,
       hideSubscriptionBox: true,
+      hideNav: true,
+      email: req.cookies.sbb_email||'',
+      subscribed: req.query.subscribed,
       isFollowing: locales.isFollowing,
       isOwner: req.user&&req.user._id.toString()==locales.product.author._id.toString()
     });
@@ -277,7 +292,7 @@ exports.list = function(req, res) {
         }, function() {
           done()
         })
-      }, {populate: 'author', sortBy: { createdAt : -1, score: -1 }})
+      }, {populate: ['author','publisher'], sortBy: { createdAt : -1, score: -1 }})
     }
   }, function() {
     res.json({
@@ -603,11 +618,11 @@ exports.business = function(req, res) {
       Product.find({_id: {$in: locales.products}})
         .populate({
           path: 'author',
-          select: '_id username permalink profile email'
+          select: '_id username permalink profile email imageFileName'
         })
         .populate({
           path: 'publisher',
-          select: '_id username permalink profile email blogger'
+          select: '_id username permalink profile email blogger imageFileName'
         })
         .sort({createdAt: -1})
         .exec(function(err, products) {
@@ -753,7 +768,7 @@ exports.remove = function(req, res) {
 };
 
 exports.post_add = function(req, res) {
-  req.assert('postUrl', 'Adres do bloga musi być podany').isURL();
+  // req.assert('postUrl', 'Adres do bloga musi być podany').isURL();
   // req.assert('url', 'Product URL is not valid').isURL();
   req.assert('title', 'Nazwa produkty jest wymagana').notEmpty();
   req.assert('body', 'Krótki opis produktu jest wymagany').notEmpty();
@@ -995,6 +1010,114 @@ exports.grab = function(req, res) {
     });
   })
 };
+
+exports.subscribe = function(req, res) {
+  var locales = {}
+
+  req.assert('email', 'Pole Email jest wymagane').notEmpty();
+
+  var errors = req.validationErrors();
+
+  if (errors) {
+    req.flash('errors', errors);
+    return res.redirect('/product/'+req.params.permalink);
+  }
+
+  res.cookie('sbb_email', req.body.email);
+
+  async.series({
+    findProduct: function(done) {
+      Product.findOne({permalink: req.params.permalink})
+        .populate({
+          path: 'author',
+        })
+        .populate({
+          path: 'publisher',
+        })
+        .exec(function(err, product) {
+          locales.product = product;
+          done();
+        });
+    },
+    findSubscrition: function(done) {
+      ProductSubscription.findOne({product: locales.product._id, email: req.body.email}, function(err, vote) {
+        // if(!vote) locales.isNew = true;
+        locales.vote = vote||new ProductSubscription();
+        done();
+      });
+    },
+    unVote: function(done) {
+      if(locales.vote&&!locales.vote.end) {//&&locales.isNew
+        if(!locales.vote.isNew) locales.vote.end = new Date();
+      } else {
+        locales.vote.end = undefined;
+        locales.shouldCreateNotification = true
+      }
+      done();
+    },
+    createNotification: function(done) {
+      req.flash('success', { msg: 'Powiadomienie o nowej ofercie dla tego produktu zostało ustawione.' });
+      done();
+      // if(locales.shouldCreateNotification) {
+        // var notification = {}
+        //     notification.author = req.user;
+        //     notification.elementType = 1;
+        //     notification.elementObject = locales.product;
+        //     notification.verb = 'voted';
+        // lb.createNotification(notification, function() {
+        //   return done();
+        // })
+      // } else done()
+    },
+    updateVote: function(done) {
+      locales.vote.product =  locales.product._id;
+      locales.vote.email =  req.body.email;
+
+      if(!locales.vote.start||!locales.vote.end) locales.vote.start = new Date();
+      locales.vote.last = new Date();
+
+      locales.vote.save(function() {
+        done();
+      });
+    },
+    // updateMetasForProduct: function(done) {
+    //   lb.updateCountersForProduct(locales.product, function(total) {
+    //     locales.totalVotes = total.totalVotes;
+    //     locales.totalComments = total.totalComments;
+    //     done();
+    //   });
+    // },
+    // updateMetasForUser: function(done) {
+    //   lb.updateCountersForUser(req.user, function(total) {
+    //     done();
+    //   });
+    // },
+    // updateMetasForProductAuthor: function(done) {
+    //   lb.updateCountersForUser(locales.product.author, function(total) {
+    //     done();
+    //   });
+    // },
+    // setScore: function(done) {
+    //   if(locales.product) {
+    //     lb.setScore(locales.product, false, function(output) {
+    //       done();
+    //     })
+    //   } else {
+    //     done();
+    //   }
+    // },
+    // autoFollowUser: function(done) {
+    //   if(!locales.product.publisher.isVerified||!locales.shouldCreateNotification) return done();
+    //   if(req.user&&!locales.product.publisher._id.toString()==req.user._id.toString()) return done();
+    //   // console.log('to follow', locales.product.author._id)
+    //   lb.followUser(locales.product.author._id, req.user._id, function(output) {
+    //     done();
+    //   });
+    // }
+  }, function() {
+    res.redirect('/product/'+locales.product.permalink+'?subscribed=1');
+  })
+}
 
 exports.vote = function(req, res) {
   var locales = {}

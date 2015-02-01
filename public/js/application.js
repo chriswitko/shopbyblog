@@ -27,6 +27,7 @@
 //= require lib/jquery.fittext
 //= require lib/jquery-ui.min
 //= require lib/jquery.select-to-autocomplete.js
+//= require lib/jquery.sprintf.js
 
 //= require lib/underscore.js
 

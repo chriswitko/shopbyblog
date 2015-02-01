@@ -14,10 +14,10 @@ block content
               a(href='#{campaign.url}', target='_blank') #{campaign.url}
             li
               | #{__('Blog')}: &nbsp;
-              a(href='/#{product.author.permalink}', target='_blank') #{product.author.getName()}
+              a(href='/#{product.publisher.permalink}', target='_blank') #{product.publisher.getName()}
             li
               | #{__('Product')}: &nbsp;
-              a(href='/product/#{campaign.product.permalink}', target='_blank') #{campaign.product.title}
+              a(href='/#{product.publisher.permalink}', target='_blank') #{campaign.product.title}
             li
               | Data emisji: &nbsp;
               span #{moment(campaign.start).format('DD/MM/YYYY HH:mm')}

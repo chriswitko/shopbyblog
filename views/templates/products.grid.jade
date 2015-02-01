@@ -199,24 +199,30 @@ script(id='grid-item-product-business', type='text/x-handlebars-template').
           <a href="/ads/create?pid={{product._id}}"><div style="background:#f8f8f8 url(#{imagesUrl}/images/s_{{product.imageFileName}}) no-repeat 50% 50%;background-size:cover" class="img-thumbnail grid-image clearfix"></div></a>
         </div>
         <div style="position:absolute;top:20px;right:20px;" class="grid-avatar">
-          {{#if product.ads.length}}
-          <span class="badge">
-            <i class="fa fa-star color-red"/><span class="color-black">#{__("Today's Deal")}</span>
-          </span>
-          {{else}}
-          <a href="/{{product.author.permalink}}"><img src="{{product.author.photo}}" width="30" class="img-rounded"/></a>
-          {{/if}}
+          <a href="/{{product.publisher.permalink}}"><img src="#{imagesUrl}/avatars/s_{{product.publisher.imageFileName}}" width="30" class="img-rounded"/></a>
         </div>
         <div class="grid-body clearfix mt10">
           <div class="clearfix overflow">
             <p class="m0 imp lato overflow"><a class="overflow" href="/ads/create?pid={{product._id}}">{{product.title}}</a></p>
+            <p class="m0 notimp small overflow"><a href="{{product.publisher.profile.website}}" target="_blank">{{product.publisher.profile.website}}</a></p>
           </div>
-          <div class="clearfix overflow">
-            <ul class="list-unstyled">
-              <li>{{product.publisher.blogger.last12mPageUniqueUsers}} użytkowników / miesiąc</li>
-            </ul>
+          <div class="clearfix overflow mt10">
+            <table class="table m0 table-bordered">
+              <thead>
+                <tr>
+                  <th width="50%" class="align-center">Użytkowników</th>
+                  <th width="50%" class="align-center">Odsłon</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="align-center">{{formatNumber product.publisher.blogger.last12mPageUniqueUsers}}</td>
+                  <td class="align-center">0</td>
+                </tr>
+              </tbody>
+            </table>
             <div class="clearfix">
-              <a href="/ads/create?pid={{product._id}}" class="btn btn-default btn-block">Dodaj link za {{product.pricing.totalBruttoFormatted}} / 30 dni</a>
+              <a href="/ads/create?pid={{product._id}}" class="btn btn-default btn-block">Kup link za {{product.pricing.totalBruttoFormatted}} / 30 dni</a>
             </div>
           </div>
         </div>
@@ -231,6 +237,47 @@ script(id='grid-item-product-business', type='text/x-handlebars-template').
     {{/if}}
 
   {{/each}}
+
+script(id='grid-item-product-business-simple', type='text/x-handlebars-template').
+  {{#each products}}
+
+    {{#if @first}}
+      <div class="row results-area">
+        <div class="col-sm-12">
+          <div class="row grid-sections">
+    {{/if}}
+
+    <div class="col-sm-4">
+      <div style="position:relative;" class="grid-element container-fb">
+        <div class="clearfix">
+          <a href="/ads/create?pid={{product._id}}"><div style="background:#f8f8f8 url(#{imagesUrl}/images/s_{{product.imageFileName}}) no-repeat 50% 50%;background-size:cover" class="img-thumbnail grid-image clearfix"></div></a>
+        </div>
+        <div style="position:absolute;top:20px;right:20px;" class="grid-avatar">
+          <a href="/{{product.publisher.permalink}}"><img src="#{imagesUrl}/avatars/s_{{product.publisher.imageFileName}}" width="30" class="img-rounded"/></a>
+        </div>
+        <div class="grid-body clearfix mt10">
+          <div class="clearfix overflow">
+            <p class="m0 imp lato overflow"><a class="overflow" href="/ads/create?pid={{product._id}}">{{product.title}}</a></p>
+            <p class="m0 notimp small overflow"><a href="{{product.publisher.profile.website}}" target="_blank">{{product.publisher.profile.website}}</a></p>
+          </div>
+          <div class="clearfix overflow mt10">
+            <div class="clearfix">
+              <a href="/ads/create?pid={{product._id}}" class="btn btn-default btn-block">Kup link za {{product.pricing.totalBruttoFormatted}} / 30 dni</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    {{#if @last}}
+      </div>
+        </div>
+          </div>
+    {{/if}}
+
+  {{/each}}
+
 
 script(id='temp-comment', type='text/x-handlebars-template').
   {{#each comments}}

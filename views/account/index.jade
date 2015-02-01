@@ -12,6 +12,11 @@ block content
         .clearfix
           if (!isOwner&&profile.isVerified)
             .clearfix(class=(!isOwner&&!profile.isFollowing)?'':'hid', id='action-btn-follow-#{profile.id}')
+              a.btn.btn-danger.bind.btn-block(style='border-top-left-radius:0;border-top-right-radius:0', href='#{profile.getExternalLink()}', target='_blank', onclick="ga('sbb.send', 'event', 'Users', 'Retraffic', 'user_#{profile._id}');")
+                i.fa.fa-rss
+                | Mój blog
+          //- if (!isOwner&&profile.isVerified)
+            .clearfix(class=(!isOwner&&!profile.isFollowing)?'':'hid', id='action-btn-follow-#{profile.id}')
               a.btn.btn-danger.bind.btn-block(style='border-top-left-radius:0;border-top-right-radius:0', href='', onclick='observable.trigger("userFollow", {followee_id:"#{profile.id}", follower_id:"#{user?user.id:""}"})')
                 i.fa.fa-plus
                 | #{__('Subscribe')}
@@ -35,7 +40,15 @@ block content
           .row
             .col-sm-12
               ul.list-unstyled.list-inline.m0.list-on-left
-                - if (profile.meta.followers)
+                - if (profile.blogger.last12mPageUniqueUsers)
+                  li
+                    a.btn.btn-sm.btn-default.bind(href='',)
+                      span.imp #{formatNumber(profile.blogger.last12mPageUniqueUsers)} użytkowników
+                - if (profile.blogger.last12mPageUniqueViews)
+                  li
+                    a.btn.btn-sm.btn-default.bind(href='',)
+                      span.imp #{formatNumber(profile.blogger.last12mPageUniqueViews)} odsłon
+                //- - if (profile.meta.followers)
                   li
                     a.btn.btn-sm.btn-default(href='#{profile.getExternalLink()}', target='_blank', onclick="ga('sbb.send', 'event', 'Users', 'Retraffic', 'user_#{profile._id}');")
                       small #{profile.meta.followers} subskrypcji
@@ -65,11 +78,23 @@ block content
                     a.btn.btn-sm.btn-default(href='/widgets/blogger?eid=#{profile.id}')
                       i.fa.fa-code
                       spam.imp Pobierz widget
+              .clearfix.mt5
+                p.m0.small.notimp
+                  i.fa.fa-info-circle
+                  | Informacje o liczbie użytkowników i odsłon są podawane w skali miesięcznej.
         if (profile.isVerified&&profile.profile.about)
-          .row.mt10
+          .row.mt5
             .col-sm-12
               p.m0 #{profile.profile.about}
-        if (profile.isVerified)
+        else
+          if user&&isOwner
+            .row.mt5
+              .col-sm-12
+                p.m0.notimp
+                  a.notimp(href='/settings')
+                    i.fa.fa-warning
+                    | Napisz kilka zdań o sobie, blogu i czytelnikach. Taka informacja jest pomocna w prezentowaniu Twojego bloga potencjalnym reklamodawcom - kliknij aby edytować.
+        //- if (profile.isVerified)
           .row.mt10
             .col-sm-12
               .pull-left.mr10
@@ -94,7 +119,7 @@ block content
             i.fa.fa-plus
             | Dodaj pierwszy produkt...
 
-  if !user
+  //- if !user
     .container-wide.mb20(style='height:auto;display:block;background:black url(/img/bg-#{bg_id}.jpg) no-repeat 50% top;background-size:cover;')
       .container-floor(style='height:100%;')
         .clearfix(class=!user?'with-floor':'')
@@ -127,7 +152,7 @@ block js
 
         SBBUser.getProducts(criteria, SBB_PROFILE.id, function(data) {
 
-          var source = $("#grid-item-product-only").html();
+          var source = $("#grid-item-product-business-simple").html();
 
           var template = Handlebars.compile(source);
 

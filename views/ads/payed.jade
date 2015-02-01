@@ -3,7 +3,6 @@ extends ../layout
 block content
   if (status)
     script.
-      ga('sbb.send', 'event', 'Sale', 'Advertisers', 'user_#{campaign.user._id}');
       ga('sbb.send', 'event', 'Sale', 'Popular Products', 'product_#{campaign.product._id}');
   .container
     .row.mt20
@@ -26,7 +25,7 @@ block content
                 if status
                   p Twoja kampania zostanie uruchomiona w przeciągu 5 minut. Na Twój adres e-mail przesłany zostanie e-mail z potwierdzenie.
                   ul.list-unstyled
-                    li
+                    //- li
                       i.fa.fa-angle-right
                       a.imp(href='/product/#{campaign.product.permalink}') Przejdź do strony produktu
                     li

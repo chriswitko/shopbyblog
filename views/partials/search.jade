@@ -1,0 +1,10 @@
+form(action='/search/business', method='get')
+  .container-wide.mb20
+    .container
+      .row
+        .col-sm-push-2.col-sm-8
+          .input-group
+            input.form-control.lato100.input-lg(autocomplete='off', type='search', placeholder='Wpisz nazwę produktu lub nazwę bloga...', name='q', value='#{q||""}', style='border:1px solid #999999')
+            span.input-group-btn
+              button.btn.btn-primary.btn-lg.btn-icon(type='submit', style='border:1px solid #999999;')
+                i.fa.fa-search

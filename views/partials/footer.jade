@@ -9,7 +9,7 @@ footer.bg-clouds2
         ul.list-inline.list-unstyled.m0
           li
             a(href='/') #{__('Home')}
-          li
+          //- li
             a(href='/about') #{__('About')}
           li
             a(href='/for-bloggers') #{__('For Bloggers')}
@@ -38,7 +38,7 @@ footer.bg-clouds2
               a.small(href='/en') #{__('English')}
             li(class=currentLang=='pl'?'imp':'notimp')
               a.small(href='/pl') #{__('Polish')}
-      .col-xs-12.mt20.small
+      //- .col-xs-12.mt20.small
         ul.list-inline.list-unstyled.m0
           li
             a(href='https://facebook.com/ShopByBlog', target='_blank')
@@ -49,6 +49,16 @@ footer.bg-clouds2
           li
             a(href='https://instagram.com/ShopByBlog', target='_blank')
               i.fa.fa-instagram.color-black.fa-2x
+    if hideNav
+      .row.mt5
+        .col-xs-12.align-center
+          table.align-center(style='margin-left:auto;margin-right:auto;')
+            tr
+              td
+                <svg class="svg-icon" viewBox="0 0 26 26"><path id="shapePath1" d="M20.6201,22.952 L19.0992,6.07491 C19.0578,5.61255 18.6672,5.25727 18.2049,5.25727 L15.6497,5.25727 C15.3359,2.86277 13.3015,0.999969 10.823,0.999969 C8.34217,0.999969 6.309,2.86277 5.99631,5.25727 L3.44485,5.25727 C2.98127,5.25727 2.59314,5.61134 2.55055,6.07491 L1.00411,23.199 C0.97977,23.4497 1.06372,23.6991 1.23528,23.8853 C1.40318,24.0702 1.64653,24.1785 1.89839,24.1785 L19.7477,24.1785 C19.7623,24.1761 19.772,24.1761 19.7842,24.1785 C20.2806,24.1785 20.6822,23.7757 20.6822,23.2805 C20.6822,23.1649 20.6602,23.0542 20.6201,22.952 M10.823,2.79585 C12.3135,2.79585 13.5607,3.85439 13.8526,5.25727 L7.79341,5.25727 C8.08536,3.85439 9.33256,2.79585 10.823,2.79585 M2.88028,22.3825 L4.26613,7.05193 L17.3848,7.05193 L18.7658,22.3825 L2.88028,22.3825 Z" style="stroke:#323232;stroke-opacity:1;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:2;stroke-linecap:round;fill-rule:evenodd;fill:#000000;fill-opacity:1;"></path><path id="shapePath2" d="M8.13267,17.7405 C7.63281,17.7405 7.22777,18.1456 7.22867,18.6441 C7.22867,19.1426 7.63326,19.5476 8.13267,19.5467 C8.63073,19.5476 9.03577,19.143 9.03487,18.6441 C9.03577,18.1442 8.63073,17.7396 8.13267,17.7405 Z" style="stroke:#323232;stroke-opacity:1;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:2;stroke-linecap:round;fill-rule:evenodd;fill:#000000;fill-opacity:1;"></path><path id="shapePath3" d="M8.13177,12.3224 C7.63326,12.3224 7.22867,12.727 7.22867,13.2255 C7.22867,13.724 7.63326,14.1286 8.13177,14.1286 C10.6216,14.1286 12.6473,16.1542 12.6473,18.6441 C12.6473,19.1426 13.0518,19.5472 13.5504,19.5472 C14.0489,19.5472 14.4535,19.1426 14.4535,18.6441 C14.4535,15.1581 11.6177,12.3224 8.13177,12.3224 Z" style="stroke:#323232;stroke-opacity:1;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:2;stroke-linecap:round;fill-rule:evenodd;fill:#000000;fill-opacity:1;"></path><path id="shapePath4" d="M8.13177,15.0317 C7.63326,15.0317 7.22867,15.4363 7.22867,15.9348 C7.22867,16.4333 7.63326,16.8379 8.13177,16.8379 C9.12744,16.8379 9.93797,17.648 9.93797,18.6441 C9.93797,19.1426 10.3426,19.5472 10.8411,19.5472 C11.3396,19.5472 11.7442,19.1426 11.7442,18.6441 C11.7442,16.6523 10.1236,15.0317 8.13177,15.0317 Z" style="stroke:#323232;stroke-opacity:1;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:2;stroke-linecap:round;fill-rule:evenodd;fill:#000000;fill-opacity:1;"></path></svg>
+              td
+                span.lato.ml10(style='line-height:2.5em') Powered by ShopByBlog
+
 
 div#fb-root
 

@@ -5,7 +5,7 @@ block content
     .col-sm-3
       .clearfix.mt0.mb20.slicer
         ul.list-unstyled.list-vertical.switch-tabs(role="tablist")
-          li.active(role="presentation")
+          //- li.active(role="presentation")
             a(href="#home", role="tab", data-toggle="tab") Ogólne
           li(role="presentation")
             a(href="#bloggers", role="tab", data-toggle="tab") Dla Blogerów
@@ -38,13 +38,13 @@ block content
           .clearfix
             iframe(style='display:block', src="#{links.for_sellers}", width='100%', height='600', frameborder='0')
 
-        .tab-pane(role="tabpanel", id="bloggers")
+        .tab-pane.active(role="tabpanel", id="bloggers")
           .clearfix.mb5
             h4.m0.pt5.pb5 Dla blogerów
           .clearfix
             iframe(style='display:block', src="#{links.for_bloggers}", width='100%', height='600', frameborder='0')
 
-        .tab-pane.active(role="tabpanel", id="home")
+        //- .tab-pane.active(role="tabpanel", id="home")
           .clearfix.mb5
             h4.m0.pt5.pb5 Ogólne
           .clearfix

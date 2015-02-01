@@ -147,12 +147,25 @@ exports.claim = function(req, res) {
   var lib = require("../vendor_modules/country-list/nodejs.countryList.js");
   var defaultCountry = 'Poland';
   var cl = lib.countryList(defaultCountry);
-  // insert the HTML you have generated into your template
-  // res.render('template.html', { placeholderInHTML: cl } );
-  res.render('claim', {
-    title: 'Dołącz do nas!',
-    citiesInHTML: cl
-  });
+  var locales = {};
+
+  async.series({
+    findUser: function(done) {
+      User.findById(req.user.id, function(err, user) {
+        locales.user = user;
+        done();
+      });
+    },
+  }, function() {
+    if(!locales.user.isVerified&&!locales.user.isPending) {
+      res.render('claim', {
+        title: 'Dołącz do nas!',
+        citiesInHTML: cl
+      });
+    } else {
+      res.redirect('/for-bloggers');
+    }
+  })
 };
 
 exports.claim_post = function(req, res) {
@@ -318,7 +331,8 @@ exports.profile = function(req, res) {
           profile: locales.profile,
           og: locales.profile.getOpenGraph(),
           hideSubscriptionBox: true,
-          isOwner: req.user&&req.user._id.toString()==locales.profile._id.toString()
+          isOwner: req.user&&req.user._id.toString()==locales.profile._id.toString(),
+          section: {section: {permalink:(req.user&&req.user._id.toString()==locales.profile._id.toString()?'me':'')}}
         });
       } else {
         res.redirect('/');
@@ -1078,11 +1092,23 @@ exports.products = function(req, res) {
           }, function() {
             done()
           });
-      }, {populate: 'author', sortBy: { createdAt : -1, score: -1 }})
+      }, {populate: ['author','publisher'], sortBy: { createdAt : -1, score: -1 }})
+    },
+    addPricing: function(done) {
+      locales.output = [];
+      async.forEachSeries(locales.products, function(product, cb) {
+        lb.campaignPrice({lang: 'pl', last12mPageUniqueUsers: product.publisher.blogger.last12mPageUniqueUsers, followers: 0, numberOfActiveAds: 0}, function(output) {
+          product.pricing = output[5]
+          locales.output.push(product);
+          cb();
+        });
+      }, function() {
+        done();
+      })
     },
     sortOutput: function(done) {
-      locales.products = _.sortBy(locales.products, ['sortIdx', 'score', 'createdAt']).reverse()
-      locales.products = _.map(locales.products, function(product) {return {product: product}})
+      locales.products = _.sortBy(locales.output, ['sortIdx', 'score', 'createdAt']).reverse()
+      locales.products = _.map(locales.output, function(product) {return {product: product}})
       done();
     }
   }, function() {

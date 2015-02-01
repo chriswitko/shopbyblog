@@ -22,34 +22,6 @@ html
     //- #close-discussion-panel.close-discussion-body.close-discussion.hid(onclick='$("#close-discussion-panel").addClass("hid");$("#sidebar-offcanvas").stop().animate({right: -$("#sidebar-offcanvas").width()});')
     //- #sidebar-offcanvas.hid(style='background:white;position:fixed;right:0;top:0px;height:100%;z-index:9999;border-left: 1px solid rgba(0,0,0,0.1);box-shadow: 0 0 20px rgba(0,0,0,0.25);overflow-y:scroll')
 
-    if (showSearchBox)
-      form(action='/search', method='get')
-        .container-wide.mt20.mb20
-          .container
-            .row
-              .col-sm-push-2.col-sm-8
-                .input-group
-                  input.form-control.lato100(autocomplete='off', type='search', placeholder='Wpisz nazwę produktu lub nazwę bloga...', name='q', value='#{q||""}', style='border:1px solid #999999')
-                  span.input-group-btn
-                    button.btn.btn-primary.btn-icon(type='submit', style='border:1px solid #999999;')
-                      i.fa.fa-search
-            .row
-              .col-sm-push-2.col-sm-8
-                ul.list-unstyled.list-inline.mb0.mt5.small.list-on-left.ml0
-                  if user
-                    if !user.isVerified
-                      li
-                        a.small.notimp(href='/for-bloggers') Dodaj swojego bloga
-                    li
-                      a.small.notimp(href='/sell-products') Masz sklep? Dodaj link sponsorowany
-                  //- else
-                    li
-                      i.fa.fa-angle-right.notimp
-                      a.small.notimp(href='/for-bloggers') Oferta dla blogerów
-                    li
-                      i.fa.fa-angle-right.notimp
-                      a.small.notimp(href='/sell-products') Oferta dla reklamodawców
-
     if (messages.errors||messages.info||messages.success)
       .container.mb0
         include partials/flash

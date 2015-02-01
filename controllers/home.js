@@ -14,6 +14,32 @@ var User = require('../models/User');
  */
 
 exports.index = function(req, res) {
+  var locales = {};
+
+  async.series({
+    getUserByPermalink: function(done) {
+      if(!req.user) return done();
+      User.findOne({_id: req.user._id}, function(err, profile) {
+        if(!err&&profile) locales.profile = profile;
+        done();
+      })
+    },
+  }, function() {
+    if(!req.user) {
+      res.render('home', {
+        title: '',
+        bg: false,
+        hideSubscriptionBox: true,
+        showSearchBox: true
+      });
+    } else {
+      if(locales.profile.isVerified) return res.redirect('/'+locales.profile.permalink);
+      else return res.redirect('/claim');
+    }
+  })
+};
+
+exports.indexOld = function(req, res) {
   // res.cookie('sbblang', 'pl');
   if(req.user) {
     res.render('home', {

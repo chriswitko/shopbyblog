@@ -12,6 +12,7 @@ var campaignSchema = new mongoose.Schema({
   user: {type : Schema.ObjectId, ref : 'User', index: true},
   blogger: {type : Schema.ObjectId, ref : 'User', index: true},
   product: {type : Schema.ObjectId, ref : 'Product', index: true},
+  email: {type: String},
 
   section: Number,
   title: String,

@@ -225,6 +225,9 @@ app.use(function(req, res, next) {
   res.locals.currentLang = req.getLocale();
   res.locals.moment = moment;
   res.locals.sprintf = require('sprintf').sprintf;
+  res.locals.formatNumber = function(str) {
+    return str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
   next();
 });
 
@@ -308,6 +311,7 @@ app.get('/api/sections', sectionController.list);
 
 app.get('/p', productController.index);
 app.get('/product/:permalink', productController.index);
+app.post('/product/:permalink', productController.subscribe);
 app.get('/product/:permalink/vote', productController.vote);
 app.get('/product/:permalink/unvote', productController.unvote);
 app.get('/product/:permalink/setScore', productController.setScore);
@@ -367,9 +371,9 @@ app.get('/analytics', passportConf.isAuthenticated, passportConf.isVerified, ana
 app.get('/api/calc/euro', adsController.euro);
 app.get('/api/calc/price', adsController.campaignPrice);
 
-app.get('/ads/create', passportConf.isAuthenticated, adsController.create);
-app.post('/ads/create', passportConf.isAuthenticated, adsController.update);
-app.get('/ads/report', passportConf.isAuthenticated, adsController.report);
+app.get('/ads/create', adsController.create);
+app.post('/ads/create', adsController.update);
+app.get('/ads/report', adsController.report);
 // app.get('/ads/payed', adsController.payed);
 // app.post('/ads/payed', adsController.payed);
 app.get('/payments/paypal/payed', adsController.paypalPayed);
@@ -378,9 +382,9 @@ app.get('/payments/paypal/cancel', adsController.paypalCancel);
 app.get('/payments/error', adsController.paymentError);
 app.get('/payments/transferuj/payed', adsController.transferujPaid);
 
-app.get('/ads/edit', passportConf.isAuthenticated, adsController.update);
-app.post('/ads/edit', passportConf.isAuthenticated, adsController.update_edit);
-app.get('/ads/payment', passportConf.isAuthenticated, adsController.payment);
+app.get('/ads/edit', adsController.update);
+app.post('/ads/edit', adsController.update_edit);
+app.get('/ads/payment', adsController.payment);
 
 app.get('/ads/calculate', passportConf.isAuthenticated, adsController.update_calculate);
 app.post('/ads/calculate', passportConf.isAuthenticated, adsController.update_calculate);

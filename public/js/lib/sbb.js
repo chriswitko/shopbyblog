@@ -53,6 +53,14 @@ var SBB = $.inherit(/** @lends A.prototype */{
     },
 
     initHandlebars: function() {
+      Handlebars.registerHelper("sprintf", function(str, args) {
+        return sprintf(str, args);
+      });
+
+      Handlebars.registerHelper("formatNumber", function(str) {
+        return str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      });
+
       Handlebars.registerHelper('dotdotdot', function(str) {
         if (str.length > 10)
           return str.substring(0,10) + '...';

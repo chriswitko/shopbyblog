@@ -9,10 +9,13 @@ block content
 
   include ./partials/sell-products-steps
 
+  if (showSearchBox)
+    include partials/search
+
   .container.container-grid.pb0.mb20.pt0
     .col-sm-12
       .row
-        .clearfix
+        .clearfix.mt20
           #results-area
           #loading.clearfix.hid
             p.align-center Trwa pobieranie danych. Proszę czekać...

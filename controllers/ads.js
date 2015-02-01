@@ -161,7 +161,7 @@ exports.report = function(req, res) {
         })
     },
     checkPermission: function(done) {
-      if(!req.user||(req.user._id.toString()!=locales.campaign.blogger.toString()&&req.user._id.toString()!=locales.campaign.user.toString())) return res.redirect('/');
+      // if(!req.user||(req.user._id.toString()!=locales.campaign.blogger.toString()&&req.user._id.toString()!=locales.campaign.user.toString())) return res.redirect('/');
       return done();
     },
     getProduct: function(done) {
@@ -169,6 +169,9 @@ exports.report = function(req, res) {
         .populate({
           path: 'author',
           select: '_id username permalink profile email blogger meta'
+        })
+        .populate({
+          path: 'publisher',
         })
         .exec(function(err, product) {
           if(product) locales.product = product
@@ -188,6 +191,7 @@ exports.report = function(req, res) {
       campaign: locales.campaign,
       product: locales.product,
       pricing: locales.pricing,
+      hideSubscriptionBox: true,
       processedDays: _.uniq(locales.campaign.daily, function(day) {return day.day}).length,
       md5sum: md5('17460' + locales.campaign.price.totalPrice.toString() + locales.campaign._id + 'U6lRv4cAiw96GsRi')
     });
@@ -260,6 +264,7 @@ exports.update = function(req, res) {
         .exec(function(err, campaign) {
           locales.campaign = campaign;
           locales.campaign.price.days = req.body.days;
+          if(req.body.email) locales.campaign.email = req.body.email;
           if(req.body.url) locales.campaign.url = req.body.url;
           if(req.body.days) locales.campaign.price.days = req.body.days;
           // if(req.body.start) locales.campaign.start = moment(req.body.start+'T'+moment().format('HH:mm:ss')).zone('+01:00').format('ddd MMM DD YYYY HH:mm:ss z');
@@ -333,7 +338,8 @@ exports.update = function(req, res) {
       title: 'Reklama',
       campaign: locales.campaign,
       demo: req.body.demo?true:false,
-      pricing: locales.pricing
+      pricing: locales.pricing,
+      hideSubscriptionBox: true
     });
   })
 };
@@ -451,6 +457,7 @@ var payed = function(options, cb) {
             locales.campaign.price.adTransactionId = options.payment.txn_id;
             locales.campaign.start = moment().zone('+01:00').format('ddd MMM DD YYYY HH:mm:ss z');
             locales.campaign.end = moment(locales.campaign.start).add(locales.campaign.price.days, 'days').zone('+01:00').format('ddd MMM DD YYYY HH:mm:ss z');
+            locales.isNew = true;
           }
           done();
         })
@@ -462,16 +469,19 @@ var payed = function(options, cb) {
       })
     },
     sendMailPaySuccessful: function(done) {
-      lb.sendHtmlEmail({to: locales.campaign.user.email, user: locales.campaign.user, campaign: locales.campaign, subject: 'shopbyblog.com - Potwierdzenie przyjęcia płatności on-line', templateName: 'campaign-payment'}, function(output) {
+      if(!locales.isNew) return done();
+      lb.sendHtmlEmail({to: locales.campaign.email, user: {}, campaign: locales.campaign, subject: 'shopbyblog.com - Potwierdzenie przyjęcia płatności on-line', templateName: 'campaign-payment'}, function(output) {
         done();
       });
     },
     sendMailNotifyUser: function(done) {
-      lb.sendHtmlEmail({to: locales.campaign.user.email, user: locales.campaign.user, campaign: locales.campaign, subject: 'shopbyblog.com - Potwierdzenie uruchomienia kampanii', templateName: 'campaign-successful'}, function(output) {
+      if(!locales.isNew) return done();
+      lb.sendHtmlEmail({to: locales.campaign.email, user: {}, campaign: locales.campaign, subject: 'shopbyblog.com - Potwierdzenie uruchomienia kampanii', templateName: 'campaign-successful'}, function(output) {
         done();
       });
     },
     sendMailNotifyBlogger: function(done) {
+      if(!locales.isNew) return done();
       lb.sendHtmlEmail({to: locales.campaign.blogger.email, user: locales.campaign.blogger, campaign: locales.campaign, subject: 'shopbyblog.com - Potwierdzenie uruchomienia nowej kampanii', templateName: 'campaign-successful'}, function(output) {
         done();
       });
@@ -502,6 +512,7 @@ exports.update_edit = function(req, res) {
           if(req.body.url) locales.campaign.url = lb.repairUrl(req.body.url);
           if(req.body.days) locales.campaign.price.days = req.body.days;
 
+          if(req.body.email) locales.campaign.email = req.body.email;
           if(req.body.fullname) locales.campaign.invoice.fullname = req.body.fullname;
           if(req.body.address1) locales.campaign.invoice.address1 = req.body.address1;
           if(req.body.address2) locales.campaign.invoice.address2 = req.body.address2;
@@ -567,7 +578,7 @@ exports.update_edit = function(req, res) {
       })
     },
     sendMailInit: function(done) {
-      lb.sendHtmlEmail({to: locales.campaign.user.email, user: locales.campaign.user, campaign: locales.campaign, subject: 'Informacje o utworzeniu kampanii reklamowej w serwisie ShopByBlog', templateName: 'campaign-init'}, function(output) {
+      lb.sendHtmlEmail({to: locales.campaign.email, user: {}, campaign: locales.campaign, subject: 'Informacje o utworzeniu kampanii reklamowej w serwisie ShopByBlog', templateName: 'campaign-init'}, function(output) {
         done();
       });
     }
@@ -579,7 +590,8 @@ exports.update_edit = function(req, res) {
       payNow: req.query.pay?true:false,
       product: locales.product,
       demo: req.body.demo?true:false,
-      md5sum: md5('17460' + locales.campaign.price.totalPrice.toString() + locales.campaign._id + 'U6lRv4cAiw96GsRi')
+      md5sum: md5('17460' + locales.campaign.price.totalPrice.toString() + locales.campaign._id + 'U6lRv4cAiw96GsRi'),
+      hideSubscriptionBox: true
     });
   })
 };
@@ -662,7 +674,7 @@ exports.create = function(req, res) {
         if(locales.product) {
           var campaign = new Campaign();
           campaign.variant = req.query.variant;
-          campaign.user = req.user._id;
+          // campaign.user = req.user._id;
           campaign.blogger = locales.product.author; // change to publisher
           campaign.product = locales.product;
           campaign.section = locales.product.section;
@@ -688,7 +700,8 @@ exports.create_click = function(req, res) {
     showSearchBox: false,
     title: 'Reklama',
     product_id: req.query.pid,
-    variant: 1
+    variant: 1,
+    hideSubscriptionBox: true
   });
 };
 

@@ -3,157 +3,87 @@ extends layout
 block content
   script.
     ga('sbb.send', 'event', 'Products', 'View', 'product_#{product._id}');
-  if ads.length
-    ul.list-unstyled.m0
-      each ad in ads
-        script.
-          ga('sbb.send', 'event', 'Campaign', 'View', 'campaign_#{ad.ad._id}');
 
   include templates/products.grid.jade
 
-  .container
+  style.
+    body {background:black url(/img/bg-#{bg_id}.jpg) no-repeat 50% top;background-size:cover;}
+  .container.container-fb.container-fix
     .row
-      .col-sm-7
-        .clearfix.container-fix.container-fb.p15
+      .col-sm-7(style='border-right:1px solid #d5d5d5')
+        .clearfix
+          //- .row.mb10
+            .col-sm-12
+              h3.m0
+                a.lato100(href='#{product.postUrl}', active='#{product.isVoted}', target='_blank') #{product.title}
           .row.mb10
-            .col-sm-8
+            .col-sm-12
               .media
-                a.pull-left(href='/#{product.author.permalink}')
-                  img.media-object.img-rounded(src='#{product.author.gravatar()}', width='50')
+                a.pull-left(href='#{product.publisher.profile.website}', target='_blank')
+                  img.media-object.img-rounded(src='#{product.publisher.gravatar()}', width='50')
                 .media-body
                   h4.media-heading.m0
                     ul.list-unstyled.list-inline.small.mb0.list-actions
                       li
-                        a.notimp(href='/#{product.author.permalink}') @#{product.author.permalink}
+                        a.notimp(href='#{product.publisher.profile.website}', target='_blank') @#{product.publisher.permalink}
                       li
                         time.imp.small(itemprop='createdAt', datetime='#{product.createdAt}')
-                  p.m0 #{product.body.substr(0, 140)}<a href="#{product.postUrl}" target="_blank">#{product.body.length>140?'...':''}</a>
-            .col-sm-4.align-right.hidden-xs
-              ul.list-unstyled.list-inline.m0.list-on-right
-                if (!isOwner)
-                  li(class=(!isOwner&&!isFollowing)?'':'hid', id='action-btn-follow-#{product.author.id}')
-                    a.btn.btn-danger.btn-lg.bind(href='', onclick='observable.trigger("userFollow", {followee_id:"#{product.author.id}", follower_id:"#{user?user.id:""}"})')
-                      | #{__('Subscribe')}
-                  li(class=(isFollowing)?'':'hid', id='action-btn-unfollow-#{product.author.id}')
-                    a.btn.btn-default.btn-lg.bind(href='', onclick='observable.trigger("userUnfollow", {followee_id:"#{product.author.id}", follower_id:"#{user?user.id:""}"})')
-                      | #{__('Subscribed')}
-                else
-                  li
-                    a.btn.btn-default.btn-lg(href='/#{product.author.permalink}')
-                      | Mój profil
-          .row.mb10
-            .col-sm-12
-              h3.m0
-                a.lato100(href='#{product.postUrl}', active='#{product.isVoted}', target='_blank') #{product.title}
-
-          .row
-            .col-sm-12.mb15
-              .clearfix
-                sbb-product-tb(variant='preview', comments="#{product.meta.comments}", product="#{product._id}", active='#{product.isVoted}', permalink='#{product.permalink}', counter='#{product.meta.upvotes}', ispublisher='#{isPublisher}')
+                  p.m0
+                    a.lato100.imp(href='#{product.publisher.profile.website}', target='_blank') #{product.title}
+                  if product.body
+                    p.m0 #{product.body.substr(0, 140)}<a href="#{product.postUrl}" target="_blank">#{product.body.length>140?'...':''}</a>
 
           .row
             .col-sm-12.grid-products
               .clearfix
-                a(href='#{product.postUrl}', target='_blank')
+                a(href='#{product.publisher.profile.website}', target='_blank')
                   .grid-element(style='position:relative;')
                     .grid-image.clearfix.img-thumbnail2(style='background:#f8f8f8 url(#{imagesUrl}/images/l_#{product.imageFileName}) no-repeat 50% 50%;background-size:cover;')
                 .clearfix.mb10.hidden-lg.hidden-md
-
-
       .col-sm-5
         .row
           .col-sm-12
-            .clearfix.p102.gbox2
-              .row.mb20
-                .col-sm-12
-                  a.btn.btn-default.btn-block.btn-lg(href='#{product.postUrl}', target='_blank')
-                    i.fa.fa-rss
-                    | Znajdź więcej na blogu
-
-              .row
-                .col-sm-12
-                  h4.mt0.mb10
-                    | #{__('WHERE TO BUY')} &nbsp;
-                    span.pull-right
-                      a.bind(href='', data-content='<span style="font-size:12px;font-weight:normal;">Sponsrowane linki są wykupowane są przez dostawców, którzy w swojej ofercie posiadają ten produkt.</span>', title='Sponsored', data-placement="bottom", data-trigger="focus", data-toggle='popover', rel='popover')
-                        small Sponsorowane &nbsp;
-                          i.fa.fa-info-circle.mr0
-                .col-sm-12
-                  .clearfix.p102
-                    if ads.length
-                      ul.list-unstyled.m0
-                        each ad in ads
+            form(method='post', name='subscribeForm')
+              input(type='hidden', name='_csrf', value=_csrf)
+              .col-sm-12
+                .clearfix
+                  p.m0 Aktualnie nie mamy ofert dla tego produktu. Jeżeli chcesz otrzymać powiadomienie o dostępnej ofercie wpisz swój adres e-mail.
+                  hr
+                - if (!subscribed)
+                  .clearfix
+                    .form-group
+                      label.control-label(for='email') #{__('Email')}
+                      input.form-control(type='email', name='email', id='email', placeholder='Email', value=email, autofocus=true, autocomplete='off')
+                    .form-group
+                      .clearfix
+                        button.btn.btn-danger.btn-block(type='submit')
+                          | Zapisz
+                      .clearfix.mt15
+                        ul.list-unstyled.mb0.small
                           li
-                            .clearfix(style='line-height:31px;')
-                              .pull-left
-                                a(href='/track/#{ad.ad._id}', target='_blank')
-                                  img.mr10.img-rounded(src='#{ad.ad.user.gravatar()}', height='25')
-                                a.imp.color-g-blue(href='/track/#{ad.ad._id}', target='_blank') #{ad.ad.getDomainUrl()}
-                              .pull-right
-                                a.btn.btn-link.btn-sm.imp.pr0.color-g-green(href='/track/#{ad.ad._id}', target='_blank') KUP TERAZ
-                    else
-                      p.mt0 Kliknij <u class="imp">Ulubione</u> aby otrzymać powiadomienie o dostępnej ofercie na ten produkt.
-                  .clearfix.mt5.align-right
-                    a.btn.btn-default.btn-block.imp(href='/ads/create?pid=#{product.id}') Masz sklep? Dodaj link sponsorowany &nbsp;
-                      i.fa.fa-angle-right
-
-          .col-sm-12.mt20
-            .clearfix
-              .pull-left.mr10
-                .fb-like(data-href="#{sbb.website}/product/#{product.permalink}", data-layout="button", data-action="recommend", data-show-faces="true", data-share="false")
-              .pull-left
-                a.twitter-share-button(href="https://twitter.com/share", data-url="#{sbb.website}/product/#{product.permalink}", data-via="shopbyblog", data-count="none")
-
-          //- if votes&&votes.length
-            .col-sm-12.mt20
-              h4.mt0.mb10 ZAINTERESOWANI (#{product.meta.upvotes})
-
-            .col-sm-12
-              ul.list-unstyled.list-inline.m0.list-on-left.list-voters
-                each vote in votes
-                  li
-                    img.img-rounded(src='#{vote.user.gravatar()}', width='30')
-
-  if !user
-    .container-wide.mb20(style='height:auto;display:block;background:black url(/img/bg-#{bg_id}.jpg) no-repeat 50% top;background-size:cover;')
-      .container-floor(style='height:100%;')
-        .clearfix(class=!user?'with-floor':'')
-          .container.pb0.hidden-xs
-            .clearfix.container-fix2.container-fb2.p20
-              .row
-                .col-sm-12
-                  .clearfix.align-center
-                    .row.mb20
-                      include partials/product.headline.jade
-                    .row
-                      .col-sm-12
-                        include partials/signup.inline.jade
-                        include partials/signup.helpnav.jade
-
-
-
-  //- .clearfix.mb20
-    sbb-people(title='POLECANI BLOGERZY', theme='default', variant='whotofollow', permalink='#{user?user.permalink:""}', follower='#{user?user._id:""}')
-
-  a(id='comments')
-  .container
-    .clearfix.container-fix
-      .row
-        .col-sm-12
-          h4.mt0.mb10 #{__('COMMENTS')} (<span id="commentsCounter">#{product.meta.comments}</span>)
-        .col-sm-12
-          if (user)
-            .clearfix
-              form.bind(name='commentForm')
-                input(type='hidden', id='_csrf', name='_csrf', value=_csrf)
-                textarea.form-control(id='commentBody', name='commentBody', placeholder="#{__('What are your thoughts on this product?')}", rows='3')
+                            i.fa.fa-check.color-green
+                            | Wysyłamy tylko ciekawe i sprawdzone oferty
+                          li
+                            i.fa.fa-check.color-green
+                            | Nie wysyłamy spamu
+                          li
+                            i.fa.fa-check.color-green
+                            | Zawsze możesz wypisać się z powiadomień
+                .clearfix
+                  ul.list-unstyled.small
+                    li
+                      a.notimp(href='#{product.publisher.profile.website}', target='_blank')
+                        i.fa.fa-angle-right
+                        | Powrót do #{product.publisher.profile.website}
+                    li
+                      a.notimp(href='/ads/create?pid=#{product.id}')
+                        i.fa.fa-angle-right
+                        | Reklamuj się na blogach! Dodaj link sponsorowany...
                 .clearfix.mt10
-                  input.btn.btn-sm.btn-default(type='submit', value="#{__('Submit')}")
-          else
-            .clearfix.p10.bg-clouds
-              p.m0 #{__('Please sign in to vote and comment for this product.')}
-          .clearfix.mt20
-            #comments-area
+                  .pull-left.mr10
+                    .fb-like(data-href="#{sbb.website}/product/#{product.permalink}", data-layout="button", data-action="recommend", data-show-faces="true", data-share="false")
+                  .pull-left
+                    a.twitter-share-button(href="https://twitter.com/share", data-url="#{sbb.website}/product/#{product.permalink}", data-via="shopbyblog", data-count="none")
 
 
 block js
@@ -162,24 +92,5 @@ block js
     $(document).ready(function() {
       window.SBB_PRODUCT = !{JSON.stringify(product)};
 
-      var validator = new FormValidator('commentForm', [
-        {
-          name: 'commentBody',
-          rules: 'required'
-        }
-      ], function(errors, event) {
-        if (errors.length > 0) {
-          $('.p-err').remove();
-          for(i=0;i<=errors.length-1;i++) {
-            $('#'+errors[i].id).before('<p class="p-err small color-red">'+errors[i].message+'</p>');
-          }
-        } else {
-          $('.p-err').remove();
-          observable.trigger("commentAdd", {SBB_PRODUCT: window.SBB_PRODUCT, product_id:"#{product.id}", user_id:"#{user?user.id:""}", body: $("#commentBody").val()})
-        }
-      });
-
-
-      if($('#comments-area')) SBBComment.uiGetComments({product_id: window.SBB_PRODUCT._id, limit: 5});
       SBB.initResizeGrid('feed');
     })

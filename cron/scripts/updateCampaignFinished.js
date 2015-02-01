@@ -91,7 +91,7 @@ stream.on('data', function (campaign) {
       });
     },
     sendFinalMail: function(done) {
-      lb.sendHtmlEmail({to: campaign.user.email, user: campaign.user, campaign: campaign, subject: 'shopbyblog.com - Potwierdzenie zakończenia emisji kampanii reklamowej', templateName: 'campaign-finished'}, function(output) {
+      lb.sendHtmlEmail({to: campaign.email, user: {}, campaign: campaign, subject: 'shopbyblog.com - Potwierdzenie zakończenia emisji kampanii reklamowej', templateName: 'campaign-finished'}, function(output) {
         done();
       });
     },

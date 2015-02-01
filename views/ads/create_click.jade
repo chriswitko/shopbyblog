@@ -2,7 +2,6 @@ extends ../layout
 
 block content
   script.
-    ga('sbb.send', 'event', 'Sale', 'Potential Advertisers', 'user_#{user._id}');
     ga('sbb.send', 'event', 'Sale', 'Popular Placements', 'blogger_#{campaign.blogger._id}');
     ga('sbb.send', 'event', 'Sale', 'Potential Products', 'product_#{campaign.product._id}');
   .container
@@ -20,15 +19,20 @@ block content
               label(class='col-sm-2 control-label', for='url')
               .col-sm-8
                 p.imp.m0 #{__('Enter URL to website where customer can buy selected product.')}
-            .form-group.p15.bg-clouds
+            .form-group.p15.bg-clouds.mb0
               label(class='col-sm-2 control-label', for='url') #{__('URL')}
               .col-sm-8
                 input.form-control(type='url', name='url', id='url', value=campaign.url, placeholder='#{__("Enter URL to website")}', autocomplete='off', autofocus=true)
+            .form-group.p15.bg-clouds.mt0
+              label(class='col-sm-2 control-label', for='url') Twój e-mail
+              .col-sm-8
+                input.form-control(type='email', name='email', id='email', value=campaign.email, placeholder='Wpisz adres e-mail na który wyślemy potwierdzenie', autocomplete='off', autofocus=true)
             .form-group
               label(class='col-sm-2 control-label', for='url') &nbsp;
               .col-sm-8
                 p.mb0.imp.color-red #{__('Estimated price per day')}: #{currentLang=='pl'?pricing[0].totalPerDayFormatted:pricing[0].euro.totalPerDayFormatted} brutto
-                p.mt0 Liczba unikalnych użytkowników: <strong>#{sprintf('%.0f', campaign.blogger.blogger.last12mPageUniqueUsers)} / miesiąc</strong>
+                p.mt0.mb0 Liczba unikalnych użytkowników: <strong>#{formatNumber(campaign.blogger.blogger.last12mPageUniqueUsers)} / miesiąc</strong>
+                p.mt0 Liczba odsłon: <strong>#{formatNumber(campaign.blogger.blogger.last12mPageUniqueViews)} / miesiąc</strong>
 
                 .clearfix
                   p.imp #{__('What you will get')}:
@@ -36,11 +40,11 @@ block content
                     ul.list-unstyled
                       li
                         i.fa.fa-check.color-red
-                        | Produkt zostanie oznaczony jako promowany na stronie: <strong>#{campaign.blogger.profile.website}</strong>
-                      li
+                        | Przekierowanie na podany link, po kliknięciu w produkt <strong>#{campaign.product.title}</strong> na stronie: <strong>#{campaign.blogger.profile.website}</strong>
+                      //- li
                         i.fa.fa-check.color-red
                         | Twój link będzie wyświetlany na stronie produktu na czas kampanii
-                      li
+                      //- li
                         i.fa.fa-check.color-red
                         | Informacja o Twoim linku zostanie rozesłana w cotygodniowym newsletterze do osób obserwujących profil blogera
                   //- p.m0 Średnia liczba wyświetleń bloga: <strong>#{sprintf('%.0f', campaign.blogger.blogger.last12mPageUniqueViews/12)} / miesiąc</strong>
@@ -120,6 +124,10 @@ block js
     var validator = new FormValidator('orderForm', [
       {
         name: 'url',
+        rules: 'required'
+      },
+      {
+        name: 'email',
         rules: 'required'
       }
     ], function(errors, event) {

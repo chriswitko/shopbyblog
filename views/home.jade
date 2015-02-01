@@ -21,10 +21,10 @@ block content
         .clearfix(class=!user?'with-floor':'')
           .container.container-clean.pb0.mb0
             .row
-              include partials/home.headline.jade
+              include partials/home.affiliate.jade
 
         .clearfix(class=!user?'with-floor':'')
-          include static/for-bloggers-signup-nav
+          include static/for-affiliate-signup-nav
 
     //- .container
       .container-fix.p20
@@ -36,23 +36,37 @@ block content
     //- sbb-people(title='#{__("RECOMMENDED BLOGS")}', theme='default', variant='whotofollow', permalink='#{user?user.permalink:""}', follower='#{user?user._id:""}')
     //- sbb-feedly(title='POPULARNE BLOGI', theme='default', variant='whotofollow', permalink='#{user?user.permalink:""}', follower='#{user?user._id:""}')
 
-  #deals-area-container.container.container-grid.pb0.mb20.pt0.hid.mt0
+  //- #deals-area-container.container.container-grid.pb0.mb20.pt0.hid.mt0
+  //-   .row
+  //-     .col-sm-12
+  //-       .row
+  //-         .col-sm-6
+  //-           h3.day.mt0 Znajdź polecane produkty
+  //-         .col-sm-6.align-right
+  //-           a.notimp(href='/search/business') Zobacz wszystkie &raquo;
+  //-       //- .row
+  //-         .col-xs-12
+  //-           #deals-area
+
+  if (showSearchBox)
+    include partials/search
+
+  .container.container-grid.pb0.mb20.pt0
     .row
       .col-sm-12
         .row
           .col-sm-6
-            h3.day.mt0 Oferty dnia
+            h3.day.mt0 Ostatnio polecane produkty
           .col-sm-6.align-right
-            a.notimp(href='/deals') Zobacz wszystkie &raquo;
-        .row
-          .col-xs-12
-            #deals-area
-
-  .container.container-grid.pb0.mb20.pt0
+            a.notimp(href='/search/business') Zobacz wszystkie &raquo;
     .col-sm-12
       .row
-        .clearfix
+        .clearfix.mt10
           #results-area
+          #loading.clearfix.hid
+            p.align-center Trwa pobieranie danych. Proszę czekać...
+          #empty.clearfix.hid
+            p.align-center Nie znaleziono produktów.
 
     #more.row.mb15.mt20.hid
       .col-sm-12.align-center
@@ -80,8 +94,8 @@ block js
 
         SBBProduct.getList(criteria, function(data) {
 
-          var source = $("#grid-item-product").html();
-          if(page>1) source = $("#grid-item-product-next").html();
+          var source = $("#grid-item-product-only").html();
+          if(page>1) source = $("#grid-item-product-only").html();
 
           var template = Handlebars.compile(source);
 
@@ -122,12 +136,30 @@ block js
       }
 
       if($('#results-area')) {
-        window.getProducts({}, function() {
-          if($('#deals-area')) {
-            window.getDeals({}, function() {
-              SBB.initResizeGrid('feed');
-            });
-          } else SBB.initResizeGrid('deals');
-        });
+        var SBB_Q = SBB.getUrlVar('q');
+
+        if($('#results-area')) {
+          $('#loading').removeClass('hid');
+          SBBProduct.searchBusiness({q: SBB_Q}, function(data) {
+            var source = $("#grid-item-product-business").html();
+
+            var template = Handlebars.compile(source);
+
+            var context = {products: data.products};
+            var html    = template(context);
+
+            $('#results-area').html(html);
+            $('#loading').addClass('hid');
+            if(!data.products.length) $('#empty').removeClass('hid');
+            SBB.initResizeGrid('search');
+          });
+        }
+        //- window.getProducts({}, function() {
+          //- if($('#deals-area')) {
+            //- window.getDeals({}, function() {
+              //- SBB.initResizeGrid('feed');
+            //- });
+          //- } else SBB.initResizeGrid('deals');
+        //- });
       }
     })
