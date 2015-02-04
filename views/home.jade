@@ -51,7 +51,46 @@ block content
   if (showSearchBox)
     include partials/search
 
-  .container.container-grid.pb0.mb20.pt0
+  include partials/sell-products-steps
+
+  .container
+    .container-fix.container-fb2.p20
+      .row
+        .col-sm-6
+          ul.m0
+            li
+              h5.lato700 Docieraj z ofertą do właściwych ludzi
+              p.m0 Twoja oferta udostępniana jest tylko osobom zainteresowanym produktem poleconym przez blogera.
+            li
+              h5.lato700 Nie pozostawiaj pytań bez odpowiedzi: "Gdzie mogę kupić ten produkt?"
+              p.m0 Czytelnicy blogów w jednym miejscu mają dostęp do informacji gdzie kupić polecany produkt.
+        .col-sm-6
+          ul.m0
+            li
+              h5.lato700 Rzetelnie analizujemy ruch generowany przez blogi
+              p.m0 Dostarczamy szczegółowe statystyki na temat konwersji z blogów na strony Twojego sklepu.
+            li
+              h5.lato700 Dowiedz się więcej o konwersji ruchu i skuteczności sprzedawania przez blogi
+              p.m0 Dostarczamy szczegółowe statystyki na temat konwersji z blogów do stron Twojego sklepu.
+
+  //- .container.container-clean.pb0.mb20(style='position:relative;')
+    .row.mb20
+      .col-sm-push-1.col-sm-10.align-center
+        h1.mt0.mb10.lato.lato900 Reklamuj się na blogach
+
+    .row.mb15
+      .col-sm-12.align-center
+        a.btn.btn-danger.btn-lg(href='/signup') ZAREJESTRUJ SIĘ TERAZ
+
+  .container.container-clean.pb0.mb20(style='position:relative;')
+    .row.mb20
+      .col-sm-push-1.col-sm-10.align-center
+        h1.mt0.mb10.lato.lato900 Masz pytania? Napisz do nas.
+
+    .row.mb15
+      .col-sm-12.align-center
+        a.btn.btn-primary.btn-lg(href='/contact') #{__('hello@shopbyblog.com')}
+  //- .container.container-grid.pb0.mb20.pt0
     .row
       .col-sm-12
         .row
