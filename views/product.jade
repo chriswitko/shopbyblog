@@ -16,19 +16,19 @@ block content
       .col-sm-7
         .clearfix.container-fix.container-fb.p15
           .row.mb10
-            .col-sm-8
+            .col-sm-12
               .media
-                a.pull-left(href='/#{product.author.permalink}')
-                  img.media-object.img-rounded(src='#{product.author.gravatar()}', width='50')
+                a.pull-left(href='#{product.publisher.profile.website}', target='_blank')
+                  img.media-object.img-rounded(src='#{product.publisher.gravatar()}', width='50')
                 .media-body
                   h4.media-heading.m0
                     ul.list-unstyled.list-inline.small.mb0.list-actions
                       li
-                        a.notimp(href='/#{product.author.permalink}') @#{product.author.permalink}
+                        a.notimp(href='#{product.publisher.profile.website}', target='_blank') @#{product.author.permalink}
                       li
                         time.imp.small(itemprop='createdAt', datetime='#{product.createdAt}')
                   p.m0 #{product.body.substr(0, 140)}<a href="#{product.postUrl}" target="_blank">#{product.body.length>140?'...':''}</a>
-            .col-sm-4.align-right.hidden-xs
+            //- .col-sm-4.align-right.hidden-xs
               ul.list-unstyled.list-inline.m0.list-on-right
                 if (!isOwner)
                   li(class=(!isOwner&&!isFollowing)?'':'hid', id='action-btn-follow-#{product.author.id}')
@@ -38,7 +38,7 @@ block content
                     a.btn.btn-default.btn-lg.bind(href='', onclick='observable.trigger("userUnfollow", {followee_id:"#{product.author.id}", follower_id:"#{user?user.id:""}"})')
                       | #{__('Subscribed')}
                 else
-                  li
+                  //- li
                     a.btn.btn-default.btn-lg(href='/#{product.author.permalink}')
                       | Mój profil
           .row.mb10.mb0
