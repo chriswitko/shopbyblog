@@ -236,7 +236,7 @@ exports.index = function(req, res) {
       og: locales.product.getOpenGraph(),
       pricing: locales.pricing,
       hideSubscriptionBox: false,
-      hideNav: false,
+      hideNav: true,
       email: req.cookies.sbb_email||'',
       subscribed: req.query.subscribed,
       isFollowing: locales.isFollowing,
