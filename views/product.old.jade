@@ -1,0 +1,96 @@
+extends layout
+
+block content
+  script.
+    ga('sbb.send', 'event', 'Products', 'View', 'product_#{product._id}');
+
+  include templates/products.grid.jade
+
+  style.
+    body {background:black url(/img/bg-#{bg_id}.jpg) no-repeat 50% top;background-size:cover;}
+  .container.container-fb.container-fix
+    .row
+      .col-sm-7(style='border-right:1px solid #d5d5d5')
+        .clearfix
+          //- .row.mb10
+            .col-sm-12
+              h3.m0
+                a.lato100(href='#{product.postUrl}', active='#{product.isVoted}', target='_blank') #{product.title}
+          .row.mb10
+            .col-sm-12
+              .media
+                a.pull-left(href='#{product.publisher.profile.website}', target='_blank')
+                  img.media-object.img-rounded(src='#{product.publisher.gravatar()}', width='50')
+                .media-body
+                  h4.media-heading.m0
+                    ul.list-unstyled.list-inline.small.mb0.list-actions
+                      li
+                        a.notimp(href='#{product.publisher.profile.website}', target='_blank') @#{product.publisher.permalink}
+                      li
+                        time.imp.small(itemprop='createdAt', datetime='#{product.createdAt}')
+                  p.m0
+                    a.lato100.imp(href='#{product.publisher.profile.website}', target='_blank') #{product.title}
+                  if product.body
+                    p.m0 #{product.body.substr(0, 140)}<a href="#{product.postUrl}" target="_blank">#{product.body.length>140?'...':''}</a>
+
+          .row
+            .col-sm-12.grid-products
+              .clearfix
+                a(href='#{product.publisher.profile.website}', target='_blank')
+                  .grid-element(style='position:relative;')
+                    .grid-image.clearfix.img-thumbnail2(style='background:#f8f8f8 url(#{imagesUrl}/images/l_#{product.imageFileName}) no-repeat 50% 50%;background-size:cover;')
+                .clearfix.mb10.hidden-lg.hidden-md
+      .col-sm-5
+        .row
+          .col-sm-12
+            form(method='post', name='subscribeForm')
+              input(type='hidden', name='_csrf', value=_csrf)
+              .col-sm-12
+                .clearfix
+                  p.m0 Aktualnie nie mamy ofert dla tego produktu. Jeżeli chcesz otrzymać powiadomienie o dostępnej ofercie wpisz swój adres e-mail.
+                  hr
+                - if (!subscribed)
+                  .clearfix
+                    .form-group
+                      label.control-label(for='email') #{__('Email')}
+                      input.form-control(type='email', name='email', id='email', placeholder='Email', value=email, autofocus=true, autocomplete='off')
+                    .form-group
+                      .clearfix
+                        button.btn.btn-danger.btn-block(type='submit')
+                          | Zapisz
+                      .clearfix.mt15
+                        ul.list-unstyled.mb0.small
+                          li
+                            i.fa.fa-check.color-green
+                            | Wysyłamy tylko ciekawe i sprawdzone oferty
+                          li
+                            i.fa.fa-check.color-green
+                            | Nie wysyłamy spamu
+                          li
+                            i.fa.fa-check.color-green
+                            | Zawsze możesz wypisać się z powiadomień
+                .clearfix
+                  ul.list-unstyled.small
+                    li
+                      a.notimp(href='#{product.publisher.profile.website}', target='_blank')
+                        i.fa.fa-angle-right
+                        | Powrót do #{product.publisher.profile.website}
+                    li
+                      a.notimp(href='/ads/create?pid=#{product.id}')
+                        i.fa.fa-angle-right
+                        | Reklamuj się na blogach! Dodaj link sponsorowany...
+                .clearfix.mt10
+                  .pull-left.mr10
+                    .fb-like(data-href="#{sbb.website}/product/#{product.permalink}", data-layout="button", data-action="recommend", data-show-faces="true", data-share="false")
+                  .pull-left
+                    a.twitter-share-button(href="https://twitter.com/share", data-url="#{sbb.website}/product/#{product.permalink}", data-via="shopbyblog", data-count="none")
+
+
+block js
+
+  script.
+    $(document).ready(function() {
+      window.SBB_PRODUCT = !{JSON.stringify(product)};
+
+      SBB.initResizeGrid('feed');
+    })

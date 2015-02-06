@@ -196,14 +196,14 @@ script(id='grid-item-product-business', type='text/x-handlebars-template').
     <div class="col-sm-4">
       <div style="position:relative;" class="grid-element container-fb">
         <div class="clearfix">
-          <a href="/ads/create?pid={{product._id}}"><div style="background:#f8f8f8 url(#{imagesUrl}/images/s_{{product.imageFileName}}) no-repeat 50% 50%;background-size:cover" class="img-thumbnail grid-image clearfix"></div></a>
+          <a href="/product/{{product.permalink}}"><div style="background:#f8f8f8 url(#{imagesUrl}/images/s_{{product.imageFileName}}) no-repeat 50% 50%;background-size:cover" class="img-thumbnail grid-image clearfix"></div></a>
         </div>
         <div style="position:absolute;top:20px;right:20px;" class="grid-avatar">
           <a href="/{{product.publisher.permalink}}"><img src="#{imagesUrl}/avatars/s_{{product.publisher.imageFileName}}" width="30" class="img-rounded"/></a>
         </div>
         <div class="grid-body clearfix mt10">
           <div class="clearfix overflow">
-            <p class="m0 imp lato overflow"><a class="overflow" href="/ads/create?pid={{product._id}}">{{product.title}}</a></p>
+            <p class="m0 imp lato overflow"><a class="overflow" href="/product/{{product.permalink}}">{{product.title}}</a></p>
             <p class="m0 notimp small overflow"><a href="{{product.publisher.profile.website}}" target="_blank">{{product.publisher.profile.website}}</a></p>
           </div>
           <div class="clearfix overflow mt10">
@@ -250,14 +250,14 @@ script(id='grid-item-product-business-simple', type='text/x-handlebars-template'
     <div class="col-sm-4">
       <div style="position:relative;" class="grid-element container-fb">
         <div class="clearfix">
-          <a href="/ads/create?pid={{product._id}}"><div style="background:#f8f8f8 url(#{imagesUrl}/images/s_{{product.imageFileName}}) no-repeat 50% 50%;background-size:cover" class="img-thumbnail grid-image clearfix"></div></a>
+          <a href="/product/{{product.permalink}}"><div style="background:#f8f8f8 url(#{imagesUrl}/images/s_{{product.imageFileName}}) no-repeat 50% 50%;background-size:cover" class="img-thumbnail grid-image clearfix"></div></a>
         </div>
         <div style="position:absolute;top:20px;right:20px;" class="grid-avatar">
           <a href="/{{product.publisher.permalink}}"><img src="#{imagesUrl}/avatars/s_{{product.publisher.imageFileName}}" width="30" class="img-rounded"/></a>
         </div>
         <div class="grid-body clearfix mt10">
           <div class="clearfix overflow">
-            <p class="m0 imp lato overflow"><a class="overflow" href="/ads/create?pid={{product._id}}">{{product.title}}</a></p>
+            <p class="m0 imp lato overflow"><a class="overflow" href="/product/{{product.permalink}}">{{product.title}}</a></p>
             <p class="m0 notimp small overflow"><a href="{{product.publisher.profile.website}}" target="_blank">{{product.publisher.profile.website}}</a></p>
           </div>
           <div class="clearfix overflow mt10">

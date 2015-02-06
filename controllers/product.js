@@ -187,13 +187,13 @@ exports.index = function(req, res) {
         done();
       }
     },
-    getAdsToRedirect: function(done) {
-      locales.ad = []
-      if(!locales.ads) return done();
-      locales.ad = _.shuffle(locales.ads).splice(0, 1)
-      if(locales.ad.length) return res.redirect('/track/' + locales.ad[0].ad._id + '?intent=true');
-      done();
-    },
+    // getAdsToRedirect: function(done) {
+    //   locales.ad = []
+    //   if(!locales.ads) return done();
+    //   locales.ad = _.shuffle(locales.ads).splice(0, 1)
+    //   if(locales.ad.length) return res.redirect('/track/' + locales.ad[0].ad._id + '?intent=true');
+    //   done();
+    // },
     findFollowing: function(done) {
       if(req.user&&locales.product&&locales.product.author) {
         Following.findOne({followee: locales.product.author.id, follower: req.user.id}, function(err, following) {
@@ -235,8 +235,8 @@ exports.index = function(req, res) {
       fromNow: moment(locales.product.createdAt).fromNow(),
       og: locales.product.getOpenGraph(),
       pricing: locales.pricing,
-      hideSubscriptionBox: true,
-      hideNav: true,
+      hideSubscriptionBox: false,
+      hideNav: false,
       email: req.cookies.sbb_email||'',
       subscribed: req.query.subscribed,
       isFollowing: locales.isFollowing,

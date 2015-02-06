@@ -54,8 +54,9 @@ exports.go = function(req, res) {
       }
     },
   }, function() {
-    if(locales.ad.length) res.redirect('/track/' + locales.ad[0].ad._id + '?intent=true');
-    else res.redirect(locales.url);
+    // if(locales.ad.length) res.redirect('/track/' + locales.ad[0].ad._id + '?intent=true');
+    // else res.redirect(locales.url);
+    res.redirect(locales.url);
   })
 }
 
