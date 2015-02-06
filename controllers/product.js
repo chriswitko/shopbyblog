@@ -235,7 +235,7 @@ exports.index = function(req, res) {
       fromNow: moment(locales.product.createdAt).fromNow(),
       og: locales.product.getOpenGraph(),
       pricing: locales.pricing,
-      hideSubscriptionBox: false,
+      hideSubscriptionBox: true,
       hideNav: true,
       email: req.cookies.sbb_email||'',
       subscribed: req.query.subscribed,
