@@ -559,13 +559,13 @@ exports.update_edit = function(req, res) {
       lb.campaignPrice({lang: locales.blogger.blogger.locale, last12mPageUniqueUsers: locales.blogger.blogger.last12mPageUniqueUsers, followers: locales.blogger.meta.followers, numberOfActiveAds: locales.ads.length}, function(output) {
         locales.pricing = output
         locales.campaign.price.plnRate = 1;
-        locales.campaign.price.eurRate = locales.pricing[((parseFloat(locales.campaign.price.days) / 5)-1)].euro.rate;
-        locales.campaign.price.usdRate = locales.pricing[((parseFloat(locales.campaign.price.days) / 5)-1)].usd.rate;
+        // locales.campaign.price.eurRate = locales.pricing[((parseFloat(locales.campaign.price.days) / 5)-1)].euro.rate;
+        // locales.campaign.price.usdRate = locales.pricing[((parseFloat(locales.campaign.price.days) / 5)-1)].usd.rate;
         locales.campaign.price.nettoPrice = locales.pricing[((parseFloat(locales.campaign.price.days) / 5)-1)].totalNetto;
         locales.campaign.price.totalPrice = locales.pricing[((parseFloat(locales.campaign.price.days) / 5)-1)].totalBrutto;
         locales.campaign.price.totalPriceFormatted = locales.pricing[((parseFloat(locales.campaign.price.days) / 5)-1)].totalBruttoFormatted;
-        locales.campaign.price.euro = locales.pricing[((parseFloat(locales.campaign.price.days) / 5)-1)].euro;
-        locales.campaign.price.usd = locales.pricing[((parseFloat(locales.campaign.price.days) / 5)-1)].usd;
+        // locales.campaign.price.euro = locales.pricing[((parseFloat(locales.campaign.price.days) / 5)-1)].euro;
+        // locales.campaign.price.usd = locales.pricing[((parseFloat(locales.campaign.price.days) / 5)-1)].usd;
         locales.campaign.bloggerShare = locales.blogger.business.baseShare;
         done();
       });
