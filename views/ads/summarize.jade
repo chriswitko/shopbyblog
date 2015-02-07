@@ -120,6 +120,7 @@ block content
               input(type='hidden', name='custom', value='#{campaign._id}')
               if demo
                 input(type='hidden', name='amount', value='1.5')
+                input(type='hidden', name='demo', value='1')
               else
                 if campaign.invoice.invoiceCurrencyCode=='EUR'
                   input(type='hidden', name='amount', value='#{campaign.price.euro.totalBrutto}')
