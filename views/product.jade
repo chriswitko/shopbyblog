@@ -41,12 +41,12 @@ block content
                   //- li
                     a.btn.btn-default.btn-lg(href='/#{product.author.permalink}')
                       | Mój profil
-          .row.mb10.mb0
-            .col-sm-12
+          .row
+            .col-sm-12.mb10
               h3.m0
                 a.lato100(href='#{product.postUrl}', active='#{product.isVoted}', target='_blank') #{product.title}
 
-          .row
+          //- .row
             .col-sm-12.mb15
               .clearfix
                 sbb-product-tb(variant='preview', comments="#{product.meta.comments}", product="#{product._id}", active='#{product.isVoted}', permalink='#{product.permalink}', counter='#{product.meta.upvotes}', ispublisher='#{isPublisher}')
