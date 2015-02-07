@@ -16,6 +16,22 @@ block content
             input(type='hidden', name='invoiceCurrencyCode', value='#{currentLang=="pl"?"PLN":"EUR"}')
             input(type='hidden', name='demo', value='#{demo?"1":"0"}')
             .form-group
+              label.col-sm-2 &nbsp;
+              .col-sm-8
+                .clearfix
+                  p.imp Twoje zamówienie:
+                  .clearfix
+                    p
+                      | Udostępnienie podanego linku na stronie produktu <a target="_blank" href="/product/#{campaign.product.permalink}"><strong>#{campaign.product.title}</strong></a> po kliknięciu w polecany produkt na stronie: <strong>#{campaign.blogger.profile.website}</strong>
+                      //- li
+                        i.fa.fa-check.color-red
+                        | Twój link będzie wyświetlany na stronie produktu na czas kampanii
+                      //- li
+                        i.fa.fa-check.color-red
+                        | Informacja o Twoim linku zostanie rozesłana w cotygodniowym newsletterze do osób obserwujących profil blogera
+                  //- p.m0 Średnia liczba wyświetleń bloga: <strong>#{sprintf('%.0f', campaign.blogger.blogger.last12mPageUniqueViews/12)} / miesiąc</strong>
+
+            .form-group
               label(class='col-sm-2 control-label', for='url')
               .col-sm-8
                 p.imp.m0 #{__('Enter URL to website where customer can buy selected product.')}
@@ -34,20 +50,6 @@ block content
                 p.mt0.mb0 Liczba unikalnych użytkowników: <strong>#{formatNumber(campaign.blogger.blogger.last12mPageUniqueUsers)} / miesiąc</strong>
                 p.mt0 Liczba odsłon: <strong>#{formatNumber(campaign.blogger.blogger.last12mPageUniqueViews)} / miesiąc</strong>
 
-                .clearfix
-                  p.imp #{__('What you will get')}:
-                  .clearfix
-                    ul.list-unstyled
-                      li
-                        i.fa.fa-check.color-red
-                        | Przekierowanie na podany link, po kliknięciu w produkt <strong>#{campaign.product.title}</strong> na stronie: <strong>#{campaign.blogger.profile.website}</strong>
-                      //- li
-                        i.fa.fa-check.color-red
-                        | Twój link będzie wyświetlany na stronie produktu na czas kampanii
-                      //- li
-                        i.fa.fa-check.color-red
-                        | Informacja o Twoim linku zostanie rozesłana w cotygodniowym newsletterze do osób obserwujących profil blogera
-                  //- p.m0 Średnia liczba wyświetleń bloga: <strong>#{sprintf('%.0f', campaign.blogger.blogger.last12mPageUniqueViews/12)} / miesiąc</strong>
                 .clearfix
                   p.imp #{__('Select your option')}:
                 .clearfix
