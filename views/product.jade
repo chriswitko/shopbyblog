@@ -122,6 +122,20 @@ block content
                   .clearfix.mt5.align-right
                     a.btn.btn-default.btn-block.imp(href='/ads/create?pid=#{product.id}') Masz sklep? Dodaj link sponsorowany &nbsp;
                       i.fa.fa-angle-right
+                  .clearfix.mt5
+                    ul.list-inline.list-unstyled.m0.small
+                      li
+                        a(href='/') #{__('Home')}
+                      li
+                        a(href='/for-bloggers') #{__('For Bloggers')}
+                      li
+                        a(href='/sell-products') Dla reklamodawców
+                      li
+                        a(href='/help') #{__('Help')}
+                      li
+                        a(href='/contact') #{__('Contact')}
+                      li
+                        a(href='/') ShopByBlog.com
 
           .col-sm-12.mt20
             .clearfix
@@ -129,6 +143,8 @@ block content
                 .fb-like(data-href="#{sbb.website}/product/#{product.permalink}", data-layout="button", data-action="recommend", data-show-faces="true", data-share="false")
               .pull-left
                 a.twitter-share-button(href="https://twitter.com/share", data-url="#{sbb.website}/product/#{product.permalink}", data-via="shopbyblog", data-count="none")
+
+
 
           //- if votes&&votes.length
             .col-sm-12.mt20
