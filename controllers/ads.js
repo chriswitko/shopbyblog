@@ -240,7 +240,7 @@ exports.payment = function(req, res) {
       pricing: locales.pricing,
       payNow: 1,
       demo: (req.query.demo||req.body.demo)?true:false,
-      md5sum: md5('17460' + locales.campaign.price.totalPrice.toString() + locales.campaign._id + 'U6lRv4cAiw96GsRi')
+      md5sum: md5('17460' + ((req.query.demo||req.body.demo)?'1.5':locales.campaign.price.totalPrice.toString()) + locales.campaign._id + 'U6lRv4cAiw96GsRi')
     });
   })
 };
