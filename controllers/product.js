@@ -768,7 +768,7 @@ exports.remove = function(req, res) {
 };
 
 exports.post_add = function(req, res) {
-  // req.assert('postUrl', 'Adres do bloga musi być podany').isURL();
+  req.assert('postUrl', 'Adres do bloga musi być podany').isURL();
   // req.assert('url', 'Product URL is not valid').isURL();
   req.assert('title', 'Nazwa produkty jest wymagana').notEmpty();
   req.assert('body', 'Krótki opis produktu jest wymagany').notEmpty();
