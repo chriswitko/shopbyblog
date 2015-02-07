@@ -239,7 +239,7 @@ exports.payment = function(req, res) {
       product: locales.product,
       pricing: locales.pricing,
       payNow: 1,
-      demo: req.query.demo?true:false,
+      demo: (req.query.demo||req.body.demo)?true:false,
       md5sum: md5('17460' + locales.campaign.price.totalPrice.toString() + locales.campaign._id + 'U6lRv4cAiw96GsRi')
     });
   })
@@ -589,7 +589,7 @@ exports.update_edit = function(req, res) {
       campaign: locales.campaign,
       payNow: req.query.pay?true:false,
       product: locales.product,
-      demo: req.body.demo?true:false,
+      demo: (req.query.demo||req.body.demo)?true:false,
       md5sum: md5('17460' + locales.campaign.price.totalPrice.toString() + locales.campaign._id + 'U6lRv4cAiw96GsRi'),
       hideSubscriptionBox: true
     });
@@ -640,6 +640,7 @@ exports.update_calculate = function(req, res) {
     res.render('ads/summarize', {
       showSearchBox: false,
       title: 'Reklama',
+      demo: (req.query.demo||req.body.demo)?true:false,
       campaign: locales.campaign
     });
   })
