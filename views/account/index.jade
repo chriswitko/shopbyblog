@@ -40,11 +40,11 @@ block content
           .row
             .col-sm-12
               ul.list-unstyled.list-inline.m0.list-on-left
-                - if (profile.blogger.last12mPageUniqueUsers)
+                //- - if (profile.blogger.last12mPageUniqueUsers)
                   li
                     a.btn.btn-sm.btn-default.bind(href='',)
                       span.imp #{formatNumber(profile.blogger.last12mPageUniqueUsers)} użytkowników
-                - if (profile.blogger.last12mPageUniqueViews)
+                //- - if (profile.blogger.last12mPageUniqueViews)
                   li
                     a.btn.btn-sm.btn-default.bind(href='',)
                       span.imp #{formatNumber(profile.blogger.last12mPageUniqueViews)} odsłon
@@ -78,7 +78,7 @@ block content
                     a.btn.btn-sm.btn-default(href='/widgets/blogger?eid=#{profile.id}')
                       i.fa.fa-code
                       spam.imp Pobierz widget
-              .clearfix.mt5
+              //- .clearfix.mt5
                 p.m0.small.notimp
                   i.fa.fa-info-circle
                   | Informacje o liczbie użytkowników i odsłon są podawane w skali miesięcznej.
@@ -152,7 +152,7 @@ block js
 
         SBBUser.getProducts(criteria, SBB_PROFILE.id, function(data) {
 
-          var source = $("#grid-item-product-business-simple").html();
+          var source = $("#grid-item-product-only").html();
 
           var template = Handlebars.compile(source);
 
