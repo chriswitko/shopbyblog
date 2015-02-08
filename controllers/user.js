@@ -199,6 +199,11 @@ exports.claim_post = function(req, res) {
         // if (err) return next(err);
         done();
       });
+    },
+    sendWelcomeEmail: function(done) {
+      lb.sendHtmlEmail({to: 'chris.witko@gmail.com', user: {}, subject: 'Nowy bloger', templateName: 'new-blogger'}, function(output) {
+        done();
+      });
     }
   }, function() {
     req.flash('success', { msg: 'Formularz został przesłany. Po weryfikacji, skontatujemy się z Tobą w celu uruchomienia profilu blogera.' });
