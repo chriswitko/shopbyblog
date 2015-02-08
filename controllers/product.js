@@ -237,7 +237,7 @@ exports.index = function(req, res) {
       pricing: locales.pricing,
       hideSubscriptionBox: true,
       hideNav: true,
-      hideFooter: true,
+      hideFooter: false,
       email: req.cookies.sbb_email||'',
       subscribed: req.query.subscribed,
       isFollowing: locales.isFollowing,
