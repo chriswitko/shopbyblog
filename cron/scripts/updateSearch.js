@@ -78,6 +78,11 @@ async.series({
       if (error) console.error("SEARCH ERROR: %s", content.message);
       done();
     });
+  },
+  removeTemplFile: function(done) {
+    fs.unlink(file, function() {
+      done();
+    })
   }
 }, function() {
   console.log('End.')
