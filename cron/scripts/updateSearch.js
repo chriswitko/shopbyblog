@@ -55,7 +55,7 @@ async.series({
     Product.find({publisher: {$in:locales.blogger_ids}, isHidden: false})
     .populate({
       path: 'publisher',
-      select: 'profile.name profile.permalink isHidden isVerified'
+      select: 'profile.name permalink isHidden isVerified'
     })
     .select('_id permalink title body imageFileName meta publisher isHidden sticky').exec(function(err, products) {
       if(!products) return done();
