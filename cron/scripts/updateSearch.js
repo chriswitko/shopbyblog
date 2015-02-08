@@ -41,8 +41,7 @@ var progress = 0;
 var locales = {};
 
 var ts = Math.floor(new Date() / 1000);
-console.log('ts', ts);
-var file = '../../_storage/products.json';
+var file = '../../_storage/products_'+ts.toString()+'.json';
 
 async.series({
   getVerifiedUsersOnly: function(done) {
