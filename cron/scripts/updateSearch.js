@@ -41,7 +41,7 @@ var progress = 0;
 var locales = {};
 
 var ts = Math.floor(new Date() / 1000);
-var file = '../../_storage/products_'+ts.toString()+'.json';
+var file = '/opt/www/shopbyblog.com/_storage/products_'+ts.toString()+'.json';
 
 async.series({
   getVerifiedUsersOnly: function(done) {
