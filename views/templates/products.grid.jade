@@ -211,13 +211,17 @@ script(id='grid-item-product-business', type='text/x-handlebars-template').
               <thead>
                 <tr>
                   <th width="50%" class="align-center">Użytkowników</th>
+                  {{#if product.publisher.blogger.last12mPageUniqueViews}}
                   <th width="50%" class="align-center">Odsłon</th>
+                  {{/if}}
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td class="align-center">{{formatNumber product.publisher.blogger.last12mPageUniqueUsers}}</td>
+                  {{#if product.publisher.blogger.last12mPageUniqueViews}}
                   <td class="align-center">{{formatNumber product.publisher.blogger.last12mPageUniqueViews}}</td>
+                  {{/if}}
                 </tr>
               </tbody>
             </table>
