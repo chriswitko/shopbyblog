@@ -40,6 +40,10 @@ var progress = 0;
 
 var locales = {};
 
+var ts = Math.floor(new Date() / 1000);
+cossole.log('ts', ts);
+var file = '../../_storage/products.json';
+
 async.series({
   getVerifiedUsersOnly: function(done) {
     locales.blogger_ids = [];
@@ -63,8 +67,6 @@ async.series({
         return product;
       });
 
-      var file = '../../_storage/products.json';
-
       jf.writeFile(file, data, function(err) {
         done();
       })
@@ -72,7 +74,7 @@ async.series({
   },
   uploadToAlgolia: function(done) {
     var index = client.initIndex('products');
-    var fileJSON = require('../../_storage/products.json');
+    var fileJSON = require(file);
     index.addObjects(fileJSON, function(error, content) {
       if (error) console.error("SEARCH ERROR: %s", content.message);
       done();
