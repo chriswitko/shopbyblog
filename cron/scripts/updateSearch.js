@@ -43,7 +43,7 @@ var locales = {};
 async.series({
   getVerifiedUsersOnly: function(done) {
     locales.blogger_ids = [];
-    User.find({isVerified: true, isHidden: {$ne: true}}, function(err, bloggers) {
+    User.find({isVerified: true}, function(err, bloggers) {//, isHidden: {$ne: true}
       locales.blogger_ids = _.map(bloggers, function(blogger) {return blogger._id});
       done();
     })
