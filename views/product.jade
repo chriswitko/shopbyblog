@@ -18,13 +18,13 @@ block content
           .row.mb10
             .col-sm-12
               .media
-                a.pull-left(href='#{product.publisher.profile.website}', target='_blank')
+                a.pull-left(href='/#{product.publisher.permalink}')
                   img.media-object.img-rounded(src='#{product.publisher.gravatar()}', width='50')
                 .media-body
                   h4.media-heading.m0
                     ul.list-unstyled.list-inline.small.mb0.list-actions
                       li
-                        a.notimp(href='#{product.publisher.profile.website}', target='_blank') @#{product.author.permalink}
+                        a.notimp(href='/#{product.publisher.permalink}') @#{product.author.permalink}
                       li
                         time.imp.small(itemprop='createdAt', datetime='#{product.createdAt}')
                   p.m0 #{product.body.substr(0, 140)}<a href="#{product.postUrl}" target="_blank">#{product.body.length>140?'...':''}</a>
