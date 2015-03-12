@@ -21,3 +21,4 @@ bower_components
 .DS_Store
 Thumbs.db
 node_modules/
+config/secrets.js
