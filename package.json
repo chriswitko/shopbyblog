@@ -80,6 +80,11 @@
   "devDependencies": {
     "blessed": "^0.0.37",
     "chai": "^1.9.1",
+    "jasmine-core": "^2.2.0",
+    "karma": "^0.12.31",
+    "karma-chrome-launcher": "^0.1.7",
+    "karma-jasmine": "^0.3.5",
+    "karma-mocha": "^0.1.10",
     "mocha": "^1.21.4",
     "multiline": "^0.3.4",
     "supertest": "^0.13.0"

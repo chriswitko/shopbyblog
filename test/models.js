@@ -14,6 +14,21 @@ describe('User Model', function() {
     })
   });
 
+  it('should show error with uu on new user', function(done) {
+    var user = new User({
+      email: 'test@gmail.com',
+      password: 'password'
+    });
+    User.findOne({ email: 'test@gmail.com' }, function(err, user) {
+      user.blogger.last12mPageUniqueUsers = '7 000';
+      user.save(function(err) {
+        if (err) return done(err);
+        done();
+      })
+    })
+  });
+
+
   it('should not create a user with the unique email', function(done) {
     var user = new User({
       email: 'test@gmail.com',

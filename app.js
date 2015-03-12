@@ -412,8 +412,6 @@ app.get('/dashboard/users/action/:user_id/welcomeEmail', passportConf.isAuthenti
 
 app.get('/me', userController.profile);
 
-app.get('/:vanityUrl', userController.profile);
-app.get('/:vanityUrl/publicJson', userController.json);
 app.get('/api/allJsons', userController.allJsons);
 
 
@@ -468,6 +466,9 @@ app.get('/auth/tumblr', passport.authorize('tumblr'));
 app.get('/auth/tumblr/callback', passport.authorize('tumblr', { failureRedirect: '/api' }), function(req, res) {
   res.redirect('/api/tumblr');
 });
+
+app.get('/:vanityUrl', userController.profile);
+app.get('/:vanityUrl/publicJson', userController.json);
 
 /**
  * 500 Error Handler.
